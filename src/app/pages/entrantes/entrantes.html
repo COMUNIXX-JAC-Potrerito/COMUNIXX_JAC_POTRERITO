@@ -1,0 +1,76 @@
+<section class="panel">
+  <div class="panel-head">
+    <h2>PQRS entrantes</h2>
+    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+
+  @if (cargando()) {
+    <p class="hint">Cargando…</p>
+  }
+
+  @if (!cargando() && pqrs().length === 0) {
+    <p class="empty">No hay PQRS entrantes por atender. 🎉</p>
+  }
+
+  @if (pqrs().length > 0) {
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Tipo</th>
+            <th>Asunto</th>
+            <th>Solicitante</th>
+            <th>Asignar comité</th>
+            <th>Cambiar estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pqrs(); track p.id) {
+            <tr>
+              <td class="mono">{{ p.codigo_seguimiento }}</td>
+              <td>{{ p.tipo }}</td>
+              <td>
+                <strong>{{ p.asunto }}</strong>
+                <div class="desc">{{ p.descripcion }}</div>
+              </td>
+              <td>
+                @if (p.es_anonima) {
+                  <span class="badge anon">Anónima</span>
+                } @else {
+                  {{ p.nombre_contacto || '—' }}
+                }
+              </td>
+              <td>
+                <div class="row-action">
+                  <select [(ngModel)]="comiteSel[p.id]" [ngModelOptions]="{ standalone: true }">
+                    <option value="">Selecciona…</option>
+                    @for (c of comites; track c) {
+                      <option [value]="c">{{ c }}</option>
+                    }
+                  </select>
+                  <button (click)="asignar(p)" [disabled]="!comiteSel[p.id]">Asignar</button>
+                </div>
+              </td>
+              <td>
+                <div class="row-action">
+                  <select [(ngModel)]="estadoSel[p.id]" [ngModelOptions]="{ standalone: true }">
+                    <option value="">Selecciona…</option>
+                    @for (e of estados; track e) {
+                      <option [value]="e">{{ e }}</option>
+                    }
+                  </select>
+                  <button (click)="actualizarEstado(p)" [disabled]="!estadoSel[p.id]">Cambiar</button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

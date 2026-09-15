@@ -1,0 +1,38 @@
+<div class="login-container">
+  <form class="login-card" (ngSubmit)="entrar()">
+    <h1>COMUNIX</h1>
+    <p class="subtitle">Junta de Acción Comunal · Vereda Potrerito</p>
+
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+
+    <label>
+      Correo
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+        autocomplete="username"
+        placeholder="correo@ejemplo.com"
+      />
+    </label>
+
+    <label>
+      Contraseña
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        autocomplete="current-password"
+        placeholder="••••••••"
+      />
+    </label>
+
+    <button type="submit" [disabled]="cargando() || !email || !password">
+      {{ cargando() ? 'Ingresando…' : 'Iniciar sesión' }}
+    </button>
+  </form>
+</div>

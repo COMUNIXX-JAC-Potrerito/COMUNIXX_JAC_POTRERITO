@@ -1,0 +1,14 @@
+<div class="layout">
+  <header class="topbar">
+    <div class="brand">COMUNIX · Panel JAC</div>
+    <nav class="nav">
+      <a routerLink="entrantes" routerLinkActive="active">PQRS entrantes</a>
+      <a routerLink="historial" routerLinkActive="active">Historial</a>
+    </nav>
+    <button class="logout" (click)="salir()">Cerrar sesión</button>
+  </header>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

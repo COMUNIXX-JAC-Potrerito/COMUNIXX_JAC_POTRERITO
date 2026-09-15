@@ -1,0 +1,81 @@
+.panel {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--azul-osc);
+  }
+}
+
+.hint,
+.empty {
+  color: var(--texto-suave);
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gris-borde);
+    vertical-align: top;
+  }
+
+  th {
+    color: var(--texto-suave);
+    font-weight: 600;
+    background: #fafbfc;
+  }
+
+  .mono {
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+  }
+
+  .desc {
+    color: var(--texto-suave);
+    font-size: 0.82rem;
+    margin-top: 2px;
+    max-width: 280px;
+  }
+}
+
+.badge.anon {
+  display: inline-block;
+  background: #eceefb;
+  color: #4b3fbf;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.row-action {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  select {
+    max-width: 190px;
+  }
+}

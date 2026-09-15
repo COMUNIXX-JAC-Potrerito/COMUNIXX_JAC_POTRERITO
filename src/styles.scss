@@ -1,1 +1,65 @@
-/* You can add global styles to this file, and also import other style files */
+/* Estilos globales de COMUNIX */
+:root {
+  --azul: #1e4e8c;
+  --azul-osc: #163a68;
+  --verde: #2e8b57;
+  --gris-bg: #f4f6f9;
+  --gris-borde: #d9dee6;
+  --texto: #1f2733;
+  --texto-suave: #5b6673;
+  --rojo: #c0392b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto);
+  background: var(--gris-bg);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  background: var(--azul);
+  color: #fff;
+  transition: background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--azul-osc);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input,
+select {
+  padding: 8px 10px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: #fff;
+  color: var(--texto);
+}
+
+.alert {
+  background: #fdecea;
+  color: var(--rojo);
+  border: 1px solid #f5c6c0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 12px;
+}

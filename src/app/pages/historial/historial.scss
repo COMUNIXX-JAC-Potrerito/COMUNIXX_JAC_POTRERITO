@@ -1,0 +1,81 @@
+.panel {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--azul-osc);
+  }
+}
+
+.hint,
+.empty {
+  color: var(--texto-suave);
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gris-borde);
+  }
+
+  th {
+    color: var(--texto-suave);
+    font-weight: 600;
+    background: #fafbfc;
+  }
+
+  .mono {
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  &.anon {
+    background: #eceefb;
+    color: #4b3fbf;
+  }
+
+  &.estado.e-Nueva {
+    background: #e7f0ff;
+    color: #1e4e8c;
+  }
+
+  &.estado.e-En_Proceso {
+    background: #fff4e0;
+    color: #b26a00;
+  }
+
+  &.estado.e-Finalizada {
+    background: #e4f6ec;
+    color: #2e8b57;
+  }
+}

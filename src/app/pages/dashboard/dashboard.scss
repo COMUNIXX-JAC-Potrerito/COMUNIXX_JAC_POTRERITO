@@ -1,0 +1,60 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: var(--azul);
+  color: #fff;
+  padding: 0 24px;
+  height: 58px;
+
+  .brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+
+    a {
+      color: #dbe4f0;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      &.active {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .logout {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .logout:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}

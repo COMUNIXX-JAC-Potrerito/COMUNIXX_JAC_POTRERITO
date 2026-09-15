@@ -1,0 +1,55 @@
+<section class="panel">
+  <div class="panel-head">
+    <h2>Historial de PQRS</h2>
+    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+
+  @if (cargando()) {
+    <p class="hint">Cargando…</p>
+  }
+
+  @if (!cargando() && pqrs().length === 0) {
+    <p class="empty">Todavía no hay PQRS registradas.</p>
+  }
+
+  @if (pqrs().length > 0) {
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Tipo</th>
+            <th>Asunto</th>
+            <th>Estado</th>
+            <th>Comité</th>
+            <th>Solicitante</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pqrs(); track p.id) {
+            <tr>
+              <td class="mono">{{ p.codigo_seguimiento }}</td>
+              <td>{{ p.tipo }}</td>
+              <td><strong>{{ p.asunto }}</strong></td>
+              <td>
+                <span class="badge estado" [class]="'e-' + p.estado">{{ p.estado }}</span>
+              </td>
+              <td>{{ p.comite || '—' }}</td>
+              <td>
+                @if (p.es_anonima) {
+                  <span class="badge anon">Anónima</span>
+                } @else {
+                  {{ p.nombre_contacto || '—' }}
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
