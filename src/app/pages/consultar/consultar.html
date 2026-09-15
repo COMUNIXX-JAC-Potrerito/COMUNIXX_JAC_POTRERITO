@@ -1,0 +1,28 @@
+<section class="panel">
+  <h2>Consultar estado de una PQRS</h2>
+  <p class="intro">Ingresa el código de seguimiento que recibiste al radicar tu solicitud.</p>
+
+  <form class="buscador" (ngSubmit)="consultar()">
+    <input name="codigo" [(ngModel)]="codigo" placeholder="Ej: a3f9c1b2e4" />
+    <button type="submit" [disabled]="buscando() || !codigo.trim()">
+      {{ buscando() ? 'Buscando…' : 'Consultar' }}
+    </button>
+  </form>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+
+  @if (resultado(); as r) {
+    <div class="resultado">
+      <div class="fila"><span>Código</span><strong class="mono">{{ r.codigo_seguimiento }}</strong></div>
+      <div class="fila"><span>Tipo</span><strong>{{ r.tipo }}</strong></div>
+      <div class="fila"><span>Asunto</span><strong>{{ r.asunto }}</strong></div>
+      <div class="fila">
+        <span>Estado</span>
+        <span class="badge" [class]="'e-' + r.estado">{{ r.estado }}</span>
+      </div>
+      <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
+    </div>
+  }
+</section>

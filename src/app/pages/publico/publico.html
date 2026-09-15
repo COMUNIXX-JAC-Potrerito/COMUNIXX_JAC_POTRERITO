@@ -1,0 +1,20 @@
+<div class="layout">
+  <header class="topbar">
+    <a class="brand" routerLink="/">COMUNIX</a>
+    <nav class="nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+      <a routerLink="/radicar" routerLinkActive="active">Radicar PQRS</a>
+      <a routerLink="/consultar" routerLinkActive="active">Consultar estado</a>
+      <a routerLink="/registro" routerLinkActive="active">Registrarse</a>
+    </nav>
+    <a class="acceso" routerLink="/login">Acceso JAC</a>
+  </header>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+
+  <footer class="footer">
+    Junta de Acción Comunal · Vereda Potrerito
+  </footer>
+</div>

@@ -1,0 +1,80 @@
+.panel {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 560px;
+  margin: 0 auto;
+
+  h2 {
+    margin: 0 0 6px;
+    color: var(--azul-osc);
+  }
+
+  .intro {
+    margin: 0 0 18px;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+  }
+}
+
+.buscador {
+  display: flex;
+  gap: 8px;
+
+  input {
+    flex: 1;
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+  }
+}
+
+.resultado {
+  margin-top: 20px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 8px;
+  overflow: hidden;
+
+  .fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--gris-borde);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span:first-child {
+      color: var(--texto-suave);
+      font-size: 0.85rem;
+    }
+  }
+
+  .mono {
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  &.e-Nueva {
+    background: #e7f0ff;
+    color: #1e4e8c;
+  }
+
+  &.e-En_Proceso {
+    background: #fff4e0;
+    color: #b26a00;
+  }
+
+  &.e-Finalizada {
+    background: #e4f6ec;
+    color: #2e8b57;
+  }
+}

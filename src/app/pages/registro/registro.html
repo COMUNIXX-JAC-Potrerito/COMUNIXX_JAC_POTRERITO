@@ -1,0 +1,38 @@
+<section class="panel">
+  <h2>Crear cuenta</h2>
+  <p class="intro">Regístrate para radicar tus solicitudes más rápido.</p>
+
+  @if (exito()) {
+    <div class="ok">✅ ¡Registro exitoso! Te llevamos al inicio de sesión…</div>
+  } @else {
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+
+    <form (ngSubmit)="registrar()">
+      <label>
+        Nombre completo
+        <input name="fullName" [(ngModel)]="fullName" required placeholder="Nombre y apellidos" />
+      </label>
+      <label>
+        Correo
+        <input name="email" [(ngModel)]="email" required placeholder="correo@ejemplo.com" />
+      </label>
+      <label>
+        Contraseña
+        <input type="password" name="password" [(ngModel)]="password" required
+          placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número" />
+      </label>
+      <label>
+        Celular
+        <input name="phone" [(ngModel)]="phone" required placeholder="300 000 0000" />
+      </label>
+
+      <button type="submit" [disabled]="enviando() || !fullName || !email || !password || !phone">
+        {{ enviando() ? 'Creando…' : 'Registrarme' }}
+      </button>
+    </form>
+
+    <p class="pie">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+  }
+</section>

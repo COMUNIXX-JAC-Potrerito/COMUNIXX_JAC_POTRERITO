@@ -1,0 +1,92 @@
+.panel {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 620px;
+  margin: 0 auto;
+
+  h2 {
+    margin: 0 0 6px;
+    color: var(--azul-osc);
+  }
+
+  .intro {
+    margin: 0 0 18px;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+  }
+
+  textarea {
+    resize: vertical;
+    font-family: inherit;
+    padding: 8px 10px;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+  }
+
+  .check {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    color: var(--texto);
+    font-size: 0.88rem;
+  }
+
+  .contacto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 12px;
+    background: var(--gris-bg);
+    border-radius: 8px;
+  }
+
+  button {
+    margin-top: 4px;
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+}
+
+.exito {
+  text-align: center;
+
+  h2 {
+    color: var(--verde);
+    margin: 0 0 8px;
+  }
+
+  .codigo {
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--azul-osc);
+    background: var(--gris-bg);
+    border: 2px dashed var(--azul);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 14px 0;
+  }
+
+  .nota {
+    color: var(--texto-suave);
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+  }
+}

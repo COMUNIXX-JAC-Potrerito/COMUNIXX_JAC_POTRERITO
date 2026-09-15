@@ -3,7 +3,19 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Área pública (comunidad)
+  {
+    path: '',
+    loadComponent: () => import('./pages/publico/publico').then((m) => m.Publico),
+    children: [
+      { path: '', loadComponent: () => import('./pages/inicio/inicio').then((m) => m.Inicio) },
+      { path: 'radicar', loadComponent: () => import('./pages/radicar/radicar').then((m) => m.Radicar) },
+      { path: 'consultar', loadComponent: () => import('./pages/consultar/consultar').then((m) => m.Consultar) },
+      { path: 'registro', loadComponent: () => import('./pages/registro/registro').then((m) => m.Registro) },
+    ],
+  },
+
+  // Acceso privado (dignatarios)
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login').then((m) => m.Login),
@@ -14,15 +26,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
     children: [
       { path: '', redirectTo: 'entrantes', pathMatch: 'full' },
-      {
-        path: 'entrantes',
-        loadComponent: () => import('./pages/entrantes/entrantes').then((m) => m.Entrantes),
-      },
-      {
-        path: 'historial',
-        loadComponent: () => import('./pages/historial/historial').then((m) => m.Historial),
-      },
+      { path: 'entrantes', loadComponent: () => import('./pages/entrantes/entrantes').then((m) => m.Entrantes) },
+      { path: 'historial', loadComponent: () => import('./pages/historial/historial').then((m) => m.Historial) },
     ],
   },
-  { path: '**', redirectTo: 'login' },
+
+  { path: '**', redirectTo: '' },
 ];

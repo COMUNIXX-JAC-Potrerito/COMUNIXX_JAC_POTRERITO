@@ -3,6 +3,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { RegistroData } from '../models/pqrs.model';
 
 interface TokenResponse {
   access_token: string;
@@ -27,6 +28,10 @@ export class AuthService {
           this.isLoggedIn.set(true);
         }),
       );
+  }
+
+  register(data: RegistroData): Observable<unknown> {
+    return this.http.post(`${this.apiUrl}/register`, data);
   }
 
   logout(): void {

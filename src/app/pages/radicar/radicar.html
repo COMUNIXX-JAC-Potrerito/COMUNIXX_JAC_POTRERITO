@@ -1,0 +1,68 @@
+<section class="panel">
+  @if (codigoGenerado()) {
+    <!-- Confirmación con el código de seguimiento -->
+    <div class="exito">
+      <h2>✅ ¡PQRS radicada!</h2>
+      <p>Guarda este código para consultar el estado de tu solicitud:</p>
+      <div class="codigo">{{ codigoGenerado() }}</div>
+      <p class="nota">Con él podrás hacer seguimiento en cualquier momento, incluso si la enviaste de forma anónima.</p>
+      <button (click)="nuevaPqrs()">Radicar otra PQRS</button>
+    </div>
+  } @else {
+    <h2>Radicar una PQRS</h2>
+    <p class="intro">Cuéntale a la Junta de Acción Comunal tu petición, queja, reclamo o sugerencia.</p>
+
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+
+    <form (ngSubmit)="radicar()">
+      <label>
+        Tipo de solicitud
+        <select name="tipo" [(ngModel)]="tipo" required>
+          <option value="">Selecciona…</option>
+          @for (t of tipos; track t) {
+            <option [value]="t">{{ t }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Asunto
+        <input name="asunto" [(ngModel)]="asunto" required placeholder="Resumen breve" />
+      </label>
+
+      <label>
+        Descripción
+        <textarea name="descripcion" [(ngModel)]="descripcion" required rows="4"
+          placeholder="Describe con detalle tu solicitud"></textarea>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" name="anonima" [(ngModel)]="esAnonima" />
+        Enviar como anónima (tu identidad no se mostrará a los dignatarios)
+      </label>
+
+      @if (!esAnonima) {
+        <div class="contacto">
+          <label>
+            Nombre
+            <input name="nombre" [(ngModel)]="nombreContacto" placeholder="Tu nombre" />
+          </label>
+          <label>
+            Correo
+            <input name="email" [(ngModel)]="emailContacto" placeholder="correo@ejemplo.com" />
+          </label>
+          <label>
+            Celular
+            <input name="telefono" [(ngModel)]="telefonoContacto" placeholder="300 000 0000" />
+          </label>
+        </div>
+      }
+
+      <button type="submit" [disabled]="enviando() || !tipo || !asunto || !descripcion">
+        {{ enviando() ? 'Enviando…' : 'Radicar PQRS' }}
+      </button>
+    </form>
+  }
+</section>

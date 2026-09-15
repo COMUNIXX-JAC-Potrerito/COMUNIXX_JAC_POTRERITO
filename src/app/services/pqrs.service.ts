@@ -3,19 +3,27 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { Pqrs } from '../models/pqrs.model';
+import { Pqrs, PqrsCreate, PqrsSeguimiento } from '../models/pqrs.model';
 
 @Injectable({ providedIn: 'root' })
 export class PqrsService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  // Solo las PQRS en estado "Nueva".
+  // --- Público ---
+  radicar(data: PqrsCreate): Observable<Pqrs> {
+    return this.http.post<Pqrs>(`${this.apiUrl}/pqrs`, data);
+  }
+
+  seguimiento(codigo: string): Observable<PqrsSeguimiento> {
+    return this.http.get<PqrsSeguimiento>(`${this.apiUrl}/pqrs/seguimiento/${codigo}`);
+  }
+
+  // --- Privado (requiere token) ---
   entrantes(): Observable<Pqrs[]> {
     return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/entrantes`);
   }
 
-  // Todas las PQRS (historial completo).
   historial(): Observable<Pqrs[]> {
     return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/historial`);
   }

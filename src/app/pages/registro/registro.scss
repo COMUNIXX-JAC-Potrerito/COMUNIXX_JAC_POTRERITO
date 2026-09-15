@@ -1,0 +1,60 @@
+.panel {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 460px;
+  margin: 0 auto;
+
+  h2 {
+    margin: 0 0 6px;
+    color: var(--azul-osc);
+  }
+
+  .intro {
+    margin: 0 0 18px;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+  }
+
+  button {
+    margin-top: 4px;
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+}
+
+.ok {
+  background: #e4f6ec;
+  color: var(--verde);
+  border: 1px solid #b6e2c6;
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.pie {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--texto-suave);
+
+  a {
+    color: var(--azul);
+    font-weight: 600;
+  }
+}

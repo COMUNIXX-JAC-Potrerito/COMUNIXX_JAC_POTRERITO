@@ -15,6 +15,36 @@ export interface Pqrs {
   created_at: string;
 }
 
+// Datos que se envían al radicar una PQRS (POST /api/pqrs).
+export interface PqrsCreate {
+  tipo: string;
+  asunto: string;
+  descripcion: string;
+  es_anonima: boolean;
+  nombre_contacto?: string | null;
+  email_contacto?: string | null;
+  telefono_contacto?: string | null;
+}
+
+// Respuesta pública de la consulta por código (GET /api/pqrs/seguimiento/{codigo}).
+export interface PqrsSeguimiento {
+  codigo_seguimiento: string;
+  tipo: string;
+  asunto: string;
+  estado: string;
+  comite: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+// Datos del registro de usuario (POST /api/register).
+export interface RegistroData {
+  full_name: string;
+  email: string;
+  password: string;
+  phone: string;
+}
+
 // Catálogo de comités/cargos válidos (debe coincidir con el backend: catalogos.py).
 export const COMITES: string[] = [
   'Presidente',
@@ -32,3 +62,6 @@ export const COMITES: string[] = [
 
 // Estados válidos del ciclo de vida de una PQRS.
 export const ESTADOS: string[] = ['Nueva', 'En_Proceso', 'Finalizada'];
+
+// Tipos de PQRS válidos (debe coincidir con el backend).
+export const TIPOS: string[] = ['Peticion', 'Queja', 'Reclamo', 'Sugerencia'];
