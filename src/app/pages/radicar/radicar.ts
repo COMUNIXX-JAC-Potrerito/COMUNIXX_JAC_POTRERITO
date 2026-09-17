@@ -1,8 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { Adjunto } from '../../models/comunicacion.model';
 import { PqrsCreate, TIPOS } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
   selector: 'app-radicar',
@@ -12,6 +14,7 @@ import { PqrsService } from '../../services/pqrs.service';
 })
 export class Radicar {
   private pqrsService = inject(PqrsService);
+  private uploads = inject(UploadService);
 
   readonly tipos = TIPOS;
 
@@ -23,15 +26,47 @@ export class Radicar {
   nombreContacto = '';
   emailContacto = '';
   telefonoContacto = '';
+  archivo = signal<File | null>(null);
 
   enviando = signal(false);
+  subiendo = signal(false);
   error = signal<string | null>(null);
   codigoGenerado = signal<string | null>(null);
+
+  seleccionarArchivo(ev: Event) {
+    const input = ev.target as HTMLInputElement;
+    this.archivo.set(input.files?.[0] ?? null);
+    input.value = '';
+  }
+
+  quitarArchivo() {
+    this.archivo.set(null);
+  }
 
   radicar() {
     this.error.set(null);
     this.enviando.set(true);
 
+    const file = this.archivo();
+    if (file) {
+      this.subiendo.set(true);
+      this.uploads.subir(file).subscribe({
+        next: (adj) => {
+          this.subiendo.set(false);
+          this.enviarPqrs(adj);
+        },
+        error: (err) => {
+          this.subiendo.set(false);
+          this.enviando.set(false);
+          this.error.set(err?.error?.detail ?? 'No se pudo subir el archivo');
+        },
+      });
+    } else {
+      this.enviarPqrs(null);
+    }
+  }
+
+  private enviarPqrs(adj: Adjunto | null) {
     const data: PqrsCreate = {
       tipo: this.tipo,
       asunto: this.asunto,
@@ -40,6 +75,9 @@ export class Radicar {
       nombre_contacto: this.nombreContacto || null,
       email_contacto: this.emailContacto || null,
       telefono_contacto: this.telefonoContacto || null,
+      adjunto_url: adj?.url ?? null,
+      adjunto_tipo: adj?.tipo ?? null,
+      adjunto_nombre: adj?.nombre ?? null,
     };
 
     this.pqrsService.radicar(data).subscribe({
@@ -63,6 +101,7 @@ export class Radicar {
     this.nombreContacto = '';
     this.emailContacto = '';
     this.telefonoContacto = '';
+    this.archivo.set(null);
     this.codigoGenerado.set(null);
     this.error.set(null);
   }

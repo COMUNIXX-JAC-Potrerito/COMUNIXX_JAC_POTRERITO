@@ -37,6 +37,9 @@
               <td>
                 <strong>{{ p.asunto }}</strong>
                 <div class="desc">{{ p.descripcion }}</div>
+                @if (p.adjunto_url) {
+                  <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+                }
               </td>
               <td>
                 @if (p.es_anonima) {

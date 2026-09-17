@@ -13,6 +13,9 @@ export interface Pqrs {
   email_contacto: string | null;
   telefono_contacto: string | null;
   created_at: string;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 // Datos que se envían al radicar una PQRS (POST /api/pqrs).
@@ -24,6 +27,9 @@ export interface PqrsCreate {
   nombre_contacto?: string | null;
   email_contacto?: string | null;
   telefono_contacto?: string | null;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 // Respuesta pública de la consulta por código (GET /api/pqrs/seguimiento/{codigo}).
@@ -35,6 +41,9 @@ export interface PqrsSeguimiento {
   comite: string | null;
   created_at: string;
   updated_at: string | null;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 // Datos del registro de usuario (POST /api/register).

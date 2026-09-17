@@ -1,67 +1,92 @@
-<section class="panel">
-  <h2>Mensajería interna</h2>
-  <p class="intro">Comunícate con otros dignatarios sin salir del sistema.</p>
+<section class="chat">
+  <!-- Lista de contactos (dignatarios) -->
+  <aside class="contactos">
+    <h3>Dignatarios</h3>
+    @if (contactos().length === 0) {
+      <p class="vacio">No hay otros dignatarios registrados.</p>
+    }
+    @for (u of contactos(); track u.id) {
+      <button
+        class="contacto"
+        [class.activo]="contactoSel() === u.id"
+        (click)="seleccionar(u.id)"
+      >
+        <span class="datos">
+          <span class="nom">{{ u.full_name }}</span>
+          <span class="rol">{{ u.role }}</span>
+        </span>
+        @if (noLeidos(u.id) > 0) {
+          <span class="badge">{{ noLeidos(u.id) }}</span>
+        }
+      </button>
+    }
+  </aside>
 
-  @if (error()) {
-    <div class="alert">{{ error() }}</div>
-  }
+  <!-- Conversación -->
+  <div class="conversacion">
+    @if (contactoSel() === null) {
+      <div class="placeholder">Selecciona un dignatario para empezar a conversar.</div>
+    } @else {
+      <header class="cab-chat">{{ nombre(contactoSel()!) }}</header>
 
-  <form class="compose" (ngSubmit)="enviar()">
-    <div class="fila">
-      <label>
-        Para
-        <select name="dest" [(ngModel)]="destinatarioId" required>
-          <option [ngValue]="null">Selecciona un dignatario…</option>
-          @for (u of usuarios(); track u.id) {
-            <option [ngValue]="u.id">{{ u.full_name }} ({{ u.role }})</option>
-          }
-        </select>
-      </label>
-      <label>
-        Asunto
-        <input name="asunto" [(ngModel)]="asunto" required placeholder="Asunto" />
-      </label>
-    </div>
-    <label>
-      Mensaje
-      <textarea name="contenido" [(ngModel)]="contenido" required rows="2" placeholder="Escribe tu mensaje"></textarea>
-    </label>
-    <button type="submit" [disabled]="enviando() || !destinatarioId || !asunto || !contenido">
-      {{ enviando() ? 'Enviando…' : 'Enviar mensaje' }}
-    </button>
-  </form>
+      <div class="mensajes">
+        @if (conversacion().length === 0) {
+          <p class="vacio">Aún no hay mensajes. Escribe el primero.</p>
+        }
+        @for (m of conversacion(); track m.id) {
+          <div class="burbuja" [class.mia]="m.mio">
+            @if (m.contenido) {
+              <p class="texto">{{ m.contenido }}</p>
+            }
+            @if (m.adjunto_url) {
+              @if (m.adjunto_tipo === 'image') {
+                <img class="media" [src]="m.adjunto_url" alt="Imagen adjunta" />
+              } @else if (esAudio(m.adjunto_nombre)) {
+                <audio class="media-audio" [src]="m.adjunto_url" controls></audio>
+              } @else if (m.adjunto_tipo === 'video') {
+                <video class="media" [src]="m.adjunto_url" controls></video>
+              } @else {
+                <a class="archivo" [href]="m.adjunto_url" target="_blank" rel="noopener">
+                  {{ m.adjunto_nombre || 'Ver archivo' }}
+                </a>
+              }
+            }
+            <span class="hora">{{ m.created_at | date: 'short' }}</span>
+          </div>
+        }
+      </div>
 
-  <div class="tabs">
-    <button [class.activo]="tab() === 'recibidos'" (click)="tab.set('recibidos')">
-      Recibidos ({{ recibidos().length }})
-    </button>
-    <button [class.activo]="tab() === 'enviados'" (click)="tab.set('enviados')">
-      Enviados ({{ enviados().length }})
-    </button>
+      @if (error()) {
+        <div class="alert">{{ error() }}</div>
+      }
+      @if (archivo()) {
+        <div class="adjunto-sel">
+          <span>Adjunto: {{ archivo()!.name }}</span>
+          <button type="button" class="secundario mini" (click)="quitarArchivo()">Quitar</button>
+        </div>
+      }
+
+      <form class="redactar" (ngSubmit)="enviar()">
+        <label class="btn-adjuntar" title="Adjuntar archivo">
+          Adjuntar
+          <input
+            type="file"
+            (change)="seleccionarArchivo($event)"
+            hidden
+            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
+          />
+        </label>
+        <input
+          class="entrada"
+          name="texto"
+          [(ngModel)]="texto"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="Escribe un mensaje"
+        />
+        <button type="submit" [disabled]="enviando() || (!texto.trim() && !archivo())">
+          {{ subiendo() ? 'Subiendo…' : enviando() ? 'Enviando…' : 'Enviar' }}
+        </button>
+      </form>
+    }
   </div>
-
-  @if (tab() === 'recibidos') {
-    @if (recibidos().length === 0) { <p class="empty">Sin mensajes recibidos.</p> }
-    @for (m of recibidos(); track m.id) {
-      <div class="msg" [class.noleido]="!m.leido">
-        <div class="cab">
-          <strong>{{ m.asunto }}</strong>
-          <span class="de">de {{ nombre(m.remitente_id) }} · {{ m.created_at | date: 'short' }}</span>
-        </div>
-        <p>{{ m.contenido }}</p>
-        @if (!m.leido) { <button class="mini" (click)="leer(m)">Marcar como leído</button> }
-      </div>
-    }
-  } @else {
-    @if (enviados().length === 0) { <p class="empty">No has enviado mensajes.</p> }
-    @for (m of enviados(); track m.id) {
-      <div class="msg">
-        <div class="cab">
-          <strong>{{ m.asunto }}</strong>
-          <span class="de">para {{ nombre(m.destinatario_id) }} · {{ m.created_at | date: 'short' }}</span>
-        </div>
-        <p>{{ m.contenido }}</p>
-      </div>
-    }
-  }
 </section>

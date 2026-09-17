@@ -34,7 +34,12 @@
             <tr>
               <td class="mono">{{ p.codigo_seguimiento }}</td>
               <td>{{ p.tipo }}</td>
-              <td><strong>{{ p.asunto }}</strong></td>
+              <td>
+                <strong>{{ p.asunto }}</strong>
+                @if (p.adjunto_url) {
+                  <div><a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a></div>
+                }
+              </td>
               <td>
                 <span class="badge estado" [class]="'e-' + p.estado">{{ p.estado }}</span>
               </td>

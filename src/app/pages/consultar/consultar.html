@@ -23,6 +23,12 @@
         <span class="badge" [class]="'e-' + r.estado">{{ r.estado }}</span>
       </div>
       <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
+      @if (r.adjunto_url) {
+        <div class="fila">
+          <span>Adjunto</span>
+          <a class="adjunto-link" [href]="r.adjunto_url" target="_blank" rel="noopener">Ver archivo</a>
+        </div>
+      }
     </div>
   }
 </section>

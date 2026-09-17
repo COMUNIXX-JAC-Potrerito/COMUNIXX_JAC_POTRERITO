@@ -1,3 +1,10 @@
+// Archivo subido (respuesta de POST /api/uploads).
+export interface Adjunto {
+  url: string;
+  tipo: string; // 'image' | 'video' | 'raw'
+  nombre: string;
+}
+
 export interface Mensaje {
   id: number;
   remitente_id: number;
@@ -6,12 +13,18 @@ export interface Mensaje {
   contenido: string;
   leido: boolean;
   created_at: string;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 export interface MensajeCreate {
   destinatario_id: number;
-  asunto: string;
-  contenido: string;
+  asunto?: string;
+  contenido?: string;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 export interface Comunicacion {

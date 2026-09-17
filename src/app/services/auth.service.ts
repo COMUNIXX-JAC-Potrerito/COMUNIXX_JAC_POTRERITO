@@ -55,13 +55,22 @@ export class AuthService {
     return r !== null && ROLES_GESTION.includes(r);
   }
 
+  // Correo del usuario logueado (viene en el token como "sub").
+  emailActual(): string | null {
+    return this.leerCampo('sub');
+  }
+
   private hasToken(): boolean {
     return !!localStorage.getItem(this.TOKEN_KEY);
   }
 
-  // Decodifica el payload del JWT (la parte del medio) para leer el rol.
-  // No verifica la firma (eso lo hace el backend); solo lee el dato.
   private leerRol(): string | null {
+    return this.leerCampo('role');
+  }
+
+  // Decodifica el payload del JWT (la parte del medio) y devuelve un campo.
+  // No verifica la firma (eso lo hace el backend); solo lee el dato.
+  private leerCampo(campo: string): string | null {
     const token = this.getToken();
     if (!token) {
       return null;
@@ -70,7 +79,7 @@ export class AuthService {
       const payload = token.split('.')[1];
       const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
       const data = JSON.parse(json);
-      return data.role ?? null;
+      return data[campo] ?? null;
     } catch {
       return null;
     }

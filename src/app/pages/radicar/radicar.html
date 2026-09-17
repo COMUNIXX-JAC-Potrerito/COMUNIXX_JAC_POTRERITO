@@ -60,8 +60,23 @@
         </div>
       }
 
+      <label class="adjunto">
+        Adjuntar foto o archivo (opcional)
+        <input
+          type="file"
+          (change)="seleccionarArchivo($event)"
+          accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
+        />
+      </label>
+      @if (archivo()) {
+        <div class="adjunto-sel">
+          <span>Adjunto: {{ archivo()!.name }}</span>
+          <button type="button" class="secundario mini" (click)="quitarArchivo()">Quitar</button>
+        </div>
+      }
+
       <button type="submit" [disabled]="enviando() || !tipo || !asunto || !descripcion">
-        {{ enviando() ? 'Enviando…' : 'Radicar PQRS' }}
+        {{ subiendo() ? 'Subiendo…' : enviando() ? 'Enviando…' : 'Radicar PQRS' }}
       </button>
     </form>
   }
