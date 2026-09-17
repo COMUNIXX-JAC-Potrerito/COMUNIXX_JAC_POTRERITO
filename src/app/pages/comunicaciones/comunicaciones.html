@@ -1,8 +1,21 @@
+<div class="page-intro">
+  <h2>Comunicación y gestión documental</h2>
+  <p>
+    Este panel tiene dos herramientas independientes: a la izquierda llevas la
+    <strong>bitácora de correspondencia</strong> con entidades externas (para dejar constancia),
+    y a la derecha <strong>envías un comunicado por correo</strong> a toda la comunidad.
+  </p>
+</div>
+
 <div class="grid">
   <!-- Registro de comunicaciones externas (HU16) -->
   <section class="panel">
-    <h2>Comunicaciones externas</h2>
-    <p class="intro">Deja trazabilidad de las comunicaciones con entidades externas.</p>
+    <h2>Bitácora de comunicaciones externas</h2>
+    <p class="intro">
+      Registro de los oficios y comunicaciones con entidades externas (alcaldía, gobernación,
+      empresas de servicios, etc.). <strong>Aquí no se envía nada</strong>: solo dejas constancia
+      de lo enviado y recibido para tener trazabilidad documental.
+    </p>
 
     @if (error()) { <div class="alert">{{ error() }}</div> }
 
@@ -49,8 +62,11 @@
 
   <!-- Envío masivo (HU18) -->
   <section class="panel">
-    <h2>Envío masivo</h2>
-    <p class="intro">Envía información a todas las personas registradas.</p>
+    <h2>Envío masivo por correo</h2>
+    <p class="intro">
+      Redacta un comunicado y envíalo por correo a <strong>todas las personas registradas</strong>
+      de una sola vez (por ejemplo, para convocar a una asamblea).
+    </p>
 
     <form (ngSubmit)="enviarMasivo()">
       <label>

@@ -55,6 +55,10 @@ export class AuthService {
     return r !== null && ROLES_GESTION.includes(r);
   }
 
+  esSuperadmin(): boolean {
+    return this.rol() === 'superadministrador';
+  }
+
   // Correo del usuario logueado (viene en el token como "sub").
   emailActual(): string | null {
     return this.leerCampo('sub');

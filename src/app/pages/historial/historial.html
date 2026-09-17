@@ -3,6 +3,7 @@
     <h2>Historial de PQRS</h2>
     <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
   </div>
+  <p class="intro">Todas las PQRS. Desde aquí puedes reasignar el comité o cambiar el estado en cualquier momento.</p>
 
   @if (error()) {
     <div class="alert">{{ error() }}</div>
@@ -27,6 +28,8 @@
             <th>Estado</th>
             <th>Comité</th>
             <th>Solicitante</th>
+            <th>Asignar comité</th>
+            <th>Cambiar estado</th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +53,28 @@
                 } @else {
                   {{ p.nombre_contacto || '—' }}
                 }
+              </td>
+              <td>
+                <div class="row-action">
+                  <select [(ngModel)]="comiteSel[p.id]" [ngModelOptions]="{ standalone: true }">
+                    <option value="">Selecciona…</option>
+                    @for (c of comites; track c) {
+                      <option [value]="c">{{ c }}</option>
+                    }
+                  </select>
+                  <button (click)="asignar(p)" [disabled]="!comiteSel[p.id]">Asignar</button>
+                </div>
+              </td>
+              <td>
+                <div class="row-action">
+                  <select [(ngModel)]="estadoSel[p.id]" [ngModelOptions]="{ standalone: true }">
+                    <option value="">Selecciona…</option>
+                    @for (e of estados; track e) {
+                      <option [value]="e">{{ e }}</option>
+                    }
+                  </select>
+                  <button (click)="actualizarEstado(p)" [disabled]="!estadoSel[p.id]">Cambiar</button>
+                </div>
               </td>
             </tr>
           }

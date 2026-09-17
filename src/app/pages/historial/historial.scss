@@ -23,6 +23,27 @@
   color: var(--texto-suave);
 }
 
+.intro {
+  color: var(--texto-suave);
+  font-size: 0.88rem;
+  margin: 0 0 14px;
+}
+
+.row-action {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 150px;
+
+  select {
+    width: 100%;
+  }
+  button {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+}
+
 .tabla-scroll {
   overflow-x: auto;
 }

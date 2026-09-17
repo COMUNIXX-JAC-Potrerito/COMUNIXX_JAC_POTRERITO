@@ -103,3 +103,25 @@ textarea:focus {
   font-size: 0.82rem;
   font-weight: 600;
 }
+
+/* Texto de ayuda pequeño bajo un campo */
+.ayuda {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+
+/* Encabezado explicativo de una página */
+.page-intro {
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0 0 6px;
+    color: var(--primario-osc);
+  }
+  p {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+  }
+}

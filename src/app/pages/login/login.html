@@ -34,5 +34,7 @@
     <button type="submit" [disabled]="cargando() || !email || !password">
       {{ cargando() ? 'Ingresando…' : 'Iniciar sesión' }}
     </button>
+
+    <a class="volver" routerLink="/">Volver al inicio</a>
   </form>
 </div>

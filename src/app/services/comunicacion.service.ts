@@ -17,9 +17,12 @@ export class ComunicacionService {
   private http = inject(HttpClient);
   private api = environment.apiUrl;
 
-  // --- Usuarios (para elegir destinatario) ---
+  // --- Usuarios (para elegir destinatario y gestionar roles) ---
   usuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.api}/usuarios`);
+  }
+  cambiarRol(id: number, rol: string): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.api}/usuarios/${id}/rol`, { rol });
   }
 
   // --- Mensajería interna ---

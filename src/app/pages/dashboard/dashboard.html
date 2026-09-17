@@ -4,10 +4,14 @@
     <nav class="nav">
       <a routerLink="entrantes" routerLinkActive="active">PQRS entrantes</a>
       <a routerLink="historial" routerLinkActive="active">Historial</a>
+      <a routerLink="radicar" routerLinkActive="active">Radicar PQRS</a>
       <a routerLink="publicaciones" routerLinkActive="active">Publicaciones</a>
       <a routerLink="mensajes" routerLinkActive="active">Mensajes</a>
       <a routerLink="comunicaciones" routerLinkActive="active">Comunicaciones</a>
       <a routerLink="reportes" routerLinkActive="active">Reportes</a>
+      @if (esSuperadmin()) {
+        <a routerLink="usuarios" routerLinkActive="active">Usuarios</a>
+      }
     </nav>
     <button class="logout" (click)="salir()">Cerrar sesión</button>
   </header>

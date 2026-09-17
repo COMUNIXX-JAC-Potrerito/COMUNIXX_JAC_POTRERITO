@@ -29,6 +29,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'entrantes', pathMatch: 'full' },
       { path: 'entrantes', loadComponent: () => import('./pages/entrantes/entrantes').then((m) => m.Entrantes) },
       { path: 'historial', loadComponent: () => import('./pages/historial/historial').then((m) => m.Historial) },
+      { path: 'radicar', loadComponent: () => import('./pages/radicar/radicar').then((m) => m.Radicar) },
+      { path: 'usuarios', loadComponent: () => import('./pages/usuarios/usuarios').then((m) => m.Usuarios) },
       { path: 'publicaciones', loadComponent: () => import('./pages/admin-publicaciones/admin-publicaciones').then((m) => m.AdminPublicaciones) },
       { path: 'mensajes', loadComponent: () => import('./pages/mensajes/mensajes').then((m) => m.Mensajes) },
       { path: 'comunicaciones', loadComponent: () => import('./pages/comunicaciones/comunicaciones').then((m) => m.Comunicaciones) },

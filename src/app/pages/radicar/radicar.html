@@ -44,10 +44,11 @@
       </label>
 
       @if (!esAnonima) {
+        <p class="req-nota">Tus datos son obligatorios para poder responderte. Si prefieres no darlos, marca la casilla de anónima.</p>
         <div class="contacto">
           <label>
-            Nombre
-            <input name="nombre" [(ngModel)]="nombreContacto" placeholder="Tu nombre" />
+            Nombre *
+            <input name="nombre" [(ngModel)]="nombreContacto" required placeholder="Tu nombre" />
           </label>
           <label>
             Correo
@@ -58,6 +59,7 @@
             <input name="telefono" [(ngModel)]="telefonoContacto" placeholder="300 000 0000" />
           </label>
         </div>
+        <p class="req-nota">Indica al menos un correo o un celular.</p>
       }
 
       <label class="adjunto">
@@ -75,7 +77,16 @@
         </div>
       }
 
-      <button type="submit" [disabled]="enviando() || !tipo || !asunto || !descripcion">
+      <button
+        type="submit"
+        [disabled]="
+          enviando() ||
+          !tipo ||
+          !asunto ||
+          !descripcion ||
+          (!esAnonima && (!nombreContacto || (!emailContacto && !telefonoContacto)))
+        "
+      >
         {{ subiendo() ? 'Subiendo…' : enviando() ? 'Enviando…' : 'Radicar PQRS' }}
       </button>
     </form>

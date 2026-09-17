@@ -13,6 +13,10 @@ export class Dashboard {
   private auth = inject(AuthService);
   private router = inject(Router);
 
+  esSuperadmin(): boolean {
+    return this.auth.esSuperadmin();
+  }
+
   salir() {
     this.auth.logout();
     this.router.navigate(['/login']);

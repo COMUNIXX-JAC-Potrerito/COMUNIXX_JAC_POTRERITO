@@ -45,4 +45,15 @@
     padding: 11px;
     font-size: 0.95rem;
   }
+
+  .volver {
+    text-align: center;
+    color: var(--primario);
+    font-size: 0.85rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
