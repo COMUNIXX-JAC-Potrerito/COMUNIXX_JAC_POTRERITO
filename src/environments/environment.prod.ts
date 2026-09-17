@@ -1,6 +1,5 @@
 // Configuración de PRODUCCIÓN (se usa al hacer `ng build`).
-// ⚠️ IMPORTANTE: reemplaza la URL por la del backend desplegado en Koyeb
-// (por ejemplo https://comunix-backend-xxxx.koyeb.app/api) y vuelve a desplegar.
+// Apunta al backend desplegado en Render.
 export const environment = {
-  apiUrl: 'https://TU-BACKEND.koyeb.app/api',
+  apiUrl: 'https://comunix-backend.onrender.com/api',
 };
