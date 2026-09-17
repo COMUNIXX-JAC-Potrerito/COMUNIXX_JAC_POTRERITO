@@ -23,7 +23,7 @@
         <span class="badge">{{ etiqueta(p.categoria) }}</span>
         <h3>{{ p.titulo }}</h3>
         @if (p.fecha_evento) {
-          <div class="fecha">📅 {{ p.fecha_evento | date: 'longDate' }}</div>
+          <div class="fecha">{{ p.fecha_evento | date: 'longDate' }}</div>
         }
         <p class="contenido">{{ p.contenido }}</p>
         <div class="pie">Publicado el {{ p.created_at | date: 'shortDate' }}</div>

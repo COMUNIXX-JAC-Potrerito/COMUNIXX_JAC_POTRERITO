@@ -26,7 +26,12 @@ export class Login {
     this.auth.login(this.email, this.password).subscribe({
       next: () => {
         this.cargando.set(false);
-        this.router.navigate(['/dashboard']);
+        // Dignatarios -> Panel JAC; comunidad -> portal público.
+        if (this.auth.esDignatario()) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
         this.cargando.set(false);

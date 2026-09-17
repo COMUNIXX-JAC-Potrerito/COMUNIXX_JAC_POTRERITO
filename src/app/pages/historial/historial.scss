@@ -65,8 +65,8 @@ table {
   }
 
   &.estado.e-Nueva {
-    background: #e7f0ff;
-    color: #1e4e8c;
+    background: #eef1ee;
+    color: var(--gris-osc);
   }
 
   &.estado.e-En_Proceso {

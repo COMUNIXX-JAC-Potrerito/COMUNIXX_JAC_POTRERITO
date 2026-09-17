@@ -1,13 +1,26 @@
-/* Estilos globales de COMUNIX */
+/* Estilos globales de COMUNIX — paleta verde, gris y blanco */
 :root {
-  --azul: #1e4e8c;
-  --azul-osc: #163a68;
-  --verde: #2e8b57;
-  --gris-bg: #f4f6f9;
-  --gris-borde: #d9dee6;
+  /* Verdes (color de marca: headers, botones, acentos y activos) */
+  --primario: #2e7d4f;
+  --primario-osc: #235e3b;
+  --primario-suave: #e9f2ec;
+
+  /* Blancos y grises */
+  --gris-bg: #f3f6f3; /* fondo de página, casi blanco */
+  --superficie: #ffffff; /* tarjetas y paneles */
+  --gris-borde: #dbe2db;
+  --gris: #64748b; /* gris medio: texto y botones secundarios */
+  --gris-osc: #475569;
+
   --texto: #1f2733;
   --texto-suave: #5b6673;
   --rojo: #c0392b;
+
+  /* Alias legado: varios componentes aún usan estos nombres.
+     Ahora apuntan al verde para no tener que tocar 14 archivos. */
+  --azul: var(--primario);
+  --azul-osc: var(--primario-osc);
+  --verde: var(--primario);
 }
 
 * {
@@ -30,13 +43,13 @@ button {
   border-radius: 6px;
   padding: 8px 14px;
   font-size: 0.9rem;
-  background: var(--azul);
+  background: var(--primario);
   color: #fff;
   transition: background 0.15s ease;
 }
 
 button:hover:not(:disabled) {
-  background: var(--azul-osc);
+  background: var(--primario-osc);
 }
 
 button:disabled {
@@ -44,14 +57,32 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Botón secundario (gris), para acciones neutras */
+button.secundario {
+  background: var(--gris);
+}
+
+button.secundario:hover:not(:disabled) {
+  background: var(--gris-osc);
+}
+
 input,
-select {
+select,
+textarea {
   padding: 8px 10px;
   border: 1px solid var(--gris-borde);
   border-radius: 6px;
   font-size: 0.9rem;
   background: #fff;
   color: var(--texto);
+  font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primario);
 }
 
 .alert {
