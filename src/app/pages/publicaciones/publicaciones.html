@@ -1,0 +1,33 @@
+<section class="pubs">
+  <h2>Publicaciones de la JAC</h2>
+  <p class="intro">Entérate de las decisiones, actividades y contenidos de la Junta de Acción Comunal.</p>
+
+  <div class="filtros">
+    <button [class.activo]="filtro() === ''" (click)="setFiltro('')">Todas</button>
+    @for (c of categorias; track c.valor) {
+      <button [class.activo]="filtro() === c.valor" (click)="setFiltro(c.valor)">{{ c.etiqueta }}</button>
+    }
+  </div>
+
+  @if (cargando()) {
+    <p class="hint">Cargando…</p>
+  }
+
+  @if (!cargando() && items().length === 0) {
+    <p class="empty">Aún no hay publicaciones.</p>
+  }
+
+  <div class="lista">
+    @for (p of items(); track p.id) {
+      <article class="card">
+        <span class="badge">{{ etiqueta(p.categoria) }}</span>
+        <h3>{{ p.titulo }}</h3>
+        @if (p.fecha_evento) {
+          <div class="fecha">📅 {{ p.fecha_evento | date: 'longDate' }}</div>
+        }
+        <p class="contenido">{{ p.contenido }}</p>
+        <div class="pie">Publicado el {{ p.created_at | date: 'shortDate' }}</div>
+      </article>
+    }
+  </div>
+</section>

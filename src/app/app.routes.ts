@@ -11,6 +11,7 @@ export const routes: Routes = [
       { path: '', loadComponent: () => import('./pages/inicio/inicio').then((m) => m.Inicio) },
       { path: 'radicar', loadComponent: () => import('./pages/radicar/radicar').then((m) => m.Radicar) },
       { path: 'consultar', loadComponent: () => import('./pages/consultar/consultar').then((m) => m.Consultar) },
+      { path: 'publicaciones', loadComponent: () => import('./pages/publicaciones/publicaciones').then((m) => m.Publicaciones) },
       { path: 'registro', loadComponent: () => import('./pages/registro/registro').then((m) => m.Registro) },
     ],
   },
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'entrantes', pathMatch: 'full' },
       { path: 'entrantes', loadComponent: () => import('./pages/entrantes/entrantes').then((m) => m.Entrantes) },
       { path: 'historial', loadComponent: () => import('./pages/historial/historial').then((m) => m.Historial) },
+      { path: 'publicaciones', loadComponent: () => import('./pages/admin-publicaciones/admin-publicaciones').then((m) => m.AdminPublicaciones) },
     ],
   },
 

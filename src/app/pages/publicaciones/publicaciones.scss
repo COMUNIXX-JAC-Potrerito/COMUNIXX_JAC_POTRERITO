@@ -1,0 +1,84 @@
+.pubs {
+  max-width: 760px;
+  margin: 0 auto;
+
+  h2 {
+    color: var(--azul-osc);
+    margin: 0 0 4px;
+  }
+
+  .intro {
+    color: var(--texto-suave);
+    margin: 0 0 18px;
+    font-size: 0.9rem;
+  }
+}
+
+.filtros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+
+  button {
+    background: #fff;
+    color: var(--texto);
+    border: 1px solid var(--gris-borde);
+
+    &.activo {
+      background: var(--azul);
+      color: #fff;
+      border-color: var(--azul);
+    }
+  }
+}
+
+.hint,
+.empty {
+  color: var(--texto-suave);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 18px;
+
+  .badge {
+    display: inline-block;
+    background: #e7f0ff;
+    color: var(--azul);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  h3 {
+    margin: 8px 0 6px;
+    color: var(--azul-osc);
+  }
+
+  .fecha {
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+    margin-bottom: 6px;
+  }
+
+  .contenido {
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  .pie {
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: var(--texto-suave);
+  }
+}

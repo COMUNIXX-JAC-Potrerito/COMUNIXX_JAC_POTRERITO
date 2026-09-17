@@ -1,0 +1,54 @@
+<section class="panel">
+  <h2>Publicaciones</h2>
+  <p class="intro">Publica decisiones, actividades y contenido institucional para la comunidad.</p>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+
+  <form class="form" (ngSubmit)="publicar()">
+    <div class="fila">
+      <label>
+        Categoría
+        <select name="categoria" [(ngModel)]="categoria" required>
+          <option value="">Selecciona…</option>
+          @for (c of categorias; track c.valor) {
+            <option [value]="c.valor">{{ c.etiqueta }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Fecha del evento (opcional)
+        <input type="date" name="fecha" [(ngModel)]="fechaEvento" />
+      </label>
+    </div>
+    <label>
+      Título
+      <input name="titulo" [(ngModel)]="titulo" required placeholder="Título de la publicación" />
+    </label>
+    <label>
+      Contenido
+      <textarea name="contenido" [(ngModel)]="contenido" required rows="3" placeholder="Detalle de la publicación"></textarea>
+    </label>
+    <button type="submit" [disabled]="guardando() || !categoria || !titulo || !contenido">
+      {{ guardando() ? 'Publicando…' : 'Publicar' }}
+    </button>
+  </form>
+
+  <h3 class="sub">Publicaciones actuales</h3>
+  @if (items().length === 0) {
+    <p class="empty">Aún no has publicado nada.</p>
+  }
+  <div class="lista">
+    @for (p of items(); track p.id) {
+      <div class="item">
+        <div>
+          <span class="badge">{{ etiqueta(p.categoria) }}</span>
+          <strong>{{ p.titulo }}</strong>
+          <div class="desc">{{ p.contenido }}</div>
+        </div>
+        <button class="del" (click)="eliminar(p)">Eliminar</button>
+      </div>
+    }
+  </div>
+</section>
