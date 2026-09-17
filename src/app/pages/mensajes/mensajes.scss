@@ -1,0 +1,98 @@
+.panel {
+  background: #fff;
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 760px;
+
+  h2 {
+    margin: 0 0 4px;
+    color: var(--azul-osc);
+  }
+  .intro {
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+    margin: 0 0 16px;
+  }
+}
+
+.compose {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gris-borde);
+
+  .fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+  }
+  textarea {
+    resize: vertical;
+    font-family: inherit;
+    padding: 8px 10px;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+  }
+  button {
+    align-self: flex-start;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+
+  button {
+    background: #fff;
+    color: var(--texto);
+    border: 1px solid var(--gris-borde);
+    &.activo {
+      background: var(--azul);
+      color: #fff;
+      border-color: var(--azul);
+    }
+  }
+}
+
+.empty {
+  color: var(--texto-suave);
+}
+
+.msg {
+  border: 1px solid var(--gris-borde);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+
+  &.noleido {
+    border-left: 3px solid var(--azul);
+    background: #f7faff;
+  }
+  .cab {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .de {
+    font-size: 0.78rem;
+    color: var(--texto-suave);
+  }
+  p {
+    margin: 6px 0;
+  }
+  .mini {
+    padding: 4px 10px;
+    font-size: 0.78rem;
+  }
+}

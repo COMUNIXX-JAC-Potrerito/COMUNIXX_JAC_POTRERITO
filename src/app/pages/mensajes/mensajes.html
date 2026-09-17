@@ -1,0 +1,67 @@
+<section class="panel">
+  <h2>Mensajería interna</h2>
+  <p class="intro">Comunícate con otros dignatarios sin salir del sistema.</p>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+
+  <form class="compose" (ngSubmit)="enviar()">
+    <div class="fila">
+      <label>
+        Para
+        <select name="dest" [(ngModel)]="destinatarioId" required>
+          <option [ngValue]="null">Selecciona un dignatario…</option>
+          @for (u of usuarios(); track u.id) {
+            <option [ngValue]="u.id">{{ u.full_name }} ({{ u.role }})</option>
+          }
+        </select>
+      </label>
+      <label>
+        Asunto
+        <input name="asunto" [(ngModel)]="asunto" required placeholder="Asunto" />
+      </label>
+    </div>
+    <label>
+      Mensaje
+      <textarea name="contenido" [(ngModel)]="contenido" required rows="2" placeholder="Escribe tu mensaje"></textarea>
+    </label>
+    <button type="submit" [disabled]="enviando() || !destinatarioId || !asunto || !contenido">
+      {{ enviando() ? 'Enviando…' : 'Enviar mensaje' }}
+    </button>
+  </form>
+
+  <div class="tabs">
+    <button [class.activo]="tab() === 'recibidos'" (click)="tab.set('recibidos')">
+      Recibidos ({{ recibidos().length }})
+    </button>
+    <button [class.activo]="tab() === 'enviados'" (click)="tab.set('enviados')">
+      Enviados ({{ enviados().length }})
+    </button>
+  </div>
+
+  @if (tab() === 'recibidos') {
+    @if (recibidos().length === 0) { <p class="empty">Sin mensajes recibidos.</p> }
+    @for (m of recibidos(); track m.id) {
+      <div class="msg" [class.noleido]="!m.leido">
+        <div class="cab">
+          <strong>{{ m.asunto }}</strong>
+          <span class="de">de {{ nombre(m.remitente_id) }} · {{ m.created_at | date: 'short' }}</span>
+        </div>
+        <p>{{ m.contenido }}</p>
+        @if (!m.leido) { <button class="mini" (click)="leer(m)">Marcar como leído</button> }
+      </div>
+    }
+  } @else {
+    @if (enviados().length === 0) { <p class="empty">No has enviado mensajes.</p> }
+    @for (m of enviados(); track m.id) {
+      <div class="msg">
+        <div class="cab">
+          <strong>{{ m.asunto }}</strong>
+          <span class="de">para {{ nombre(m.destinatario_id) }} · {{ m.created_at | date: 'short' }}</span>
+        </div>
+        <p>{{ m.contenido }}</p>
+      </div>
+    }
+  }
+</section>

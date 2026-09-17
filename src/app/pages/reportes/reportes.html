@@ -1,0 +1,35 @@
+<section>
+  <div class="cab">
+    <h2>Reportes y estadísticas</h2>
+    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+  </div>
+
+  @if (data(); as d) {
+    <div class="grupo">
+      <h3>PQRS</h3>
+      <div class="cards">
+        <div class="stat"><span class="num">{{ d.pqrs_total }}</span><span class="lbl">Total</span></div>
+        <div class="stat azul"><span class="num">{{ d.pqrs_nuevas }}</span><span class="lbl">Nuevas</span></div>
+        <div class="stat naranja"><span class="num">{{ d.pqrs_en_proceso }}</span><span class="lbl">En proceso</span></div>
+        <div class="stat verde"><span class="num">{{ d.pqrs_finalizadas }}</span><span class="lbl">Finalizadas</span></div>
+      </div>
+    </div>
+
+    <div class="grupo">
+      <h3>Comunicación</h3>
+      <div class="cards">
+        <div class="stat"><span class="num">{{ d.comunicaciones_enviadas }}</span><span class="lbl">Enviadas</span></div>
+        <div class="stat"><span class="num">{{ d.comunicaciones_recibidas }}</span><span class="lbl">Recibidas</span></div>
+        <div class="stat"><span class="num">{{ d.mensajes_internos }}</span><span class="lbl">Mensajes internos</span></div>
+      </div>
+    </div>
+
+    <div class="grupo">
+      <h3>Comunidad</h3>
+      <div class="cards">
+        <div class="stat"><span class="num">{{ d.usuarios }}</span><span class="lbl">Usuarios</span></div>
+        <div class="stat"><span class="num">{{ d.publicaciones }}</span><span class="lbl">Publicaciones</span></div>
+      </div>
+    </div>
+  }
+</section>
