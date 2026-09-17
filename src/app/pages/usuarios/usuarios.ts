@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Usuario } from '../../models/comunicacion.model';
+import { COMITES } from '../../models/pqrs.model';
 import { ComunicacionService } from '../../services/comunicacion.service';
 
 // Roles válidos (deben coincidir con el backend: roles.py).
@@ -17,13 +18,15 @@ export class Usuarios implements OnInit {
   private service = inject(ComunicacionService);
 
   readonly roles = ROLES;
+  readonly comites = COMITES;
 
   items = signal<Usuario[]>([]);
   error = signal<string | null>(null);
   ok = signal<string | null>(null);
 
-  // Rol elegido por fila.
+  // Selección por fila.
   rolSel: Record<number, string> = {};
+  comiteSel: Record<number, string> = {};
 
   ngOnInit() {
     this.cargar();
@@ -34,13 +37,16 @@ export class Usuarios implements OnInit {
     this.service.usuarios().subscribe({
       next: (u) => {
         this.items.set(u);
-        u.forEach((x) => (this.rolSel[x.id] = x.role));
+        u.forEach((x) => {
+          this.rolSel[x.id] = x.role;
+          this.comiteSel[x.id] = x.comite ?? '';
+        });
       },
       error: (e) => this.error.set(e?.error?.detail ?? 'No se pudieron cargar los usuarios'),
     });
   }
 
-  cambiar(u: Usuario) {
+  cambiarRol(u: Usuario) {
     const rol = this.rolSel[u.id];
     if (!rol || rol === u.role) {
       return;
@@ -53,6 +59,26 @@ export class Usuarios implements OnInit {
         this.cargar();
       },
       error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo cambiar el rol'),
+    });
+  }
+
+  cambiarComite(u: Usuario) {
+    const comite = this.comiteSel[u.id] ?? '';
+    if (comite === (u.comite ?? '')) {
+      return;
+    }
+    this.error.set(null);
+    this.ok.set(null);
+    this.service.cambiarComite(u.id, comite).subscribe({
+      next: () => {
+        this.ok.set(
+          comite
+            ? `${u.full_name} quedó en la comisión "${comite}".`
+            : `${u.full_name} quedó sin comisión.`,
+        );
+        this.cargar();
+      },
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo cambiar la comisión'),
     });
   }
 }

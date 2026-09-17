@@ -28,6 +28,14 @@ export class PqrsService {
     return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/historial`);
   }
 
+  asignadas(): Observable<Pqrs[]> {
+    return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/asignadas`);
+  }
+
+  responder(id: number, respuesta: string): Observable<Pqrs> {
+    return this.http.put<Pqrs>(`${this.apiUrl}/pqrs/${id}/responder`, { respuesta });
+  }
+
   asignarComite(id: number, comite: string): Observable<Pqrs> {
     return this.http.put<Pqrs>(`${this.apiUrl}/pqrs/${id}/asignar`, { comite });
   }

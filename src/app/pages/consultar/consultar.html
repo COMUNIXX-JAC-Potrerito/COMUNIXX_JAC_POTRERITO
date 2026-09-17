@@ -23,6 +23,12 @@
         <span class="badge" [class]="'e-' + r.estado">{{ r.estado }}</span>
       </div>
       <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
+      @if (r.respuesta) {
+        <div class="fila respuesta">
+          <span>Respuesta de la JAC</span>
+          <strong>{{ r.respuesta }}</strong>
+        </div>
+      }
       @if (r.adjunto_url) {
         <div class="fila">
           <span>Adjunto</span>

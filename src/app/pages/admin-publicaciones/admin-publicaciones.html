@@ -31,8 +31,19 @@
       Contenido
       <textarea name="contenido" [(ngModel)]="contenido" required rows="3" placeholder="Detalle de la publicación"></textarea>
     </label>
+    <label>
+      Imagen o archivo (opcional)
+      <input type="file" (change)="seleccionarArchivo($event)"
+        accept="image/*,video/*,.pdf,.doc,.docx" />
+    </label>
+    @if (archivo()) {
+      <div class="adjunto-sel">
+        <span>Adjunto: {{ archivo()!.name }}</span>
+        <button type="button" class="secundario mini" (click)="quitarArchivo()">Quitar</button>
+      </div>
+    }
     <button type="submit" [disabled]="guardando() || !categoria || !titulo || !contenido">
-      {{ guardando() ? 'Publicando…' : 'Publicar' }}
+      {{ subiendo() ? 'Subiendo…' : guardando() ? 'Publicando…' : 'Publicar' }}
     </button>
   </form>
 
@@ -47,6 +58,9 @@
           <span class="badge">{{ etiqueta(p.categoria) }}</span>
           <strong>{{ p.titulo }}</strong>
           <div class="desc">{{ p.contenido }}</div>
+          @if (p.adjunto_url) {
+            <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+          }
         </div>
         <button class="del" (click)="eliminar(p)">Eliminar</button>
       </div>

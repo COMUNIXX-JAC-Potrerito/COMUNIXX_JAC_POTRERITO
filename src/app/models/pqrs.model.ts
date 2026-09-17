@@ -13,6 +13,7 @@ export interface Pqrs {
   email_contacto: string | null;
   telefono_contacto: string | null;
   created_at: string;
+  respuesta?: string | null;
   adjunto_url?: string | null;
   adjunto_tipo?: string | null;
   adjunto_nombre?: string | null;
@@ -41,6 +42,7 @@ export interface PqrsSeguimiento {
   comite: string | null;
   created_at: string;
   updated_at: string | null;
+  respuesta?: string | null;
   adjunto_url?: string | null;
   adjunto_tipo?: string | null;
   adjunto_nombre?: string | null;

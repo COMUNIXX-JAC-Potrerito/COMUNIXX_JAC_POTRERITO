@@ -6,6 +6,9 @@ export interface Publicacion {
   fecha_evento: string | null;
   publicado_por_id: number | null;
   created_at: string;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 export interface PublicacionCreate {
@@ -13,6 +16,9 @@ export interface PublicacionCreate {
   titulo: string;
   contenido: string;
   fecha_evento?: string | null;
+  adjunto_url?: string | null;
+  adjunto_tipo?: string | null;
+  adjunto_nombre?: string | null;
 }
 
 // Categorías (deben coincidir con el backend).

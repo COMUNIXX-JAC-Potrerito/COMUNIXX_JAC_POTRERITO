@@ -53,7 +53,21 @@
 
 .sub {
   margin: 18px 0 10px;
-  color: var(--azul-osc);
+  color: var(--primario-osc);
+}
+
+.adjunto-sel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.mini {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  align-self: flex-start;
 }
 
 .empty {
@@ -77,8 +91,8 @@
 
   .badge {
     display: inline-block;
-    background: #e7f0ff;
-    color: var(--azul);
+    background: var(--primario-suave);
+    color: var(--primario-osc);
     padding: 1px 8px;
     border-radius: 999px;
     font-size: 0.72rem;

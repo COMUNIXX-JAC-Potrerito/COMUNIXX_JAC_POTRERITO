@@ -4,8 +4,9 @@
     <button (click)="cargar()">Actualizar</button>
   </div>
   <p class="intro">
-    Como superadministrador puedes cambiar el rol de cualquier persona registrada.
-    Los roles <strong>administrador</strong> y <strong>superadministrador</strong> pueden entrar al Panel JAC.
+    Como superadministrador puedes cambiar el <strong>rol</strong> y la <strong>comisión</strong> de cualquier
+    persona. Los roles <strong>administrador</strong> y <strong>superadministrador</strong> entran al Panel JAC;
+    la comisión define qué PQRS le llegan a cada dignatario en "Mis asignadas".
   </p>
 
   @if (error()) {
@@ -25,17 +26,20 @@
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>Correo</th>
             <th>Celular</th>
-            <th>Rol actual</th>
+            <th>Rol</th>
             <th>Cambiar rol</th>
+            <th>Comisión</th>
+            <th>Cambiar comisión</th>
           </tr>
         </thead>
         <tbody>
           @for (u of items(); track u.id) {
             <tr>
-              <td><strong>{{ u.full_name }}</strong></td>
-              <td>{{ u.email }}</td>
+              <td>
+                <strong>{{ u.full_name }}</strong>
+                <div class="sub-dato">{{ u.email }}</div>
+              </td>
               <td>{{ u.phone || '—' }}</td>
               <td><span class="badge">{{ u.role }}</span></td>
               <td>
@@ -45,7 +49,19 @@
                       <option [value]="r">{{ r }}</option>
                     }
                   </select>
-                  <button (click)="cambiar(u)" [disabled]="rolSel[u.id] === u.role">Guardar</button>
+                  <button (click)="cambiarRol(u)" [disabled]="rolSel[u.id] === u.role">Guardar</button>
+                </div>
+              </td>
+              <td>{{ u.comite || '—' }}</td>
+              <td>
+                <div class="row-action">
+                  <select [(ngModel)]="comiteSel[u.id]" [ngModelOptions]="{ standalone: true }">
+                    <option value="">Sin comisión</option>
+                    @for (c of comites; track c) {
+                      <option [value]="c">{{ c }}</option>
+                    }
+                  </select>
+                  <button (click)="cambiarComite(u)" [disabled]="comiteSel[u.id] === (u.comite ?? '')">Guardar</button>
                 </div>
               </td>
             </tr>

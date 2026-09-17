@@ -24,6 +24,9 @@ export class ComunicacionService {
   cambiarRol(id: number, rol: string): Observable<Usuario> {
     return this.http.put<Usuario>(`${this.api}/usuarios/${id}/rol`, { rol });
   }
+  cambiarComite(id: number, comite: string): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.api}/usuarios/${id}/comite`, { comite });
+  }
 
   // --- Mensajería interna ---
   recibidos(): Observable<Mensaje[]> {

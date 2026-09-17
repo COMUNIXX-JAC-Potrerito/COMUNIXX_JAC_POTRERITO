@@ -28,6 +28,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'entrantes', pathMatch: 'full' },
       { path: 'entrantes', loadComponent: () => import('./pages/entrantes/entrantes').then((m) => m.Entrantes) },
+      { path: 'asignadas', loadComponent: () => import('./pages/asignadas/asignadas').then((m) => m.Asignadas) },
       { path: 'historial', loadComponent: () => import('./pages/historial/historial').then((m) => m.Historial) },
       { path: 'radicar', loadComponent: () => import('./pages/radicar/radicar').then((m) => m.Radicar) },
       { path: 'usuarios', loadComponent: () => import('./pages/usuarios/usuarios').then((m) => m.Usuarios) },

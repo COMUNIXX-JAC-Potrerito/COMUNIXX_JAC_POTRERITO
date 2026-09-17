@@ -51,6 +51,7 @@ export interface Usuario {
   full_name: string;
   phone: string | null;
   role: string;
+  comite?: string | null;
 }
 
 export interface Reporte {

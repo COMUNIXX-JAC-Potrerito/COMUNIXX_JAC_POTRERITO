@@ -26,6 +26,17 @@
           <div class="fecha">Actividad: {{ p.fecha_evento | date: 'longDate' }}</div>
         }
         <p class="contenido">{{ p.contenido }}</p>
+        @if (p.adjunto_url) {
+          @if (p.adjunto_tipo === 'image') {
+            <img class="media" [src]="p.adjunto_url" alt="Imagen de la publicación" />
+          } @else if (p.adjunto_tipo === 'video') {
+            <video class="media" [src]="p.adjunto_url" controls></video>
+          } @else {
+            <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">
+              {{ p.adjunto_nombre || 'Ver archivo' }}
+            </a>
+          }
+        }
         <div class="pie">Publicado el {{ p.created_at | date: 'shortDate' }}</div>
       </article>
     }

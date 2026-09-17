@@ -1,0 +1,80 @@
+<section class="panel">
+  <div class="panel-head">
+    <h2>Mis PQRS asignadas</h2>
+    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+  </div>
+  <p class="intro">
+    PQRS asignadas a tu comisión. Aquí puedes responderlas (el ciudadano ve tu respuesta con su
+    código) y actualizar su estado. Si no ves ninguna, el superadministrador debe asignarte una
+    comisión en la página "Usuarios".
+  </p>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+  @if (ok()) {
+    <div class="ok">{{ ok() }}</div>
+  }
+  @if (cargando()) {
+    <p class="hint">Cargando…</p>
+  }
+  @if (!cargando() && pqrs().length === 0) {
+    <p class="empty">No tienes PQRS asignadas a tu comisión por ahora.</p>
+  }
+
+  <div class="lista">
+    @for (p of pqrs(); track p.id) {
+      <article class="tarjeta">
+        <div class="cab">
+          <span class="badge estado" [class]="'e-' + p.estado">{{ p.estado }}</span>
+          <span class="tipo">{{ p.tipo }}</span>
+          <span class="cod mono">{{ p.codigo_seguimiento }}</span>
+        </div>
+
+        <h3>{{ p.asunto }}</h3>
+        <p class="desc">{{ p.descripcion }}</p>
+
+        <div class="meta">
+          @if (p.es_anonima) {
+            <span class="badge anon">Anónima</span>
+          } @else {
+            <span>De: {{ p.nombre_contacto || '—' }}
+              @if (p.email_contacto) { · {{ p.email_contacto }} }
+              @if (p.telefono_contacto) { · {{ p.telefono_contacto }} }
+            </span>
+          }
+          @if (p.adjunto_url) {
+            <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+          }
+        </div>
+
+        <label class="resp">
+          Respuesta al ciudadano
+          <textarea
+            [(ngModel)]="respuestaSel[p.id]"
+            [ngModelOptions]="{ standalone: true }"
+            rows="3"
+            placeholder="Escribe la respuesta…"
+          ></textarea>
+        </label>
+
+        <div class="acciones">
+          <button (click)="responder(p)" [disabled]="!(respuestaSel[p.id] || '').trim()">
+            Guardar respuesta
+          </button>
+          <div class="estado-cambio">
+            <select [(ngModel)]="estadoSel[p.id]" [ngModelOptions]="{ standalone: true }">
+              <option value="">Cambiar estado…</option>
+              @for (e of estados; track e) {
+                <option [value]="e">{{ e }}</option>
+              }
+            </select>
+            <button class="secundario" (click)="actualizarEstado(p)" [disabled]="!estadoSel[p.id]">
+              Aplicar
+            </button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>
