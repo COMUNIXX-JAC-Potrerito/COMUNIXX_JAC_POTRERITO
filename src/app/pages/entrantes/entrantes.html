@@ -1,84 +1,105 @@
 <section class="panel">
-  <div class="panel-head">
-    <h2>PQRS entrantes</h2>
-    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
-  </div>
-
-  @if (error()) {
-    <div class="alert">{{ error() }}</div>
-  }
-
-  @if (cargando()) {
-    <p class="hint">Cargando…</p>
-  }
-
-  @if (!cargando() && pqrs().length === 0) {
-    <p class="empty">No hay PQRS entrantes por atender.</p>
-  }
-
-  @if (pqrs().length > 0) {
-    <div class="tabla-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Tipo</th>
-            <th>Asunto</th>
-            <th>Solicitante</th>
-            <th>Asignar comité</th>
-            <th>Cambiar estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (p of pqrs(); track p.id) {
-            <tr>
-              <td class="mono">{{ p.codigo_seguimiento }}</td>
-              <td>{{ p.tipo }}</td>
-              <td class="asunto-cell">
-                <strong (click)="toggle(p.id)">{{ p.asunto }}</strong>
-                <div class="desc" [class.expandida]="expandido[p.id]">{{ p.descripcion }}</div>
-                @if (p.descripcion && p.descripcion.length > 120) {
-                  <button type="button" class="ver-mas" (click)="toggle(p.id)">
-                    {{ expandido[p.id] ? 'Ver menos' : 'Ver más' }}
-                  </button>
-                }
-                @if (p.adjunto_url) {
-                  <div><a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a></div>
-                }
-              </td>
-              <td>
-                @if (p.es_anonima) {
-                  <span class="badge anon">Anónima</span>
-                } @else {
-                  {{ p.nombre_contacto || '—' }}
-                }
-              </td>
-              <td>
-                <div class="row-action">
-                  <select [(ngModel)]="comiteSel[p.id]" [ngModelOptions]="{ standalone: true }">
-                    <option value="">Selecciona…</option>
-                    @for (c of comites; track c) {
-                      <option [value]="c">{{ c }}</option>
-                    }
-                  </select>
-                  <button (click)="asignar(p)" [disabled]="!comiteSel[p.id]">Asignar</button>
-                </div>
-              </td>
-              <td>
-                <div class="row-action">
-                  <select [(ngModel)]="estadoSel[p.id]" [ngModelOptions]="{ standalone: true }">
-                    <option value="">Selecciona…</option>
-                    @for (e of estados; track e) {
-                      <option [value]="e">{{ e }}</option>
-                    }
-                  </select>
-                  <button (click)="actualizarEstado(p)" [disabled]="!estadoSel[p.id]">Cambiar</button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  @if (!seleccionada()) {
+    <!-- BANDEJA -->
+    <div class="panel-head">
+      <h2>PQRS entrantes</h2>
+      <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
     </div>
+
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+    @if (cargando()) {
+      <p class="hint">Cargando…</p>
+    }
+    @if (!cargando() && pqrs().length === 0) {
+      <p class="empty">No hay PQRS entrantes por atender.</p>
+    }
+
+    @if (pqrs().length > 0) {
+      <ul class="bandeja">
+        @for (p of pqrs(); track p.id) {
+          <li class="fila-msg" (click)="abrir(p)">
+            <div class="izq">
+              <div class="linea1">
+                <span class="tipo">{{ p.tipo }}</span>
+                <strong class="asunto">{{ p.asunto }}</strong>
+              </div>
+              <div class="de">
+                {{ p.es_anonima ? 'Anónima' : (p.nombre_contacto || 'Sin nombre') }}
+                — {{ p.descripcion }}
+              </div>
+            </div>
+            <div class="der">
+              @if (p.adjunto_url) {
+                <span class="clip">Adjunto</span>
+              }
+              <span class="cod mono">{{ p.codigo_seguimiento }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  } @else if (seleccionada(); as p) {
+    <!-- DETALLE (tipo correo) -->
+    <button class="secundario volver" (click)="volver()">← Volver a la bandeja</button>
+
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+
+    <article class="detalle">
+      <div class="cab-det">
+        <span class="tipo">{{ p.tipo }}</span>
+        <span class="cod mono">{{ p.codigo_seguimiento }}</span>
+      </div>
+      <h2>{{ p.asunto }}</h2>
+      <div class="meta">
+        @if (p.es_anonima) {
+          <span class="badge anon">Anónima</span>
+        } @else {
+          <span>De: <strong>{{ p.nombre_contacto || '—' }}</strong></span>
+          @if (p.email_contacto) {
+            <span>· {{ p.email_contacto }}</span>
+          }
+          @if (p.telefono_contacto) {
+            <span>· {{ p.telefono_contacto }}</span>
+          }
+        }
+      </div>
+
+      <p class="cuerpo">{{ p.descripcion }}</p>
+
+      @if (p.adjunto_url) {
+        <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+      }
+
+      <div class="acciones-det">
+        <div class="accion">
+          <label>Asignar a un comité</label>
+          <div class="row">
+            <select [(ngModel)]="comiteSel" [ngModelOptions]="{ standalone: true }">
+              <option value="">Selecciona…</option>
+              @for (c of comites; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+            <button (click)="asignar()" [disabled]="!comiteSel">Asignar</button>
+          </div>
+        </div>
+        <div class="accion">
+          <label>Cambiar estado</label>
+          <div class="row">
+            <select [(ngModel)]="estadoSel" [ngModelOptions]="{ standalone: true }">
+              <option value="">Selecciona…</option>
+              @for (e of estados; track e) {
+                <option [value]="e">{{ e }}</option>
+              }
+            </select>
+            <button (click)="actualizarEstado()" [disabled]="!estadoSel">Cambiar</button>
+          </div>
+        </div>
+      </div>
+    </article>
   }
 </section>

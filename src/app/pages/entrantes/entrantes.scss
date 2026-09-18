@@ -9,12 +9,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 
   h2 {
     margin: 0;
     font-size: 1.2rem;
-    color: var(--azul-osc);
+    color: var(--primario-osc);
   }
 }
 
@@ -23,72 +23,118 @@
   color: var(--texto-suave);
 }
 
-.tabla-scroll {
-  overflow-x: auto;
+.mono {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-
-  th,
-  td {
-    text-align: left;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--gris-borde);
-    vertical-align: top;
-  }
-
-  th {
-    color: var(--texto-suave);
-    font-weight: 600;
-    background: #fafbfc;
-  }
-
-  .mono {
-    font-family: ui-monospace, 'Cascadia Code', monospace;
-    font-size: 0.82rem;
-    color: var(--texto-suave);
-  }
-
-  .desc {
-    color: var(--texto-suave);
-    font-size: 0.82rem;
-    margin-top: 2px;
-    max-width: 320px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .desc.expandida {
-    display: block;
-    overflow: visible;
-    white-space: pre-line;
-  }
+/* --- Bandeja (lista tipo correo) --- */
+.bandeja {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--gris-borde);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.asunto-cell {
-  strong {
-    cursor: pointer;
-  }
-}
-
-.ver-mas {
-  margin-top: 4px;
-  background: transparent;
-  color: var(--primario-osc);
-  border: none;
-  padding: 2px 0;
-  font-size: 0.78rem;
-  font-weight: 600;
+.fila-msg {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--gris-borde);
   cursor: pointer;
 
+  &:last-child {
+    border-bottom: none;
+  }
   &:hover {
-    text-decoration: underline;
-    background: transparent;
+    background: var(--primario-suave);
+  }
+
+  .izq {
+    flex: 1;
+    min-width: 0;
+  }
+  .linea1 {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tipo {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primario-osc);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .asunto {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .de {
+    margin-top: 2px;
+    color: var(--texto-suave);
+    font-size: 0.82rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .der {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .clip {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--primario-osc);
+      background: var(--primario-suave);
+      padding: 1px 8px;
+      border-radius: 999px;
+    }
+  }
+}
+
+/* --- Detalle (correo abierto) --- */
+.volver {
+  margin-bottom: 14px;
+}
+
+.detalle {
+  .cab-det {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tipo {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primario-osc);
+    text-transform: uppercase;
+  }
+  h2 {
+    margin: 6px 0 8px;
+    color: var(--texto);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gris-borde);
+  }
+  .cuerpo {
+    margin: 14px 0;
+    white-space: pre-line;
+    line-height: 1.5;
   }
 }
 
@@ -102,12 +148,27 @@ table {
   font-weight: 600;
 }
 
-.row-action {
+.acciones-det {
   display: flex;
-  gap: 6px;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gris-borde);
 
-  select {
-    max-width: 190px;
+  .accion {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--texto-suave);
+    }
+    .row {
+      display: flex;
+      gap: 6px;
+    }
   }
 }

@@ -20,16 +20,10 @@ export class Entrantes implements OnInit {
   cargando = signal(false);
   error = signal<string | null>(null);
 
-  // Selección temporal por fila (id de PQRS -> valor elegido en el <select>)
-  comiteSel: Record<number, string> = {};
-  estadoSel: Record<number, string> = {};
-
-  // Qué PQRS están expandidas (para ver el contenido completo)
-  expandido: Record<number, boolean> = {};
-
-  toggle(id: number) {
-    this.expandido[id] = !this.expandido[id];
-  }
+  // PQRS abierta (vista tipo correo). null = viendo la bandeja.
+  seleccionada = signal<Pqrs | null>(null);
+  comiteSel = '';
+  estadoSel = '';
 
   ngOnInit() {
     this.cargar();
@@ -50,25 +44,42 @@ export class Entrantes implements OnInit {
     });
   }
 
-  asignar(p: Pqrs) {
-    const comite = this.comiteSel[p.id];
-    if (!comite) return;
+  abrir(p: Pqrs) {
+    this.seleccionada.set(p);
+    this.comiteSel = '';
+    this.estadoSel = '';
+    this.error.set(null);
+  }
 
-    this.pqrsService.asignarComite(p.id, comite).subscribe({
-      // al asignar pasa a "En_Proceso": sale de la bandeja de entrantes
-      next: () => this.pqrs.update((l) => l.filter((x) => x.id !== p.id)),
+  volver() {
+    this.seleccionada.set(null);
+  }
+
+  asignar() {
+    const p = this.seleccionada();
+    if (!p || !this.comiteSel) {
+      return;
+    }
+    this.pqrsService.asignarComite(p.id, this.comiteSel).subscribe({
+      // al asignar deja de ser "entrante": sale de la bandeja
+      next: () => this.sacarYVolver(p.id),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo asignar el comité'),
     });
   }
 
-  actualizarEstado(p: Pqrs) {
-    const estado = this.estadoSel[p.id];
-    if (!estado) return;
-
-    this.pqrsService.cambiarEstado(p.id, estado).subscribe({
-      // cualquier cambio de estado la saca de "entrantes" (que solo muestra Nueva)
-      next: () => this.pqrs.update((l) => l.filter((x) => x.id !== p.id)),
+  actualizarEstado() {
+    const p = this.seleccionada();
+    if (!p || !this.estadoSel) {
+      return;
+    }
+    this.pqrsService.cambiarEstado(p.id, this.estadoSel).subscribe({
+      next: () => this.sacarYVolver(p.id),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo cambiar el estado'),
     });
+  }
+
+  private sacarYVolver(id: number) {
+    this.pqrs.update((l) => l.filter((x) => x.id !== id));
+    this.seleccionada.set(null);
   }
 }
