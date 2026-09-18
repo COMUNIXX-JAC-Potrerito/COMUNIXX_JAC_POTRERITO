@@ -1,14 +1,25 @@
 <div class="layout">
   <header class="topbar">
-    <a class="brand" routerLink="/">COMUNIX</a>
-    <nav class="nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-      <a routerLink="/radicar" routerLinkActive="active">Radicar PQRS</a>
-      <a routerLink="/consultar" routerLinkActive="active">Consultar estado</a>
-      <a routerLink="/publicaciones" routerLinkActive="active">Publicaciones</a>
-      <a routerLink="/registro" routerLinkActive="active">Registrarse</a>
+    <a class="brand" routerLink="/" (click)="cerrarMenu()">COMUNIX</a>
+
+    <button
+      class="menu-btn"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuAbierto()"
+      aria-label="Abrir menú"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" [class.abierto]="menuAbierto()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="cerrarMenu()">Inicio</a>
+      <a routerLink="/radicar" routerLinkActive="active" (click)="cerrarMenu()">Radicar PQRS</a>
+      <a routerLink="/consultar" routerLinkActive="active" (click)="cerrarMenu()">Consultar estado</a>
+      <a routerLink="/publicaciones" routerLinkActive="active" (click)="cerrarMenu()">Publicaciones</a>
+      <a routerLink="/registro" routerLinkActive="active" (click)="cerrarMenu()">Registrarse</a>
+      <a class="acceso" routerLink="/login" (click)="cerrarMenu()">Iniciar sesión</a>
     </nav>
-    <a class="acceso" routerLink="/login">Iniciar sesión</a>
   </header>
 
   <main class="content">

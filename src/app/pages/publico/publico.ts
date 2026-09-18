@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,4 +7,14 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './publico.html',
   styleUrl: './publico.scss',
 })
-export class Publico {}
+export class Publico {
+  menuAbierto = signal(false);
+
+  toggleMenu() {
+    this.menuAbierto.update((v) => !v);
+  }
+
+  cerrarMenu() {
+    this.menuAbierto.set(false);
+  }
+}

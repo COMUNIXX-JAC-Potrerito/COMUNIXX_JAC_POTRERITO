@@ -134,3 +134,10 @@ textarea:focus {
     font-size: 0.9rem;
   }
 }
+
+/* En móviles pequeños, los campos en dos columnas se apilan. */
+@media (max-width: 480px) {
+  .fila {
+    grid-template-columns: 1fr !important;
+  }
+}

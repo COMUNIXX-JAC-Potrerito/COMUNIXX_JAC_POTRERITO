@@ -5,37 +5,41 @@
 }
 
 .topbar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 24px;
-  background: var(--azul);
+  background: var(--primario);
   color: #fff;
   padding: 0 24px;
-  height: 58px;
+  min-height: 58px;
 
   .brand {
     font-weight: 700;
     letter-spacing: 0.5px;
+    white-space: nowrap;
   }
 
   .nav {
     display: flex;
+    align-items: center;
     gap: 6px;
     flex: 1;
+    flex-wrap: wrap;
 
     a {
-      color: #dbe4f0;
+      color: #e5efe8;
       text-decoration: none;
       padding: 8px 12px;
       border-radius: 6px;
       font-size: 0.9rem;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.14);
       }
 
       &.active {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.22);
         color: #fff;
         font-weight: 600;
       }
@@ -43,11 +47,32 @@
   }
 
   .logout {
-    background: rgba(255, 255, 255, 0.15);
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.16);
+    white-space: nowrap;
   }
-
   .logout:hover {
-    background: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Botón hamburguesa: oculto en escritorio */
+.menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  padding: 8px;
+
+  span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
   }
 }
 
@@ -57,4 +82,48 @@
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+}
+
+/* --- Responsive: menú hamburguesa --- */
+@media (max-width: 860px) {
+  .topbar {
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .menu-btn {
+    display: flex;
+  }
+
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    background: var(--primario);
+    padding: 8px 12px 14px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+    z-index: 30;
+
+    &.abierto {
+      display: flex;
+    }
+
+    a {
+      padding: 12px;
+    }
+
+    .logout {
+      margin: 8px 0 0;
+      width: 100%;
+    }
+  }
+
+  .content {
+    padding: 16px;
+  }
 }

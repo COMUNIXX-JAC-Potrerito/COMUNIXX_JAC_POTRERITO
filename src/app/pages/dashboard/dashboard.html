@@ -1,20 +1,31 @@
 <div class="layout">
   <header class="topbar">
     <div class="brand">COMUNIX · Panel JAC</div>
-    <nav class="nav">
-      <a routerLink="entrantes" routerLinkActive="active">PQRS entrantes</a>
-      <a routerLink="asignadas" routerLinkActive="active">Mis asignadas</a>
-      <a routerLink="historial" routerLinkActive="active">Historial</a>
-      <a routerLink="radicar" routerLinkActive="active">Radicar PQRS</a>
-      <a routerLink="publicaciones" routerLinkActive="active">Publicaciones</a>
-      <a routerLink="mensajes" routerLinkActive="active">Mensajes</a>
-      <a routerLink="comunicaciones" routerLinkActive="active">Comunicaciones</a>
-      <a routerLink="reportes" routerLinkActive="active">Reportes</a>
+
+    <button
+      class="menu-btn"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuAbierto()"
+      aria-label="Abrir menú"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" [class.abierto]="menuAbierto()">
+      <a routerLink="entrantes" routerLinkActive="active" (click)="cerrarMenu()">PQRS entrantes</a>
+      <a routerLink="asignadas" routerLinkActive="active" (click)="cerrarMenu()">Mis asignadas</a>
+      <a routerLink="historial" routerLinkActive="active" (click)="cerrarMenu()">Historial</a>
+      <a routerLink="radicar" routerLinkActive="active" (click)="cerrarMenu()">Radicar PQRS</a>
+      <a routerLink="publicaciones" routerLinkActive="active" (click)="cerrarMenu()">Publicaciones</a>
+      <a routerLink="mensajes" routerLinkActive="active" (click)="cerrarMenu()">Mensajes</a>
+      <a routerLink="comunicaciones" routerLinkActive="active" (click)="cerrarMenu()">Comunicaciones</a>
+      <a routerLink="reportes" routerLinkActive="active" (click)="cerrarMenu()">Reportes</a>
       @if (esSuperadmin()) {
-        <a routerLink="usuarios" routerLinkActive="active">Usuarios</a>
+        <a routerLink="usuarios" routerLinkActive="active" (click)="cerrarMenu()">Usuarios</a>
       }
+      <button class="logout" (click)="salir()">Cerrar sesión</button>
     </nav>
-    <button class="logout" (click)="salir()">Cerrar sesión</button>
   </header>
 
   <main class="content">
