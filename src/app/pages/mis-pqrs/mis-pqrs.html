@@ -1,0 +1,51 @@
+<section class="panel">
+  <div class="panel-head">
+    <h2>Mis PQRS radicadas</h2>
+    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+  </div>
+  <p class="intro">Las PQRS que tú radicaste. Busca por código o asunto para encontrarlas rápido.</p>
+
+  <input
+    class="buscador"
+    [ngModel]="busqueda()"
+    (ngModelChange)="busqueda.set($event)"
+    [ngModelOptions]="{ standalone: true }"
+    placeholder="Buscar por código o asunto…"
+  />
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+  @if (cargando()) {
+    <p class="hint">Cargando…</p>
+  }
+  @if (!cargando() && filtradas().length === 0) {
+    <p class="empty">No tienes PQRS radicadas (o ninguna coincide con la búsqueda).</p>
+  }
+
+  <div class="lista">
+    @for (p of filtradas(); track p.id) {
+      <article class="tarjeta">
+        <div class="cab">
+          <span class="badge estado" [class]="'e-' + p.estado">{{ p.estado }}</span>
+          <span class="tipo">{{ p.tipo }}</span>
+          <span class="cod mono">{{ p.codigo_seguimiento }}</span>
+        </div>
+        <h3>{{ p.asunto }}</h3>
+        <p class="desc">{{ p.descripcion }}</p>
+        <div class="meta">
+          <span>Comité: {{ p.comite || 'Pendiente de asignar' }}</span>
+          @if (p.adjunto_url) {
+            <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+          }
+        </div>
+        @if (p.respuesta) {
+          <div class="respuesta">
+            <span class="etiqueta">Respuesta de la JAC:</span>
+            <p>{{ p.respuesta }}</p>
+          </div>
+        }
+      </article>
+    }
+  </div>
+</section>

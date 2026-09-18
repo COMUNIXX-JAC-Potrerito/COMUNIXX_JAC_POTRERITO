@@ -30,6 +30,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'entrantes', pathMatch: 'full' },
       { path: 'entrantes', loadComponent: () => import('./pages/entrantes/entrantes').then((m) => m.Entrantes) },
       { path: 'asignadas', loadComponent: () => import('./pages/asignadas/asignadas').then((m) => m.Asignadas) },
+      { path: 'mis-pqrs', loadComponent: () => import('./pages/mis-pqrs/mis-pqrs').then((m) => m.MisPqrs) },
       { path: 'historial', loadComponent: () => import('./pages/historial/historial').then((m) => m.Historial) },
       { path: 'radicar', loadComponent: () => import('./pages/radicar/radicar').then((m) => m.Radicar) },
       { path: 'usuarios', loadComponent: () => import('./pages/usuarios/usuarios').then((m) => m.Usuarios) },

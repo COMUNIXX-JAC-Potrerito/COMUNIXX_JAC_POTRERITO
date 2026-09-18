@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import {
   EncuestaCreate,
+  EncuestaDetalle,
   EncuestaResultados,
   EncuestaResumen,
   PreguntaCreate,
+  RespuestaItem,
 } from '../../models/encuesta.model';
 import { EncuestasService } from '../../services/encuestas.service';
 
@@ -39,8 +41,52 @@ export class AdminEncuestas implements OnInit {
   // Resultados abiertos
   resultados = signal<EncuestaResultados | null>(null);
 
+  // Responder (los dignatarios también pueden participar)
+  respondiendo = signal<EncuestaDetalle | null>(null);
+  respuestasResp: Record<number, string> = {};
+  enviandoResp = signal(false);
+  graciasResp = signal(false);
+
   ngOnInit() {
     this.cargar();
+  }
+
+  responderAbrir(e: EncuestaResumen) {
+    this.error.set(null);
+    this.graciasResp.set(false);
+    this.respuestasResp = {};
+    this.service.detalle(e.id).subscribe({
+      next: (d) => this.respondiendo.set(d),
+      error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo abrir la encuesta'),
+    });
+  }
+
+  cerrarResponder() {
+    this.respondiendo.set(null);
+    this.graciasResp.set(false);
+  }
+
+  responderEnviar() {
+    const enc = this.respondiendo();
+    if (!enc) {
+      return;
+    }
+    const items: RespuestaItem[] = enc.preguntas.map((p) => ({
+      pregunta_id: p.id,
+      valor: this.respuestasResp[p.id] ?? null,
+    }));
+    this.enviandoResp.set(true);
+    // Al estar logueado, el backend usa los datos de la cuenta.
+    this.service.responder(enc.id, items, {}).subscribe({
+      next: () => {
+        this.enviandoResp.set(false);
+        this.graciasResp.set(true);
+      },
+      error: (err) => {
+        this.enviandoResp.set(false);
+        this.error.set(err?.error?.detail ?? 'No se pudo enviar la respuesta');
+      },
+    });
   }
 
   cargar() {

@@ -85,6 +85,9 @@
         </div>
         <div class="acciones">
           <button (click)="publicar(e)">{{ e.publicada ? 'Despublicar' : 'Publicar' }}</button>
+          @if (e.publicada) {
+            <button class="secundario" (click)="responderAbrir(e)">Responder</button>
+          }
           <button class="secundario" (click)="verResultados(e)">Resultados</button>
           <button class="del" (click)="eliminar(e)">Eliminar</button>
         </div>
@@ -122,6 +125,39 @@
             }
           }
         </div>
+      }
+    </div>
+  }
+
+  @if (respondiendo(); as enc) {
+    <div class="responder">
+      <div class="res-cab">
+        <h3>Responder: {{ enc.titulo }}</h3>
+        <button class="secundario mini" (click)="cerrarResponder()">Cerrar</button>
+      </div>
+      @if (graciasResp()) {
+        <p class="ok">¡Gracias! Tu respuesta quedó registrada.</p>
+      } @else {
+        <form (ngSubmit)="responderEnviar()">
+          @for (p of enc.preguntas; track p.id) {
+            <div class="pregunta">
+              <label class="txt-p">{{ p.texto }}</label>
+              @if (p.tipo === 'opciones' && p.opciones) {
+                @for (o of p.opciones; track o) {
+                  <label class="opcion-r">
+                    <input type="radio" [name]="'r' + p.id" [value]="o" [(ngModel)]="respuestasResp[p.id]" [ngModelOptions]="{ standalone: true }" />
+                    {{ o }}
+                  </label>
+                }
+              } @else {
+                <textarea rows="2" [(ngModel)]="respuestasResp[p.id]" [ngModelOptions]="{ standalone: true }" placeholder="Tu respuesta"></textarea>
+              }
+            </div>
+          }
+          <button type="submit" [disabled]="enviandoResp()">
+            {{ enviandoResp() ? 'Enviando…' : 'Enviar respuesta' }}
+          </button>
+        </form>
       }
     </div>
   }

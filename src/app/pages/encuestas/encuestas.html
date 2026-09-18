@@ -42,6 +42,18 @@
       }
 
       <form (ngSubmit)="responder()">
+        @if (!logueado()) {
+          <div class="datos">
+            <p class="nota">Tus datos son obligatorios para registrar tu participación.</p>
+            <input [(ngModel)]="nombre" [ngModelOptions]="{ standalone: true }" placeholder="Nombre completo *" />
+            <input [(ngModel)]="email" [ngModelOptions]="{ standalone: true }" placeholder="Correo" />
+            <input [(ngModel)]="telefono" [ngModelOptions]="{ standalone: true }" placeholder="Celular" />
+            <p class="nota">Indica al menos un correo o un celular.</p>
+          </div>
+        } @else {
+          <p class="nota">Se registrará tu participación con los datos de tu cuenta.</p>
+        }
+
         @for (p of actual()!.preguntas; track p.id) {
           <div class="pregunta">
             <label class="txt">{{ p.texto }}</label>

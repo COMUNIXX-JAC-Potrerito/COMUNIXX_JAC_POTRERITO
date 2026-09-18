@@ -42,8 +42,15 @@ export class EncuestasService {
     return this.http.delete<void>(`${this.api}/encuestas/${id}`);
   }
 
-  responder(id: number, items: RespuestaItem[]): Observable<{ ok: boolean }> {
-    return this.http.post<{ ok: boolean }>(`${this.api}/encuestas/${id}/responder`, { items });
+  responder(
+    id: number,
+    items: RespuestaItem[],
+    datos: { nombre?: string; email?: string; telefono?: string },
+  ): Observable<{ ok: boolean }> {
+    return this.http.post<{ ok: boolean }>(`${this.api}/encuestas/${id}/responder`, {
+      items,
+      ...datos,
+    });
   }
 
   resultados(id: number): Observable<EncuestaResultados> {

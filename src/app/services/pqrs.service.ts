@@ -32,6 +32,10 @@ export class PqrsService {
     return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/asignadas`);
   }
 
+  mias(): Observable<Pqrs[]> {
+    return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/mias`);
+  }
+
   responder(id: number, respuesta: string): Observable<Pqrs> {
     return this.http.put<Pqrs>(`${this.apiUrl}/pqrs/${id}/responder`, { respuesta });
   }

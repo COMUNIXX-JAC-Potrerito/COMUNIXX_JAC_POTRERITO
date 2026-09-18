@@ -1,0 +1,120 @@
+.panel {
+  background: var(--superficie);
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primario-osc);
+  }
+}
+
+.intro {
+  color: var(--texto-suave);
+  font-size: 0.88rem;
+  margin: 0 0 12px;
+}
+
+.buscador {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.hint,
+.empty {
+  color: var(--texto-suave);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tarjeta {
+  border: 1px solid var(--gris-borde);
+  border-radius: 10px;
+  padding: 16px;
+
+  .cab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tipo {
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .cod {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--texto-suave);
+  }
+  h3 {
+    margin: 10px 0 4px;
+  }
+  .desc {
+    margin: 0 0 10px;
+    white-space: pre-line;
+  }
+  .meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+  }
+  .respuesta {
+    margin-top: 10px;
+    background: var(--primario-suave);
+    border: 1px solid #cfe6d8;
+    border-radius: 8px;
+    padding: 10px 12px;
+
+    .etiqueta {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primario-osc);
+    }
+    p {
+      margin: 4px 0 0;
+      white-space: pre-line;
+    }
+  }
+}
+
+.mono {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  &.estado.e-Nueva {
+    background: #eef1ee;
+    color: var(--gris-osc);
+  }
+  &.estado.e-En_Proceso {
+    background: #fff4e0;
+    color: #b26a00;
+  }
+  &.estado.e-Finalizada {
+    background: #e4f6ec;
+    color: #2e8b57;
+  }
+}

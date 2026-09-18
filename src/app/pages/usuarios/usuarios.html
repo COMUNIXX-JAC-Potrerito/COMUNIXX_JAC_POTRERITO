@@ -54,15 +54,19 @@
               </td>
               <td>{{ u.comite || '—' }}</td>
               <td>
-                <div class="row-action">
-                  <select [(ngModel)]="comiteSel[u.id]" [ngModelOptions]="{ standalone: true }">
-                    <option value="">Sin comisión</option>
-                    @for (c of comites; track c) {
-                      <option [value]="c">{{ c }}</option>
-                    }
-                  </select>
-                  <button (click)="cambiarComite(u)" [disabled]="comiteSel[u.id] === (u.comite ?? '')">Guardar</button>
-                </div>
+                @if (u.role === 'administrador' || u.role === 'superadministrador') {
+                  <div class="row-action">
+                    <select [(ngModel)]="comiteSel[u.id]" [ngModelOptions]="{ standalone: true }">
+                      <option value="">Sin comisión</option>
+                      @for (c of comites; track c) {
+                        <option [value]="c">{{ c }}</option>
+                      }
+                    </select>
+                    <button (click)="cambiarComite(u)" [disabled]="comiteSel[u.id] === (u.comite ?? '')">Guardar</button>
+                  </div>
+                } @else {
+                  <span class="sub-dato">Debe ser dignatario primero</span>
+                }
               </td>
             </tr>
           }
