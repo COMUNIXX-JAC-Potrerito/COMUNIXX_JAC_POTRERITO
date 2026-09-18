@@ -14,6 +14,7 @@ export interface Pqrs {
   telefono_contacto: string | null;
   created_at: string;
   respuesta?: string | null;
+  respuesta_fecha?: string | null;
   adjunto_url?: string | null;
   adjunto_tipo?: string | null;
   adjunto_nombre?: string | null;

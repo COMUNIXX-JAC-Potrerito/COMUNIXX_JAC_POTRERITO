@@ -48,7 +48,8 @@ export class Entrantes implements OnInit {
     if (!comite) return;
 
     this.pqrsService.asignarComite(p.id, comite).subscribe({
-      next: () => this.cargar(), // al asignar pasa a "En_Proceso" y sale de entrantes
+      // al asignar pasa a "En_Proceso": sale de la bandeja de entrantes
+      next: () => this.pqrs.update((l) => l.filter((x) => x.id !== p.id)),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo asignar el comité'),
     });
   }
@@ -58,7 +59,8 @@ export class Entrantes implements OnInit {
     if (!estado) return;
 
     this.pqrsService.cambiarEstado(p.id, estado).subscribe({
-      next: () => this.cargar(),
+      // cualquier cambio de estado la saca de "entrantes" (que solo muestra Nueva)
+      next: () => this.pqrs.update((l) => l.filter((x) => x.id !== p.id)),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo cambiar el estado'),
     });
   }

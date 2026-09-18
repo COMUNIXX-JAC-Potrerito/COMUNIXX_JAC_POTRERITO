@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { COMITES, ESTADOS, Pqrs } from '../../models/pqrs.model';
@@ -19,6 +19,23 @@ export class Historial implements OnInit {
   pqrs = signal<Pqrs[]>([]);
   cargando = signal(false);
   error = signal<string | null>(null);
+
+  // Buscador por nombre, correo, asunto o código.
+  busqueda = signal('');
+  filtradas = computed(() => {
+    const q = this.busqueda().trim().toLowerCase();
+    if (!q) {
+      return this.pqrs();
+    }
+    return this.pqrs().filter(
+      (p) =>
+        (p.asunto ?? '').toLowerCase().includes(q) ||
+        (p.descripcion ?? '').toLowerCase().includes(q) ||
+        (p.nombre_contacto ?? '').toLowerCase().includes(q) ||
+        (p.email_contacto ?? '').toLowerCase().includes(q) ||
+        (p.codigo_seguimiento ?? '').toLowerCase().includes(q),
+    );
+  });
 
   // Selección temporal por fila (para reasignar comité o cambiar estado).
   comiteSel: Record<number, string> = {};
@@ -49,7 +66,7 @@ export class Historial implements OnInit {
       return;
     }
     this.pqrsService.asignarComite(p.id, comite).subscribe({
-      next: () => this.cargar(),
+      next: (r) => this.reemplazar(r),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo asignar el comité'),
     });
   }
@@ -60,8 +77,12 @@ export class Historial implements OnInit {
       return;
     }
     this.pqrsService.cambiarEstado(p.id, estado).subscribe({
-      next: () => this.cargar(),
+      next: (r) => this.reemplazar(r),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo cambiar el estado'),
     });
+  }
+
+  private reemplazar(actualizada: Pqrs) {
+    this.pqrs.update((lista) => lista.map((x) => (x.id === actualizada.id ? actualizada : x)));
   }
 }

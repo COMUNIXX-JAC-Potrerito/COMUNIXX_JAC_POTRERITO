@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Adjunto } from '../../models/comunicacion.model';
 import { PqrsCreate, TIPOS } from '../../models/pqrs.model';
+import { AuthService } from '../../services/auth.service';
 import { PqrsService } from '../../services/pqrs.service';
 import { UploadService } from '../../services/upload.service';
 
@@ -15,8 +16,14 @@ import { UploadService } from '../../services/upload.service';
 export class Radicar {
   private pqrsService = inject(PqrsService);
   private uploads = inject(UploadService);
+  private auth = inject(AuthService);
 
   readonly tipos = TIPOS;
+
+  // Si el usuario está logueado, sus datos se toman de la cuenta (no se piden).
+  logueado(): boolean {
+    return this.auth.isLoggedIn();
+  }
 
   // Modelo del formulario
   tipo = '';

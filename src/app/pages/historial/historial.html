@@ -5,6 +5,15 @@
   </div>
   <p class="intro">Todas las PQRS. Desde aquí puedes reasignar el comité o cambiar el estado en cualquier momento.</p>
 
+  <input
+    class="buscador"
+    name="busqueda"
+    [ngModel]="busqueda()"
+    (ngModelChange)="busqueda.set($event)"
+    [ngModelOptions]="{ standalone: true }"
+    placeholder="Buscar por nombre, correo, asunto o código…"
+  />
+
   @if (error()) {
     <div class="alert">{{ error() }}</div>
   }
@@ -13,11 +22,11 @@
     <p class="hint">Cargando…</p>
   }
 
-  @if (!cargando() && pqrs().length === 0) {
-    <p class="empty">Todavía no hay PQRS registradas.</p>
+  @if (!cargando() && filtradas().length === 0) {
+    <p class="empty">No hay PQRS que coincidan.</p>
   }
 
-  @if (pqrs().length > 0) {
+  @if (filtradas().length > 0) {
     <div class="tabla-scroll">
       <table>
         <thead>
@@ -33,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (p of pqrs(); track p.id) {
+          @for (p of filtradas(); track p.id) {
             <tr>
               <td class="mono">{{ p.codigo_seguimiento }}</td>
               <td>{{ p.tipo }}</td>

@@ -59,7 +59,13 @@
           <strong>{{ p.titulo }}</strong>
           <div class="desc">{{ p.contenido }}</div>
           @if (p.adjunto_url) {
-            <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+            @if (p.adjunto_tipo === 'image') {
+              <img class="media" [src]="p.adjunto_url" alt="Imagen de la publicación" />
+            } @else if (p.adjunto_tipo === 'video') {
+              <video class="media" [src]="p.adjunto_url" controls></video>
+            } @else {
+              <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+            }
           }
         </div>
         <button class="del" (click)="eliminar(p)">Eliminar</button>

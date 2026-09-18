@@ -106,6 +106,14 @@
     margin-top: 4px;
   }
 
+  .media {
+    display: block;
+    max-width: 240px;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+
   .del {
     background: var(--rojo);
     flex-shrink: 0;

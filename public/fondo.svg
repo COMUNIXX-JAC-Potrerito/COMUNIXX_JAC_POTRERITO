@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1024" preserveAspectRatio="xMidYMid slice">
+  <rect width="1440" height="1024" fill="#ffffff"/>
+  <g fill="none" stroke-linecap="round">
+    <!-- Trazos gruesos, verde muy suave -->
+    <path d="M-100,760 C 260,560 340,300 620,300 C 940,300 900,720 1240,660 C 1420,632 1500,540 1560,520"
+          stroke="#dcebdc" stroke-width="42"/>
+    <path d="M-120,300 C 220,360 300,640 560,700 C 860,770 980,520 1220,470 C 1400,433 1500,470 1580,500"
+          stroke="#e4f0e4" stroke-width="34"/>
+    <path d="M120,-120 C 240,220 60,420 260,640 C 420,816 760,860 900,1120"
+          stroke="#dcebdc" stroke-width="30"/>
+    <!-- Trazos finos, verde bosque -->
+    <path d="M-100,700 C 260,520 360,260 640,260 C 980,260 900,700 1260,640 C 1440,610 1520,520 1580,500"
+          stroke="#7fa07f" stroke-width="2.5"/>
+    <path d="M60,-100 C 200,260 40,460 260,700 C 440,900 820,900 940,1160"
+          stroke="#6f906f" stroke-width="2.5"/>
+    <path d="M1520,80 C 1180,180 1160,520 820,560 C 520,596 360,860 420,1140"
+          stroke="#87a887" stroke-width="2.5"/>
+    <path d="M1560,620 C 1240,700 1140,900 820,1000"
+          stroke="#7fa07f" stroke-width="2"/>
+  </g>
+</svg>

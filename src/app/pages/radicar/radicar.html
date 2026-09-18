@@ -43,7 +43,11 @@
         Enviar como anónima (tu identidad no se mostrará a los dignatarios)
       </label>
 
-      @if (!esAnonima) {
+      @if (!esAnonima && logueado()) {
+        <p class="req-nota">Se usarán automáticamente los datos de tu cuenta para poder responderte.</p>
+      }
+
+      @if (!esAnonima && !logueado()) {
         <p class="req-nota">Tus datos son obligatorios para poder responderte. Si prefieres no darlos, marca la casilla de anónima.</p>
         <div class="contacto">
           <label>
@@ -84,7 +88,7 @@
           !tipo ||
           !asunto ||
           !descripcion ||
-          (!esAnonima && (!nombreContacto || (!emailContacto && !telefonoContacto)))
+          (!esAnonima && !logueado() && (!nombreContacto || (!emailContacto && !telefonoContacto)))
         "
       >
         {{ subiendo() ? 'Subiendo…' : enviando() ? 'Enviando…' : 'Radicar PQRS' }}
