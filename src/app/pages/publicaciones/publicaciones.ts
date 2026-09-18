@@ -20,6 +20,17 @@ export class Publicaciones implements OnInit {
   items = signal<Publicacion[]>([]);
   cargando = signal(false);
 
+  // Imagen ampliada (lightbox); null = cerrado.
+  imagenAmpliada = signal<string | null>(null);
+
+  ampliar(url: string) {
+    this.imagenAmpliada.set(url);
+  }
+
+  cerrarImagen() {
+    this.imagenAmpliada.set(null);
+  }
+
   ngOnInit() {
     this.cargar();
   }

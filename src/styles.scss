@@ -141,3 +141,42 @@ textarea:focus {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Imagen que se puede tocar para ampliar. */
+.ampliable {
+  cursor: zoom-in;
+}
+
+/* Lightbox: imagen ampliada a pantalla completa (toca para cerrar). */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  cursor: zoom-out;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.lightbox .cerrar {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+}

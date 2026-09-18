@@ -60,7 +60,7 @@
           <div class="desc">{{ p.contenido }}</div>
           @if (p.adjunto_url) {
             @if (p.adjunto_tipo === 'image') {
-              <img class="media" [src]="p.adjunto_url" alt="Imagen de la publicación" />
+              <img class="media ampliable" [src]="p.adjunto_url" alt="Imagen de la publicación" (click)="ampliar(p.adjunto_url!)" />
             } @else if (p.adjunto_tipo === 'video') {
               <video class="media" [src]="p.adjunto_url" controls></video>
             } @else {
@@ -73,3 +73,10 @@
     }
   </div>
 </section>
+
+@if (imagenAmpliada()) {
+  <div class="lightbox" (click)="cerrarImagen()">
+    <button class="cerrar" type="button" (click)="cerrarImagen()" aria-label="Cerrar">&times;</button>
+    <img [src]="imagenAmpliada()" alt="Imagen ampliada" />
+  </div>
+}

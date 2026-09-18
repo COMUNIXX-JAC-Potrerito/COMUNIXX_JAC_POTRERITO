@@ -24,6 +24,15 @@ export class AdminPublicaciones implements OnInit {
   guardando = signal(false);
   subiendo = signal(false);
 
+  // Imagen ampliada (lightbox); null = cerrado.
+  imagenAmpliada = signal<string | null>(null);
+  ampliar(url: string) {
+    this.imagenAmpliada.set(url);
+  }
+  cerrarImagen() {
+    this.imagenAmpliada.set(null);
+  }
+
   // Formulario
   categoria = '';
   titulo = '';
