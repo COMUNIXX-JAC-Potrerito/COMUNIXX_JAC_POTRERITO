@@ -23,15 +23,15 @@ export class Asignadas implements OnInit {
   error = signal<string | null>(null);
   ok = signal<string | null>(null);
 
-  // Sub-panel activo por estado.
   tab = signal<Estado>('Nueva');
   busqueda = signal('');
 
-  respuestaSel: Record<number, string> = {};
-  estadoSel: Record<number, string> = {};
-  editando: Record<number, boolean> = {};
+  // PQRS abierta (detalle tipo correo)
+  seleccionada = signal<Pqrs | null>(null);
+  respuestaTexto = '';
+  estadoSel = '';
+  editando = signal(false);
 
-  // PQRS del sub-panel activo, aplicando también el buscador.
   visibles = computed(() => {
     const t = this.tab();
     const q = this.busqueda().trim().toLowerCase();
@@ -62,7 +62,6 @@ export class Asignadas implements OnInit {
     this.pqrsService.asignadas().subscribe({
       next: (data) => {
         this.pqrs.set(data);
-        data.forEach((p) => (this.respuestaSel[p.id] = p.respuesta ?? ''));
         this.cargando.set(false);
       },
       error: (e) => {
@@ -72,7 +71,19 @@ export class Asignadas implements OnInit {
     });
   }
 
-  // ¿Todavía se puede editar la respuesta (dentro de los 5 min)?
+  abrir(p: Pqrs) {
+    this.seleccionada.set(p);
+    this.respuestaTexto = p.respuesta ?? '';
+    this.estadoSel = '';
+    this.editando.set(false);
+    this.error.set(null);
+    this.ok.set(null);
+  }
+
+  volver() {
+    this.seleccionada.set(null);
+  }
+
   puedeEditar(p: Pqrs): boolean {
     if (!p.respuesta_fecha) {
       return false;
@@ -85,17 +96,21 @@ export class Asignadas implements OnInit {
   }
 
   editar(p: Pqrs) {
-    this.respuestaSel[p.id] = p.respuesta ?? '';
-    this.editando[p.id] = true;
+    this.respuestaTexto = p.respuesta ?? '';
+    this.editando.set(true);
   }
 
   cancelar(p: Pqrs) {
-    this.respuestaSel[p.id] = p.respuesta ?? '';
-    this.editando[p.id] = false;
+    this.respuestaTexto = p.respuesta ?? '';
+    this.editando.set(false);
   }
 
-  responder(p: Pqrs) {
-    const texto = (this.respuestaSel[p.id] ?? '').trim();
+  responder() {
+    const p = this.seleccionada();
+    if (!p) {
+      return;
+    }
+    const texto = this.respuestaTexto.trim();
     if (!texto) {
       return;
     }
@@ -104,29 +119,30 @@ export class Asignadas implements OnInit {
     this.pqrsService.responder(p.id, texto).subscribe({
       next: (r) => {
         this.reemplazar(r);
-        this.editando[p.id] = false;
+        this.seleccionada.set(r);
+        this.editando.set(false);
         this.ok.set('Respuesta guardada. El ciudadano ya puede verla con su código.');
       },
       error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo guardar la respuesta'),
     });
   }
 
-  actualizarEstado(p: Pqrs) {
-    const estado = this.estadoSel[p.id];
-    if (!estado) {
+  actualizarEstado() {
+    const p = this.seleccionada();
+    if (!p || !this.estadoSel) {
       return;
     }
-    this.pqrsService.cambiarEstado(p.id, estado).subscribe({
+    this.pqrsService.cambiarEstado(p.id, this.estadoSel).subscribe({
       next: (r) => {
         this.reemplazar(r);
-        this.estadoSel[p.id] = '';
+        this.seleccionada.set(r);
+        this.estadoSel = '';
       },
       error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo cambiar el estado'),
     });
   }
 
   private reemplazar(actualizada: Pqrs) {
-    this.respuestaSel[actualizada.id] = actualizada.respuesta ?? '';
     this.pqrs.update((lista) => lista.map((x) => (x.id === actualizada.id ? actualizada : x)));
   }
 }

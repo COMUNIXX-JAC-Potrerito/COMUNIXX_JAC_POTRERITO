@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 
   h2 {
     margin: 0;
@@ -21,7 +21,7 @@
 .intro {
   color: var(--texto-suave);
   font-size: 0.88rem;
-  margin: 0 0 14px;
+  margin: 0 0 12px;
 }
 
 .tabs {
@@ -63,72 +63,28 @@
   margin-bottom: 12px;
 }
 
-.lista {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+/* Bloque de respuesta dentro del detalle */
+.bloque-resp {
+  margin-top: 16px;
 
-.tarjeta {
-  border: 1px solid var(--gris-borde);
-  border-radius: 10px;
-  padding: 16px;
-
-  .cab {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .tipo {
+  .etq {
+    display: block;
+    font-size: 0.8rem;
     font-weight: 600;
-    font-size: 0.85rem;
-  }
-  .cod {
-    margin-left: auto;
-    font-size: 0.78rem;
     color: var(--texto-suave);
+    margin-bottom: 6px;
   }
-  h3 {
-    margin: 10px 0 4px;
-  }
-  .desc {
-    margin: 0 0 10px;
-    white-space: pre-line;
-  }
-  .meta {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-    font-size: 0.82rem;
-    color: var(--texto-suave);
-    margin-bottom: 12px;
-  }
-}
-
-.mono {
-  font-family: ui-monospace, 'Cascadia Code', monospace;
-}
-
-.resp {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
-  color: var(--texto-suave);
-
   textarea {
+    width: 100%;
     resize: vertical;
     font-family: inherit;
   }
-}
-
-.resp-acciones {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
+  .resp-acc {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
 }
 
 .respuesta-guardada {
@@ -136,7 +92,6 @@
   border: 1px solid #cfe6d8;
   border-radius: 8px;
   padding: 10px 12px;
-  margin-top: 8px;
 
   .etiqueta {
     font-size: 0.75rem;
@@ -161,37 +116,3 @@
   padding: 4px 10px;
   font-size: 0.78rem;
 }
-
-.estado-cambio {
-  display: flex;
-  gap: 6px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--gris-borde);
-}
-
-.badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 600;
-
-  &.anon {
-    background: #eceefb;
-    color: #4b3fbf;
-  }
-  &.estado.e-Nueva {
-    background: #eef1ee;
-    color: var(--gris-osc);
-  }
-  &.estado.e-En_Proceso {
-    background: #fff4e0;
-    color: #b26a00;
-  }
-  &.estado.e-Finalizada {
-    background: #e4f6ec;
-    color: #2e8b57;
-  }
-}
-

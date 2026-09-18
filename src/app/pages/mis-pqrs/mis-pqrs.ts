@@ -17,6 +17,14 @@ export class MisPqrs implements OnInit {
   cargando = signal(false);
   error = signal<string | null>(null);
   busqueda = signal('');
+  seleccionada = signal<Pqrs | null>(null);
+
+  abrir(p: Pqrs) {
+    this.seleccionada.set(p);
+  }
+  volver() {
+    this.seleccionada.set(null);
+  }
 
   filtradas = computed(() => {
     const q = this.busqueda().trim().toLowerCase();

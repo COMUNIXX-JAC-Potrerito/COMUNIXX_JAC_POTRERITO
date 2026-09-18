@@ -19,9 +19,12 @@ export class Historial implements OnInit {
   pqrs = signal<Pqrs[]>([]);
   cargando = signal(false);
   error = signal<string | null>(null);
-
-  // Buscador por nombre, correo, asunto o código.
   busqueda = signal('');
+
+  seleccionada = signal<Pqrs | null>(null);
+  comiteSel = '';
+  estadoSel = '';
+
   filtradas = computed(() => {
     const q = this.busqueda().trim().toLowerCase();
     if (!q) {
@@ -36,10 +39,6 @@ export class Historial implements OnInit {
         (p.codigo_seguimiento ?? '').toLowerCase().includes(q),
     );
   });
-
-  // Selección temporal por fila (para reasignar comité o cambiar estado).
-  comiteSel: Record<number, string> = {};
-  estadoSel: Record<number, string> = {};
 
   ngOnInit() {
     this.cargar();
@@ -60,24 +59,43 @@ export class Historial implements OnInit {
     });
   }
 
-  asignar(p: Pqrs) {
-    const comite = this.comiteSel[p.id];
-    if (!comite) {
+  abrir(p: Pqrs) {
+    this.seleccionada.set(p);
+    this.comiteSel = '';
+    this.estadoSel = '';
+    this.error.set(null);
+  }
+
+  volver() {
+    this.seleccionada.set(null);
+  }
+
+  asignar() {
+    const p = this.seleccionada();
+    if (!p || !this.comiteSel) {
       return;
     }
-    this.pqrsService.asignarComite(p.id, comite).subscribe({
-      next: (r) => this.reemplazar(r),
+    this.pqrsService.asignarComite(p.id, this.comiteSel).subscribe({
+      next: (r) => {
+        this.reemplazar(r);
+        this.seleccionada.set(r);
+        this.comiteSel = '';
+      },
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo asignar el comité'),
     });
   }
 
-  actualizarEstado(p: Pqrs) {
-    const estado = this.estadoSel[p.id];
-    if (!estado) {
+  actualizarEstado() {
+    const p = this.seleccionada();
+    if (!p || !this.estadoSel) {
       return;
     }
-    this.pqrsService.cambiarEstado(p.id, estado).subscribe({
-      next: (r) => this.reemplazar(r),
+    this.pqrsService.cambiarEstado(p.id, this.estadoSel).subscribe({
+      next: (r) => {
+        this.reemplazar(r);
+        this.seleccionada.set(r);
+        this.estadoSel = '';
+      },
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo cambiar el estado'),
     });
   }

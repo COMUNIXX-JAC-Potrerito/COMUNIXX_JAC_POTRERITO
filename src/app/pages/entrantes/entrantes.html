@@ -56,7 +56,7 @@
       <h2>{{ p.asunto }}</h2>
       <div class="meta">
         @if (p.es_anonima) {
-          <span class="badge anon">Anónima</span>
+          <span class="badge-anon">Anónima</span>
         } @else {
           <span>De: <strong>{{ p.nombre_contacto || '—' }}</strong></span>
           @if (p.email_contacto) {

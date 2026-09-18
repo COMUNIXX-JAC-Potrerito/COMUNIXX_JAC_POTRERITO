@@ -1,87 +1,110 @@
 <section class="panel">
-  <div class="panel-head">
-    <h2>Mis PQRS asignadas</h2>
-    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
-  </div>
-  <p class="intro">
-    PQRS asignadas a tu comisión. Respóndelas (el ciudadano ve tu respuesta con su código) y
-    cambia su estado. Si no ves ninguna, pide al superadministrador que te asigne una comisión.
-  </p>
+  @if (!seleccionada()) {
+    <div class="panel-head">
+      <h2>Mis PQRS asignadas</h2>
+      <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
+    </div>
+    <p class="intro">
+      PQRS asignadas a tu comisión. Toca una para abrirla, responderla y cambiar su estado.
+      Si no ves ninguna, pide al superadministrador que te asigne una comisión.
+    </p>
 
-  <div class="tabs">
-    <button [class.activo]="tab() === 'Nueva'" (click)="tab.set('Nueva')">
-      Nuevas ({{ cuenta('Nueva') }})
-    </button>
-    <button [class.activo]="tab() === 'En_Proceso'" (click)="tab.set('En_Proceso')">
-      En proceso ({{ cuenta('En_Proceso') }})
-    </button>
-    <button [class.activo]="tab() === 'Finalizada'" (click)="tab.set('Finalizada')">
-      Finalizadas ({{ cuenta('Finalizada') }})
-    </button>
-  </div>
+    <div class="tabs">
+      <button [class.activo]="tab() === 'Nueva'" (click)="tab.set('Nueva')">
+        Nuevas ({{ cuenta('Nueva') }})
+      </button>
+      <button [class.activo]="tab() === 'En_Proceso'" (click)="tab.set('En_Proceso')">
+        En proceso ({{ cuenta('En_Proceso') }})
+      </button>
+      <button [class.activo]="tab() === 'Finalizada'" (click)="tab.set('Finalizada')">
+        Finalizadas ({{ cuenta('Finalizada') }})
+      </button>
+    </div>
 
-  <input
-    class="buscador"
-    [ngModel]="busqueda()"
-    (ngModelChange)="busqueda.set($event)"
-    [ngModelOptions]="{ standalone: true }"
-    placeholder="Buscar por nombre, correo, asunto o código…"
-  />
+    <input
+      class="buscador"
+      [ngModel]="busqueda()"
+      (ngModelChange)="busqueda.set($event)"
+      [ngModelOptions]="{ standalone: true }"
+      placeholder="Buscar por nombre, correo, asunto o código…"
+    />
 
-  @if (error()) {
-    <div class="alert">{{ error() }}</div>
-  }
-  @if (ok()) {
-    <div class="ok">{{ ok() }}</div>
-  }
-  @if (cargando()) {
-    <p class="hint">Cargando…</p>
-  }
-  @if (!cargando() && visibles().length === 0) {
-    <p class="empty">No hay PQRS en este estado.</p>
-  }
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+    @if (cargando()) {
+      <p class="hint">Cargando…</p>
+    }
+    @if (!cargando() && visibles().length === 0) {
+      <p class="empty">No hay PQRS en este estado.</p>
+    }
 
-  <div class="lista">
-    @for (p of visibles(); track p.id) {
-      <article class="tarjeta">
-        <div class="cab">
-          <span class="badge estado" [class]="'e-' + p.estado">{{ p.estado }}</span>
-          <span class="tipo">{{ p.tipo }}</span>
-          <span class="cod mono">{{ p.codigo_seguimiento }}</span>
-        </div>
+    @if (visibles().length > 0) {
+      <ul class="bandeja">
+        @for (p of visibles(); track p.id) {
+          <li class="fila-msg" (click)="abrir(p)">
+            <div class="izq">
+              <div class="linea1">
+                <span class="tipo">{{ p.tipo }}</span>
+                <strong class="asunto">{{ p.asunto }}</strong>
+              </div>
+              <div class="de">
+                {{ p.es_anonima ? 'Anónima' : (p.nombre_contacto || 'Sin nombre') }} — {{ p.descripcion }}
+              </div>
+            </div>
+            <div class="der">
+              @if (p.respuesta) {
+                <span class="clip">Respondida</span>
+              }
+              <span class="cod">{{ p.codigo_seguimiento }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  } @else if (seleccionada(); as p) {
+    <button class="secundario volver" (click)="volver()">← Volver a mis asignadas</button>
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+    @if (ok()) {
+      <div class="ok">{{ ok() }}</div>
+    }
 
-        <h3>{{ p.asunto }}</h3>
-        <p class="desc">{{ p.descripcion }}</p>
-
-        <div class="meta">
-          @if (p.es_anonima) {
-            <span class="badge anon">Anónima</span>
-          } @else {
-            <span>De: {{ p.nombre_contacto || '—' }}
-              @if (p.email_contacto) { · {{ p.email_contacto }} }
-              @if (p.telefono_contacto) { · {{ p.telefono_contacto }} }
-            </span>
+    <article class="detalle">
+      <div class="cab-det">
+        <span class="tipo">{{ p.tipo }}</span>
+        <span class="cod">{{ p.codigo_seguimiento }}</span>
+      </div>
+      <h2>{{ p.asunto }}</h2>
+      <div class="meta">
+        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado }}</span>
+        @if (p.es_anonima) {
+          <span class="badge-anon">Anónima</span>
+        } @else {
+          <span>· De: <strong>{{ p.nombre_contacto || '—' }}</strong></span>
+          @if (p.email_contacto) {
+            <span>· {{ p.email_contacto }}</span>
           }
-          @if (p.adjunto_url) {
-            <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+          @if (p.telefono_contacto) {
+            <span>· {{ p.telefono_contacto }}</span>
           }
-        </div>
+        }
+      </div>
 
-        <!-- Respuesta -->
-        @if (!p.respuesta || editando[p.id]) {
-          <label class="resp">
-            Respuesta al ciudadano
-            <textarea
-              [(ngModel)]="respuestaSel[p.id]"
-              [ngModelOptions]="{ standalone: true }"
-              rows="3"
-              placeholder="Escribe la respuesta…"
-            ></textarea>
-          </label>
-          <div class="resp-acciones">
-            <button (click)="responder(p)" [disabled]="!(respuestaSel[p.id] || '').trim()">
-              Guardar respuesta
-            </button>
+      <p class="cuerpo">{{ p.descripcion }}</p>
+
+      @if (p.adjunto_url) {
+        <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+      }
+
+      <!-- Responder -->
+      <div class="bloque-resp">
+        @if (!p.respuesta || editando()) {
+          <label class="etq">Respuesta al ciudadano</label>
+          <textarea [(ngModel)]="respuestaTexto" [ngModelOptions]="{ standalone: true }" rows="3" placeholder="Escribe la respuesta…"></textarea>
+          <div class="resp-acc">
+            <button (click)="responder()" [disabled]="!respuestaTexto.trim()">Guardar respuesta</button>
             @if (p.respuesta) {
               <button class="secundario" (click)="cancelar(p)">Cancelar</button>
             }
@@ -97,20 +120,22 @@
             <span class="bloqueado">Respuesta enviada (ya no se puede editar).</span>
           }
         }
+      </div>
 
-        <!-- Cambiar estado -->
-        <div class="estado-cambio">
-          <select [(ngModel)]="estadoSel[p.id]" [ngModelOptions]="{ standalone: true }">
-            <option value="">Cambiar estado…</option>
-            @for (e of estados; track e) {
-              <option [value]="e">{{ e }}</option>
-            }
-          </select>
-          <button class="secundario" (click)="actualizarEstado(p)" [disabled]="!estadoSel[p.id]">
-            Aplicar
-          </button>
+      <div class="acciones-det">
+        <div class="accion">
+          <label>Cambiar estado</label>
+          <div class="row">
+            <select [(ngModel)]="estadoSel" [ngModelOptions]="{ standalone: true }">
+              <option value="">Selecciona…</option>
+              @for (e of estados; track e) {
+                <option [value]="e">{{ e }}</option>
+              }
+            </select>
+            <button (click)="actualizarEstado()" [disabled]="!estadoSel">Aplicar</button>
+          </div>
         </div>
-      </article>
-    }
-  </div>
+      </div>
+    </article>
+  }
 </section>

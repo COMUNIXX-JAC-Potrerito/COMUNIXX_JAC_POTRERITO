@@ -142,6 +142,182 @@ textarea:focus {
   }
 }
 
+/* ====== Bandeja tipo correo (listas de PQRS) ====== */
+.bandeja {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--gris-borde);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fila-msg {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--gris-borde);
+  cursor: pointer;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: var(--primario-suave);
+  }
+
+  .izq {
+    flex: 1;
+    min-width: 0;
+  }
+  .linea1 {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tipo {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primario-osc);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .asunto {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .de {
+    margin-top: 2px;
+    color: var(--texto-suave);
+    font-size: 0.82rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .der {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .clip {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--primario-osc);
+      background: var(--primario-suave);
+      padding: 1px 8px;
+      border-radius: 999px;
+    }
+    .cod {
+      font-family: ui-monospace, 'Cascadia Code', monospace;
+      font-size: 0.78rem;
+      color: var(--texto-suave);
+    }
+  }
+}
+
+/* ====== Detalle (correo abierto) ====== */
+.volver {
+  margin-bottom: 14px;
+}
+
+.detalle {
+  .cab-det {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tipo {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primario-osc);
+    text-transform: uppercase;
+  }
+  .cod {
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+  }
+  h2 {
+    margin: 6px 0 8px;
+    color: var(--texto);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gris-borde);
+  }
+  .cuerpo {
+    margin: 14px 0;
+    white-space: pre-line;
+    line-height: 1.5;
+  }
+}
+
+.acciones-det {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gris-borde);
+
+  .accion {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--texto-suave);
+    }
+    .row {
+      display: flex;
+      gap: 6px;
+    }
+  }
+}
+
+/* Insignias compartidas */
+.badge-anon {
+  display: inline-block;
+  background: #eceefb;
+  color: #4b3fbf;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  &.e-Nueva {
+    background: #eef1ee;
+    color: var(--gris-osc);
+  }
+  &.e-En_Proceso {
+    background: #fff4e0;
+    color: #b26a00;
+  }
+  &.e-Finalizada {
+    background: #e4f6ec;
+    color: #2e8b57;
+  }
+}
+
 /* Imagen que se puede tocar para ampliar. */
 .ampliable {
   cursor: zoom-in;
