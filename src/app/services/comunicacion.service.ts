@@ -41,6 +41,15 @@ export class ComunicacionService {
   marcarLeido(id: number): Observable<Mensaje> {
     return this.http.put<Mensaje>(`${this.api}/mensajes/${id}/leido`, {});
   }
+  editarMensaje(id: number, contenido: string): Observable<Mensaje> {
+    return this.http.put<Mensaje>(`${this.api}/mensajes/${id}`, { contenido });
+  }
+  fijarMensaje(id: number, fijado: boolean): Observable<Mensaje> {
+    return this.http.put<Mensaje>(`${this.api}/mensajes/${id}/fijar`, { fijado });
+  }
+  eliminarMensaje(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/mensajes/${id}`);
+  }
 
   // --- Comunicaciones externas ---
   listarComunicaciones(tipo?: string): Observable<Comunicacion[]> {

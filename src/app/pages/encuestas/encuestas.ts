@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { EncuestaDetalle, EncuestaResumen, RespuestaItem } from '../../models/encuesta.model';
-import { AuthService } from '../../services/auth.service';
 import { EncuestasService } from '../../services/encuestas.service';
 
 @Component({
@@ -13,7 +12,6 @@ import { EncuestasService } from '../../services/encuestas.service';
 })
 export class Encuestas implements OnInit {
   private service = inject(EncuestasService);
-  private auth = inject(AuthService);
 
   items = signal<EncuestaResumen[]>([]);
   cargando = signal(false);
@@ -29,10 +27,6 @@ export class Encuestas implements OnInit {
   nombre = '';
   email = '';
   telefono = '';
-
-  logueado(): boolean {
-    return this.auth.isLoggedIn();
-  }
 
   ngOnInit() {
     this.cargar();
@@ -72,12 +66,10 @@ export class Encuestas implements OnInit {
     if (!enc) {
       return;
     }
-    // Datos personales obligatorios si no está logueado.
-    if (!this.logueado()) {
-      if (!this.nombre.trim() || (!this.email.trim() && !this.telefono.trim())) {
-        this.error.set('Indica tu nombre y un correo o teléfono para responder');
-        return;
-      }
+    // Datos personales obligatorios.
+    if (!this.nombre.trim() || (!this.email.trim() && !this.telefono.trim())) {
+      this.error.set('Indica tu nombre y un correo o teléfono para responder');
+      return;
     }
 
     const items: RespuestaItem[] = enc.preguntas.map((p) => ({

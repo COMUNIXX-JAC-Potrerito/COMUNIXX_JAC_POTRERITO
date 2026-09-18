@@ -247,6 +247,70 @@
   }
 }
 
+/* Acciones sobre cada mensaje */
+.burbuja {
+  &.fijado {
+    box-shadow: inset 3px 0 0 #b26a00;
+  }
+
+  .pin-ind {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #b26a00;
+    margin-bottom: 2px;
+  }
+
+  .acciones-msg {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+
+    .acc {
+      background: transparent;
+      color: var(--texto-suave);
+      border: none;
+      padding: 2px 6px;
+      font-size: 0.72rem;
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+      &.del:hover {
+        color: var(--rojo);
+      }
+    }
+  }
+
+  .edit-area {
+    width: 100%;
+    min-width: 200px;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .edit-acc {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+}
+
+.accion-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(31, 39, 51, 0.92);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
 .alert {
   margin: 8px 16px 0;
 }

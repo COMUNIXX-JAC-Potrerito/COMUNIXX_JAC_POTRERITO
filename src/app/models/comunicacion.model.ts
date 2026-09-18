@@ -12,6 +12,8 @@ export interface Mensaje {
   asunto: string;
   contenido: string;
   leido: boolean;
+  fijado?: boolean;
+  editado?: boolean;
   created_at: string;
   adjunto_url?: string | null;
   adjunto_tipo?: string | null;

@@ -34,24 +34,48 @@
           <p class="vacio">Aún no hay mensajes. Escribe el primero.</p>
         }
         @for (m of conversacion(); track m.id) {
-          <div class="burbuja" [class.mia]="m.mio">
-            @if (m.contenido) {
-              <p class="texto">{{ m.contenido }}</p>
+          <div class="burbuja" [class.mia]="m.mio" [class.fijado]="m.fijado">
+            @if (m.fijado) {
+              <span class="pin-ind">Fijado</span>
             }
-            @if (m.adjunto_url) {
-              @if (m.adjunto_tipo === 'image') {
-                <img class="media" [src]="m.adjunto_url" alt="Imagen adjunta" />
-              } @else if (esAudio(m.adjunto_nombre)) {
-                <audio class="media-audio" [src]="m.adjunto_url" controls></audio>
-              } @else if (m.adjunto_tipo === 'video') {
-                <video class="media" [src]="m.adjunto_url" controls></video>
-              } @else {
-                <a class="archivo" [href]="m.adjunto_url" target="_blank" rel="noopener">
-                  {{ m.adjunto_nombre || 'Ver archivo' }}
-                </a>
+
+            @if (editandoId() === m.id) {
+              <textarea class="edit-area" [(ngModel)]="textoEdit" [ngModelOptions]="{ standalone: true }" rows="2"></textarea>
+              <div class="edit-acc">
+                <button class="mini" (click)="guardarEdicion(m)">Guardar</button>
+                <button class="secundario mini" (click)="cancelarEdicion()">Cancelar</button>
+              </div>
+            } @else {
+              @if (m.contenido) {
+                <p class="texto">{{ m.contenido }}</p>
               }
+              @if (m.adjunto_url) {
+                @if (m.adjunto_tipo === 'image') {
+                  <img class="media" [src]="m.adjunto_url" alt="Imagen adjunta" />
+                } @else if (esAudio(m.adjunto_nombre)) {
+                  <audio class="media-audio" [src]="m.adjunto_url" controls></audio>
+                } @else if (m.adjunto_tipo === 'video') {
+                  <video class="media" [src]="m.adjunto_url" controls></video>
+                } @else {
+                  <a class="archivo" [href]="m.adjunto_url" target="_blank" rel="noopener">
+                    {{ m.adjunto_nombre || 'Ver archivo' }}
+                  </a>
+                }
+              }
+              <span class="hora">
+                {{ m.created_at | date: 'short' }}@if (m.editado) { · editado }
+              </span>
+              <div class="acciones-msg">
+                <button class="acc" (click)="copiar(m)">Copiar</button>
+                <button class="acc" (click)="fijar(m)">{{ m.fijado ? 'Desfijar' : 'Fijar' }}</button>
+                @if (m.mio && puedeEditar(m)) {
+                  <button class="acc" (click)="editar(m)">Editar</button>
+                }
+                @if (m.mio) {
+                  <button class="acc del" (click)="eliminar(m)">Eliminar</button>
+                }
+              </div>
             }
-            <span class="hora">{{ m.created_at | date: 'short' }}</span>
           </div>
         }
       </div>
@@ -100,4 +124,8 @@
     <strong>{{ t.nombre }}</strong> te escribió
     <div class="txt">{{ t.texto }}</div>
   </div>
+}
+
+@if (accion(); as a) {
+  <div class="accion-toast">{{ a }}</div>
 }

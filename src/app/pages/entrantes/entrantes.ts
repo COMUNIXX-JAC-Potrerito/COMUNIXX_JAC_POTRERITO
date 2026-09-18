@@ -24,6 +24,13 @@ export class Entrantes implements OnInit {
   comiteSel: Record<number, string> = {};
   estadoSel: Record<number, string> = {};
 
+  // Qué PQRS están expandidas (para ver el contenido completo)
+  expandido: Record<number, boolean> = {};
+
+  toggle(id: number) {
+    this.expandido[id] = !this.expandido[id];
+  }
+
   ngOnInit() {
     this.cargar();
   }

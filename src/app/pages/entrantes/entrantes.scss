@@ -56,7 +56,39 @@ table {
     color: var(--texto-suave);
     font-size: 0.82rem;
     margin-top: 2px;
-    max-width: 280px;
+    max-width: 320px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .desc.expandida {
+    display: block;
+    overflow: visible;
+    white-space: pre-line;
+  }
+}
+
+.asunto-cell {
+  strong {
+    cursor: pointer;
+  }
+}
+
+.ver-mas {
+  margin-top: 4px;
+  background: transparent;
+  color: var(--primario-osc);
+  border: none;
+  padding: 2px 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    background: transparent;
   }
 }
 

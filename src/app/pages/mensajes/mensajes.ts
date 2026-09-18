@@ -41,6 +41,12 @@ export class Mensajes implements OnInit, OnDestroy {
   private poll: ReturnType<typeof setInterval> | null = null;
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // Acciones sobre un mensaje (copiar/fijar/editar/eliminar)
+  accion = signal<string | null>(null);
+  private accionTimer: ReturnType<typeof setTimeout> | null = null;
+  editandoId = signal<number | null>(null);
+  textoEdit = '';
+
   // Contactos con los que se puede chatear = SOLO dignatarios (admin/superadmin), distintos de mí.
   contactos = computed(() =>
     this.usuarios().filter(
@@ -121,6 +127,80 @@ export class Mensajes implements OnInit, OnDestroy {
       clearTimeout(this.toastTimer);
     }
     this.toastTimer = setTimeout(() => this.toast.set(null), 3000);
+  }
+
+  private avisar(txt: string) {
+    this.accion.set(txt);
+    if (this.accionTimer) {
+      clearTimeout(this.accionTimer);
+    }
+    this.accionTimer = setTimeout(() => this.accion.set(null), 2000);
+  }
+
+  private reemplazarMsg(u: Mensaje) {
+    this.recibidos.update((l) => l.map((x) => (x.id === u.id ? u : x)));
+    this.enviados.update((l) => l.map((x) => (x.id === u.id ? u : x)));
+  }
+
+  copiar(m: Mensaje) {
+    navigator.clipboard
+      ?.writeText(m.contenido ?? '')
+      .then(() => this.avisar('Mensaje copiado'))
+      .catch(() => this.avisar('No se pudo copiar'));
+  }
+
+  fijar(m: Mensaje) {
+    this.service.fijarMensaje(m.id, !m.fijado).subscribe({
+      next: (u) => {
+        this.reemplazarMsg(u);
+        this.avisar(u.fijado ? 'Mensaje fijado' : 'Mensaje desfijado');
+      },
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo fijar'),
+    });
+  }
+
+  eliminar(m: Mensaje) {
+    this.service.eliminarMensaje(m.id).subscribe({
+      next: () => {
+        this.recibidos.update((l) => l.filter((x) => x.id !== m.id));
+        this.enviados.update((l) => l.filter((x) => x.id !== m.id));
+        this.avisar('Mensaje eliminado');
+      },
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo eliminar'),
+    });
+  }
+
+  // ¿Puedo editar este mensaje? (mío y dentro de los 15 min)
+  puedeEditar(m: Mensaje): boolean {
+    if (m.remitente_id !== this.miId()) {
+      return false;
+    }
+    const iso =
+      m.created_at.endsWith('Z') || m.created_at.includes('+') ? m.created_at : m.created_at + 'Z';
+    return Date.now() - new Date(iso).getTime() < 15 * 60 * 1000;
+  }
+
+  editar(m: Mensaje) {
+    this.editandoId.set(m.id);
+    this.textoEdit = m.contenido ?? '';
+  }
+
+  cancelarEdicion() {
+    this.editandoId.set(null);
+  }
+
+  guardarEdicion(m: Mensaje) {
+    const t = this.textoEdit.trim();
+    if (!t) {
+      return;
+    }
+    this.service.editarMensaje(m.id, t).subscribe({
+      next: (u) => {
+        this.reemplazarMsg(u);
+        this.editandoId.set(null);
+      },
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo editar'),
+    });
   }
 
   seleccionar(id: number) {

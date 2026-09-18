@@ -34,11 +34,16 @@
             <tr>
               <td class="mono">{{ p.codigo_seguimiento }}</td>
               <td>{{ p.tipo }}</td>
-              <td>
-                <strong>{{ p.asunto }}</strong>
-                <div class="desc">{{ p.descripcion }}</div>
+              <td class="asunto-cell">
+                <strong (click)="toggle(p.id)">{{ p.asunto }}</strong>
+                <div class="desc" [class.expandida]="expandido[p.id]">{{ p.descripcion }}</div>
+                @if (p.descripcion && p.descripcion.length > 120) {
+                  <button type="button" class="ver-mas" (click)="toggle(p.id)">
+                    {{ expandido[p.id] ? 'Ver menos' : 'Ver más' }}
+                  </button>
+                }
                 @if (p.adjunto_url) {
-                  <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
+                  <div><a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a></div>
                 }
               </td>
               <td>
