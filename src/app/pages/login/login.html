@@ -3,6 +3,9 @@
     <h1>COMUNIX</h1>
     <p class="subtitle">Junta de Acción Comunal · Vereda Potrerito</p>
 
+    @if (expirado()) {
+      <div class="aviso">Tu sesión se cerró por inactividad. Vuelve a iniciar sesión.</div>
+    }
     @if (error()) {
       <div class="alert">{{ error() }}</div>
     }

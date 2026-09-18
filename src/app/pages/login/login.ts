@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -13,11 +13,14 @@ import { AuthService } from '../../services/auth.service';
 export class Login {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   email = '';
   password = '';
   error = signal<string | null>(null);
   cargando = signal(false);
+  // Aviso cuando la sesión se cerró por inactividad.
+  expirado = signal(this.route.snapshot.queryParamMap.get('expirado') === '1');
 
   entrar() {
     this.error.set(null);

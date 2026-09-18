@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Mensaje, Usuario } from '../../models/comunicacion.model';
@@ -18,7 +18,7 @@ interface Burbuja extends Mensaje {
   templateUrl: './mensajes.html',
   styleUrl: './mensajes.scss',
 })
-export class Mensajes implements OnInit {
+export class Mensajes implements OnInit, OnDestroy {
   private service = inject(ComunicacionService);
   private uploads = inject(UploadService);
   private auth = inject(AuthService);
@@ -35,8 +35,20 @@ export class Mensajes implements OnInit {
   enviando = signal(false);
   error = signal<string | null>(null);
 
-  // Contactos con los que se puede chatear = dignatarios distintos de mí.
-  contactos = computed(() => this.usuarios().filter((u) => u.id !== this.miId()));
+  // Notificación emergente (toast) de mensaje nuevo.
+  toast = signal<{ nombre: string; texto: string } | null>(null);
+  private ultimoId = 0;
+  private poll: ReturnType<typeof setInterval> | null = null;
+  private toastTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // Contactos con los que se puede chatear = SOLO dignatarios (admin/superadmin), distintos de mí.
+  contactos = computed(() =>
+    this.usuarios().filter(
+      (u) =>
+        u.id !== this.miId() &&
+        (u.role === 'administrador' || u.role === 'superadministrador'),
+    ),
+  );
 
   // Conversación con el contacto seleccionado, en ambos sentidos y orden cronológico.
   conversacion = computed<Burbuja[]>(() => {
@@ -62,11 +74,53 @@ export class Mensajes implements OnInit {
       this.miId.set(u.find((x) => x.email === correo)?.id ?? null);
     });
     this.cargar();
+    // Revisa si llegan mensajes nuevos cada 10 segundos.
+    this.poll = setInterval(() => this.revisarNuevos(), 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.poll) {
+      clearInterval(this.poll);
+    }
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer);
+    }
   }
 
   cargar() {
-    this.service.recibidos().subscribe((m) => this.recibidos.set(m));
+    this.service.recibidos().subscribe((m) => {
+      this.recibidos.set(m);
+      this.ultimoId = m.reduce((max, x) => Math.max(max, x.id), this.ultimoId);
+    });
     this.service.enviados().subscribe((m) => this.enviados.set(m));
+  }
+
+  // Sondeo: detecta mensajes recibidos nuevos y muestra el toast.
+  private revisarNuevos() {
+    this.service.recibidos().subscribe((m) => {
+      const nuevos = m.filter((x) => x.id > this.ultimoId);
+      this.recibidos.set(m);
+      if (nuevos.length > 0) {
+        this.ultimoId = m.reduce((max, x) => Math.max(max, x.id), this.ultimoId);
+        const ultimo = nuevos.sort((a, b) => b.id - a.id)[0];
+        const preview = ultimo.contenido?.trim()
+          ? ultimo.contenido
+          : ultimo.adjunto_url
+            ? 'te envió un archivo'
+            : 'te escribió';
+        this.mostrarToast(this.nombre(ultimo.remitente_id), preview);
+      }
+    });
+    this.service.enviados().subscribe((m) => this.enviados.set(m));
+  }
+
+  private mostrarToast(nombre: string, texto: string) {
+    const corto = texto.length > 60 ? texto.slice(0, 60) + '…' : texto;
+    this.toast.set({ nombre, texto: corto });
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer);
+    }
+    this.toastTimer = setTimeout(() => this.toast.set(null), 3000);
   }
 
   seleccionar(id: number) {

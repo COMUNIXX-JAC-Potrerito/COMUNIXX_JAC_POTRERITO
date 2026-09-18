@@ -82,6 +82,10 @@
           [(ngModel)]="texto"
           [ngModelOptions]="{ standalone: true }"
           placeholder="Escribe un mensaje"
+          autocorrect="off"
+          autocapitalize="off"
+          autocomplete="off"
+          spellcheck="false"
         />
         <button type="submit" [disabled]="enviando() || (!texto.trim() && !archivo())">
           {{ subiendo() ? 'Subiendo…' : enviando() ? 'Enviando…' : 'Enviar' }}
@@ -90,3 +94,10 @@
     }
   </div>
 </section>
+
+@if (toast(); as t) {
+  <div class="toast-msg">
+    <strong>{{ t.nombre }}</strong> te escribió
+    <div class="txt">{{ t.texto }}</div>
+  </div>
+}
