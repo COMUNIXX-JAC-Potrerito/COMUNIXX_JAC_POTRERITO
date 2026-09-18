@@ -1,0 +1,128 @@
+<section class="panel">
+  <h2>Encuestas y censos</h2>
+  <p class="intro">Crea encuestas o censos, publícalos para la comunidad y consulta los resultados.</p>
+
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+  @if (ok()) {
+    <div class="ok">{{ ok() }}</div>
+  }
+
+  <form class="form" (ngSubmit)="crear()">
+    <div class="fila">
+      <label>
+        Título
+        <input [(ngModel)]="titulo" [ngModelOptions]="{ standalone: true }" required placeholder="Título" />
+      </label>
+      <label>
+        Tipo
+        <select [(ngModel)]="tipo" [ngModelOptions]="{ standalone: true }">
+          <option value="encuesta">Encuesta</option>
+          <option value="censo">Censo</option>
+        </select>
+      </label>
+    </div>
+    <label>
+      Descripción (opcional)
+      <textarea [(ngModel)]="descripcion" [ngModelOptions]="{ standalone: true }" rows="2" placeholder="Para qué es"></textarea>
+    </label>
+
+    <h3 class="sub">Preguntas</h3>
+    @for (p of preguntas; track pi; let pi = $index) {
+      <div class="pregunta">
+        <div class="pregunta-cab">
+          <span class="num">Pregunta {{ pi + 1 }}</span>
+          @if (preguntas.length > 1) {
+            <button type="button" class="secundario mini" (click)="quitarPregunta(pi)">Quitar</button>
+          }
+        </div>
+        <input [(ngModel)]="p.texto" [ngModelOptions]="{ standalone: true }" placeholder="Texto de la pregunta" />
+        <select [(ngModel)]="p.tipo" [ngModelOptions]="{ standalone: true }">
+          <option value="texto">Respuesta abierta (texto)</option>
+          <option value="opciones">Opción múltiple</option>
+        </select>
+
+        @if (p.tipo === 'opciones') {
+          <div class="opciones">
+            @for (o of p.opciones; track oi; let oi = $index) {
+              <div class="opcion">
+                <input [(ngModel)]="p.opciones[oi]" [ngModelOptions]="{ standalone: true }" placeholder="Opción {{ oi + 1 }}" />
+                @if (p.opciones.length > 2) {
+                  <button type="button" class="secundario mini" (click)="quitarOpcion(pi, oi)">×</button>
+                }
+              </div>
+            }
+            <button type="button" class="secundario mini" (click)="agregarOpcion(pi)">+ Opción</button>
+          </div>
+        }
+      </div>
+    }
+
+    <button type="button" class="secundario" (click)="agregarPregunta()">+ Agregar pregunta</button>
+
+    <button type="submit" [disabled]="guardando() || !titulo">
+      {{ guardando() ? 'Creando…' : 'Crear encuesta' }}
+    </button>
+  </form>
+
+  <h3 class="sub">Encuestas creadas</h3>
+  @if (items().length === 0) {
+    <p class="empty">Aún no has creado encuestas.</p>
+  }
+  <div class="lista">
+    @for (e of items(); track e.id) {
+      <div class="item">
+        <div class="item-info">
+          <span class="badge tipo">{{ e.tipo }}</span>
+          @if (e.publicada) {
+            <span class="badge pub">Publicada</span>
+          } @else {
+            <span class="badge borr">Borrador</span>
+          }
+          <strong>{{ e.titulo }}</strong>
+          <div class="fecha">{{ e.created_at | date: 'short' }}</div>
+        </div>
+        <div class="acciones">
+          <button (click)="publicar(e)">{{ e.publicada ? 'Despublicar' : 'Publicar' }}</button>
+          <button class="secundario" (click)="verResultados(e)">Resultados</button>
+          <button class="del" (click)="eliminar(e)">Eliminar</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (resultados(); as r) {
+    <div class="resultados">
+      <div class="res-cab">
+        <h3>Resultados: {{ r.titulo }}</h3>
+        <button class="secundario mini" (click)="cerrarResultados()">Cerrar</button>
+      </div>
+      <p class="total">{{ r.total_respuestas }} respuesta(s)</p>
+      @for (p of r.preguntas; track p.pregunta_id) {
+        <div class="res-pregunta">
+          <strong>{{ p.texto }}</strong>
+          @if (p.tipo === 'opciones' && p.conteo) {
+            @for (entry of p.conteo | keyvalue; track entry.key) {
+              <div class="barra-row">
+                <span class="etq">{{ entry.key }}</span>
+                <div class="barra"><div class="relleno" [style.width.%]="porcentaje(entry.value, totalConteo(p.conteo))"></div></div>
+                <span class="num">{{ entry.value }}</span>
+              </div>
+            }
+          } @else {
+            @if (p.respuestas_texto && p.respuestas_texto.length > 0) {
+              <ul class="textos">
+                @for (t of p.respuestas_texto; track $index) {
+                  <li>{{ t }}</li>
+                }
+              </ul>
+            } @else {
+              <p class="empty">Sin respuestas.</p>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,66 @@
+<section class="enc">
+  @if (!actual()) {
+    <h2>Encuestas y censos</h2>
+    <p class="intro">Participa respondiendo las encuestas y censos de la Junta de Acción Comunal.</p>
+
+    @if (cargando()) {
+      <p class="hint">Cargando…</p>
+    }
+    @if (!cargando() && items().length === 0) {
+      <p class="empty">Por ahora no hay encuestas disponibles.</p>
+    }
+
+    <div class="lista">
+      @for (e of items(); track e.id) {
+        <article class="card">
+          <span class="badge">{{ e.tipo }}</span>
+          <h3>{{ e.titulo }}</h3>
+          @if (e.descripcion) {
+            <p class="desc">{{ e.descripcion }}</p>
+          }
+          <button (click)="abrir(e)">Responder</button>
+        </article>
+      }
+    </div>
+  } @else {
+    <button class="secundario volver" (click)="volver()">← Volver</button>
+
+    @if (gracias()) {
+      <div class="gracias">
+        <h2>¡Gracias por participar!</h2>
+        <p>Tu respuesta fue registrada.</p>
+        <button (click)="volver()">Ver otras encuestas</button>
+      </div>
+    } @else {
+      <h2>{{ actual()!.titulo }}</h2>
+      @if (actual()!.descripcion) {
+        <p class="intro">{{ actual()!.descripcion }}</p>
+      }
+
+      @if (error()) {
+        <div class="alert">{{ error() }}</div>
+      }
+
+      <form (ngSubmit)="responder()">
+        @for (p of actual()!.preguntas; track p.id) {
+          <div class="pregunta">
+            <label class="txt">{{ p.texto }}</label>
+            @if (p.tipo === 'opciones' && p.opciones) {
+              @for (o of p.opciones; track o) {
+                <label class="opcion">
+                  <input type="radio" [name]="'p' + p.id" [value]="o" [(ngModel)]="respuestas[p.id]" [ngModelOptions]="{ standalone: true }" />
+                  {{ o }}
+                </label>
+              }
+            } @else {
+              <textarea rows="2" [(ngModel)]="respuestas[p.id]" [ngModelOptions]="{ standalone: true }" placeholder="Tu respuesta"></textarea>
+            }
+          </div>
+        }
+        <button type="submit" [disabled]="enviando()">
+          {{ enviando() ? 'Enviando…' : 'Enviar respuestas' }}
+        </button>
+      </form>
+    }
+  }
+</section>
