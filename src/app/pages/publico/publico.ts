@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-publico',
@@ -8,7 +10,18 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './publico.scss',
 })
 export class Publico {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
   menuAbierto = signal(false);
+
+  logueado(): boolean {
+    return this.auth.isLoggedIn();
+  }
+
+  esDignatario(): boolean {
+    return this.auth.esDignatario();
+  }
 
   toggleMenu() {
     this.menuAbierto.update((v) => !v);
@@ -16,5 +29,11 @@ export class Publico {
 
   cerrarMenu() {
     this.menuAbierto.set(false);
+  }
+
+  salir() {
+    this.cerrarMenu();
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 }
