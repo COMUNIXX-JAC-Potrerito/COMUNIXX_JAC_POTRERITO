@@ -26,22 +26,27 @@ export class EncuestasService {
     return this.http.get<EncuestaResumen[]>(`${this.api}/encuestas/gestion`);
   }
 
+  // Trae una encuesta con sus preguntas.
   detalle(id: number): Observable<EncuestaDetalle> {
     return this.http.get<EncuestaDetalle>(`${this.api}/encuestas/${id}`);
   }
 
+  // Crea una encuesta/censo.
   crear(data: EncuestaCreate): Observable<EncuestaDetalle> {
     return this.http.post<EncuestaDetalle>(`${this.api}/encuestas`, data);
   }
 
+  // Publica o despublica una encuesta.
   publicar(id: number, publicada: boolean): Observable<EncuestaResumen> {
     return this.http.put<EncuestaResumen>(`${this.api}/encuestas/${id}/publicar`, { publicada });
   }
 
+  // Elimina una encuesta.
   eliminar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.api}/encuestas/${id}`);
   }
 
+  // Envía las respuestas de una encuesta (con datos personales).
   responder(
     id: number,
     items: RespuestaItem[],
@@ -53,6 +58,7 @@ export class EncuestasService {
     });
   }
 
+  // Trae los resultados agregados de una encuesta.
   resultados(id: number): Observable<EncuestaResultados> {
     return this.http.get<EncuestaResultados>(`${this.api}/encuestas/${id}/resultados`);
   }

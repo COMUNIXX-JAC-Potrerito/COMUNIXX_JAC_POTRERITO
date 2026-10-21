@@ -32,6 +32,7 @@ export class Asignadas implements OnInit {
   estadoSel = '';
   editando = signal(false);
 
+  // PQRS del sub-panel activo (por estado) que además coinciden con la búsqueda.
   visibles = computed(() => {
     const t = this.tab();
     const q = this.busqueda().trim().toLowerCase();
@@ -48,14 +49,17 @@ export class Asignadas implements OnInit {
       );
   });
 
+  // Cuántas PQRS hay en cada estado (para los contadores de las pestañas).
   cuenta(estado: Estado): number {
     return this.pqrs().filter((p) => p.estado === estado).length;
   }
 
+  // Al abrir, carga las PQRS asignadas a mi comisión.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae las PQRS de la comisión del dignatario.
   cargar() {
     this.cargando.set(true);
     this.error.set(null);
@@ -71,6 +75,7 @@ export class Asignadas implements OnInit {
     });
   }
 
+  // Abre una PQRS en vista de detalle para responderla/gestionarla.
   abrir(p: Pqrs) {
     this.seleccionada.set(p);
     this.respuestaTexto = p.respuesta ?? '';
@@ -80,10 +85,12 @@ export class Asignadas implements OnInit {
     this.ok.set(null);
   }
 
+  // Vuelve a la lista.
   volver() {
     this.seleccionada.set(null);
   }
 
+  // ¿La respuesta aún se puede editar? (dentro de los 5 min).
   puedeEditar(p: Pqrs): boolean {
     if (!p.respuesta_fecha) {
       return false;
@@ -95,16 +102,19 @@ export class Asignadas implements OnInit {
     return Date.now() - new Date(iso).getTime() < VENTANA_EDICION_MS;
   }
 
+  // Reabre el cuadro de texto para editar la respuesta.
   editar(p: Pqrs) {
     this.respuestaTexto = p.respuesta ?? '';
     this.editando.set(true);
   }
 
+  // Cancela la edición y restaura la respuesta guardada.
   cancelar(p: Pqrs) {
     this.respuestaTexto = p.respuesta ?? '';
     this.editando.set(false);
   }
 
+  // Guarda la respuesta a la PQRS abierta.
   responder() {
     const p = this.seleccionada();
     if (!p) {
@@ -127,6 +137,7 @@ export class Asignadas implements OnInit {
     });
   }
 
+  // Cambia el estado de la PQRS abierta (puede moverla de pestaña).
   actualizarEstado() {
     const p = this.seleccionada();
     if (!p || !this.estadoSel) {
@@ -142,6 +153,7 @@ export class Asignadas implements OnInit {
     });
   }
 
+  // Reemplaza la PQRS en la lista por su versión actualizada.
   private reemplazar(actualizada: Pqrs) {
     this.pqrs.update((lista) => lista.map((x) => (x.id === actualizada.id ? actualizada : x)));
   }

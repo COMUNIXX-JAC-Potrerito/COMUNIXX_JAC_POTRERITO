@@ -28,6 +28,7 @@ export const CATEGORIAS = [
   { valor: 'contenido', etiqueta: 'Contenido institucional' },
 ];
 
+// Devuelve la etiqueta legible de una categoría (ej. 'decision' -> 'Decisión').
 export function etiquetaCategoria(cat: string): string {
   return CATEGORIAS.find((c) => c.valor === cat)?.etiqueta ?? cat;
 }

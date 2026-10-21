@@ -26,9 +26,11 @@ export class AdminPublicaciones implements OnInit {
 
   // Imagen ampliada (lightbox); null = cerrado.
   imagenAmpliada = signal<string | null>(null);
+  // Abre una imagen en grande (lightbox).
   ampliar(url: string) {
     this.imagenAmpliada.set(url);
   }
+  // Cierra la imagen ampliada.
   cerrarImagen() {
     this.imagenAmpliada.set(null);
   }
@@ -40,10 +42,12 @@ export class AdminPublicaciones implements OnInit {
   fechaEvento = '';
   archivo = signal<File | null>(null);
 
+  // Al abrir, carga las publicaciones existentes.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae todas las publicaciones.
   cargar() {
     this.service.listar().subscribe({
       next: (data) => this.items.set(data),
@@ -51,16 +55,19 @@ export class AdminPublicaciones implements OnInit {
     });
   }
 
+  // Guarda el archivo elegido (imagen/video opcional).
   seleccionarArchivo(ev: Event) {
     const input = ev.target as HTMLInputElement;
     this.archivo.set(input.files?.[0] ?? null);
     input.value = '';
   }
 
+  // Quita el archivo seleccionado.
   quitarArchivo() {
     this.archivo.set(null);
   }
 
+  // Publica: si hay archivo lo sube primero y luego crea la publicación.
   publicar() {
     this.error.set(null);
     this.guardando.set(true);
@@ -84,6 +91,7 @@ export class AdminPublicaciones implements OnInit {
     }
   }
 
+  // Crea la publicación (con el adjunto si lo hay) y limpia el formulario.
   private enviar(adj: Adjunto | null) {
     this.service
       .crear({
@@ -112,6 +120,7 @@ export class AdminPublicaciones implements OnInit {
       });
   }
 
+  // Elimina una publicación.
   eliminar(p: Publicacion) {
     this.service.eliminar(p.id).subscribe({
       next: () => this.cargar(),

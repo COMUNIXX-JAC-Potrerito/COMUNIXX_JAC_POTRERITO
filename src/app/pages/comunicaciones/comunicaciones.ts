@@ -29,14 +29,17 @@ export class Comunicaciones implements OnInit {
   enviandoMasivo = signal(false);
   resultadoMasivo = signal<string | null>(null);
 
+  // Al abrir, carga la bitácora de comunicaciones.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae las comunicaciones externas registradas.
   cargar() {
     this.service.listarComunicaciones().subscribe((c) => this.items.set(c));
   }
 
+  // Registra una nueva comunicación externa y limpia el formulario.
   registrar() {
     this.error.set(null);
     this.service
@@ -52,10 +55,12 @@ export class Comunicaciones implements OnInit {
       });
   }
 
+  // Elimina una comunicación de la bitácora.
   eliminar(c: Comunicacion) {
     this.service.eliminarComunicacion(c.id).subscribe(() => this.cargar());
   }
 
+  // Envía el comunicado por correo a toda la comunidad y muestra el resultado.
   enviarMasivo() {
     this.enviandoMasivo.set(true);
     this.resultadoMasivo.set(null);

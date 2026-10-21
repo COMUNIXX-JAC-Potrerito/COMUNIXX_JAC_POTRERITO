@@ -23,18 +23,22 @@ export class Publicaciones implements OnInit {
   // Imagen ampliada (lightbox); null = cerrado.
   imagenAmpliada = signal<string | null>(null);
 
+  // Abre una imagen en grande (lightbox).
   ampliar(url: string) {
     this.imagenAmpliada.set(url);
   }
 
+  // Cierra la imagen ampliada.
   cerrarImagen() {
     this.imagenAmpliada.set(null);
   }
 
+  // Al abrir, carga las publicaciones.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae las publicaciones aplicando el filtro de categoría.
   cargar() {
     this.cargando.set(true);
     this.service.listar(this.filtro() || undefined).subscribe({
@@ -46,6 +50,7 @@ export class Publicaciones implements OnInit {
     });
   }
 
+  // Cambia el filtro de categoría y recarga.
   setFiltro(valor: string) {
     this.filtro.set(valor);
     this.cargar();

@@ -19,13 +19,16 @@ export class MisPqrs implements OnInit {
   busqueda = signal('');
   seleccionada = signal<Pqrs | null>(null);
 
+  // Abre una PQRS en vista de detalle.
   abrir(p: Pqrs) {
     this.seleccionada.set(p);
   }
+  // Vuelve a la lista.
   volver() {
     this.seleccionada.set(null);
   }
 
+  // Filtra las PQRS por código o asunto según la búsqueda.
   filtradas = computed(() => {
     const q = this.busqueda().trim().toLowerCase();
     if (!q) {
@@ -38,10 +41,12 @@ export class MisPqrs implements OnInit {
     );
   });
 
+  // Al abrir, carga las PQRS del usuario.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae las PQRS que radicó el propio usuario.
   cargar() {
     this.cargando.set(true);
     this.error.set(null);

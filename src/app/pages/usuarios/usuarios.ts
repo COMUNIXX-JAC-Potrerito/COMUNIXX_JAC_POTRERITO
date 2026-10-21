@@ -28,10 +28,12 @@ export class Usuarios implements OnInit {
   rolSel: Record<number, string> = {};
   comiteSel: Record<number, string> = {};
 
+  // Al abrir, carga la lista de usuarios.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae todos los usuarios y precarga el rol/comisión actual de cada fila.
   cargar() {
     this.error.set(null);
     this.service.usuarios().subscribe({
@@ -46,6 +48,7 @@ export class Usuarios implements OnInit {
     });
   }
 
+  // Guarda el nuevo rol del usuario (si cambió).
   cambiarRol(u: Usuario) {
     const rol = this.rolSel[u.id];
     if (!rol || rol === u.role) {
@@ -62,6 +65,7 @@ export class Usuarios implements OnInit {
     });
   }
 
+  // Guarda la nueva comisión del usuario (si cambió).
   cambiarComite(u: Usuario) {
     const comite = this.comiteSel[u.id] ?? '';
     if (comite === (u.comite ?? '')) {

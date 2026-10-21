@@ -47,10 +47,12 @@ export class AdminEncuestas implements OnInit {
   enviandoResp = signal(false);
   graciasResp = signal(false);
 
+  // Al abrir, carga las encuestas creadas.
   ngOnInit() {
     this.cargar();
   }
 
+  // Abre una encuesta para que el dignatario también la responda.
   responderAbrir(e: EncuestaResumen) {
     this.error.set(null);
     this.graciasResp.set(false);
@@ -61,11 +63,13 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Cierra el formulario de responder.
   cerrarResponder() {
     this.respondiendo.set(null);
     this.graciasResp.set(false);
   }
 
+  // Envía las respuestas del dignatario (usa los datos de su cuenta).
   responderEnviar() {
     const enc = this.respondiendo();
     if (!enc) {
@@ -89,6 +93,7 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Trae todas las encuestas (incluye borradores).
   cargar() {
     this.service.listarGestion().subscribe({
       next: (d) => this.items.set(d),
@@ -96,19 +101,24 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Agrega una pregunta al formulario.
   agregarPregunta() {
     this.preguntas.push({ texto: '', tipo: 'texto', opciones: ['', ''] });
   }
+  // Quita la pregunta i del formulario.
   quitarPregunta(i: number) {
     this.preguntas.splice(i, 1);
   }
+  // Agrega una opción a la pregunta i.
   agregarOpcion(i: number) {
     this.preguntas[i].opciones.push('');
   }
+  // Quita la opción j de la pregunta i.
   quitarOpcion(i: number, j: number) {
     this.preguntas[i].opciones.splice(j, 1);
   }
 
+  // Crea la encuesta con sus preguntas (valida que haya al menos una).
   crear() {
     this.error.set(null);
     this.ok.set(null);
@@ -151,6 +161,7 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Publica o despublica la encuesta.
   publicar(e: EncuestaResumen) {
     this.service.publicar(e.id, !e.publicada).subscribe({
       next: () => this.cargar(),
@@ -158,6 +169,7 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Elimina la encuesta (y cierra sus resultados si estaban abiertos).
   eliminar(e: EncuestaResumen) {
     this.service.eliminar(e.id).subscribe({
       next: () => {
@@ -170,6 +182,7 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Carga y muestra los resultados de una encuesta.
   verResultados(e: EncuestaResumen) {
     this.service.resultados(e.id).subscribe({
       next: (r) => this.resultados.set(r),
@@ -177,6 +190,7 @@ export class AdminEncuestas implements OnInit {
     });
   }
 
+  // Cierra el panel de resultados.
   cerrarResultados() {
     this.resultados.set(null);
   }
@@ -189,6 +203,7 @@ export class AdminEncuestas implements OnInit {
     return Object.values(conteo).reduce((a, b) => a + b, 0);
   }
 
+  // Porcentaje de una opción respecto al total (para el ancho de la barra).
   porcentaje(valor: number, total: number): number {
     return total > 0 ? Math.round((valor / total) * 100) : 0;
   }

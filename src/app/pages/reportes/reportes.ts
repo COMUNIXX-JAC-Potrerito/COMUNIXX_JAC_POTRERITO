@@ -15,10 +15,12 @@ export class Reportes implements OnInit {
   data = signal<Reporte | null>(null);
   cargando = signal(false);
 
+  // Al abrir la página, carga el resumen.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae el resumen de conteos del sistema desde el backend.
   cargar() {
     this.cargando.set(true);
     this.service.reporte().subscribe({
