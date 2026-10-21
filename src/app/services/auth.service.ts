@@ -23,6 +23,7 @@ export class AuthService {
   readonly isLoggedIn = signal<boolean>(this.hasToken());
   readonly rol = signal<string | null>(this.leerRol());
 
+  // Inicia sesión: pide el token al backend y guarda sesión y rol.
   login(email: string, password: string): Observable<TokenResponse> {
     return this.http
       .post<TokenResponse>(`${this.apiUrl}/login`, { email, password })
@@ -35,16 +36,19 @@ export class AuthService {
       );
   }
 
+  // Registra un usuario nuevo (rol "usuario" por defecto).
   register(data: RegistroData): Observable<unknown> {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
+  // Cierra sesión: borra el token y limpia los signals de sesión/rol.
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this.isLoggedIn.set(false);
     this.rol.set(null);
   }
 
+  // Devuelve el token JWT guardado (o null si no hay sesión).
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
@@ -55,6 +59,7 @@ export class AuthService {
     return r !== null && ROLES_GESTION.includes(r);
   }
 
+  // ¿El usuario logueado es superadministrador?
   esSuperadmin(): boolean {
     return this.rol() === 'superadministrador';
   }
@@ -64,10 +69,12 @@ export class AuthService {
     return this.leerCampo('sub');
   }
 
+  // ¿Hay un token guardado? (estado inicial de la sesión)
   private hasToken(): boolean {
     return !!localStorage.getItem(this.TOKEN_KEY);
   }
 
+  // Lee el rol del usuario desde el token.
   private leerRol(): string | null {
     return this.leerCampo('role');
   }

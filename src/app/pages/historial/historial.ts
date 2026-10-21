@@ -25,6 +25,7 @@ export class Historial implements OnInit {
   comiteSel = '';
   estadoSel = '';
 
+  // Filtra las PQRS por nombre, correo, asunto o código.
   filtradas = computed(() => {
     const q = this.busqueda().trim().toLowerCase();
     if (!q) {
@@ -40,10 +41,12 @@ export class Historial implements OnInit {
     );
   });
 
+  // Al abrir, carga el historial.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae todas las PQRS (historial).
   cargar() {
     this.cargando.set(true);
     this.error.set(null);
@@ -59,6 +62,7 @@ export class Historial implements OnInit {
     });
   }
 
+  // Abre una PQRS en vista de detalle para gestionarla.
   abrir(p: Pqrs) {
     this.seleccionada.set(p);
     this.comiteSel = '';
@@ -66,10 +70,12 @@ export class Historial implements OnInit {
     this.error.set(null);
   }
 
+  // Vuelve a la lista.
   volver() {
     this.seleccionada.set(null);
   }
 
+  // Asigna/reasigna el comité de la PQRS abierta.
   asignar() {
     const p = this.seleccionada();
     if (!p || !this.comiteSel) {
@@ -85,6 +91,7 @@ export class Historial implements OnInit {
     });
   }
 
+  // Cambia el estado de la PQRS abierta.
   actualizarEstado() {
     const p = this.seleccionada();
     if (!p || !this.estadoSel) {
@@ -100,6 +107,7 @@ export class Historial implements OnInit {
     });
   }
 
+  // Reemplaza la PQRS en la lista por su versión actualizada.
   private reemplazar(actualizada: Pqrs) {
     this.pqrs.update((lista) => lista.map((x) => (x.id === actualizada.id ? actualizada : x)));
   }

@@ -15,6 +15,7 @@ export class IdleService {
   private timer: ReturnType<typeof setTimeout> | null = null;
   private iniciado = false;
 
+  // Empieza a escuchar la actividad del usuario y arranca el temporizador.
   iniciar() {
     if (this.iniciado || typeof window === 'undefined') {
       return;
@@ -31,6 +32,7 @@ export class IdleService {
     this.reiniciar();
   }
 
+  // Reinicia el temporizador cada vez que hay actividad.
   private reiniciar() {
     if (this.timer) {
       clearTimeout(this.timer);
@@ -38,6 +40,7 @@ export class IdleService {
     this.timer = setTimeout(() => this.expirar(), IDLE_MS);
   }
 
+  // Al cumplirse el tiempo: si hay sesión, la cierra y manda al login.
   private expirar() {
     // Si no hay sesión, no hay nada que cerrar; solo reprograma el chequeo.
     if (!this.auth.getToken()) {

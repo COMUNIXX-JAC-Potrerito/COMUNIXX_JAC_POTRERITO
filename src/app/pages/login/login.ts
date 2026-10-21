@@ -22,6 +22,7 @@ export class Login {
   // Aviso cuando la sesión se cerró por inactividad.
   expirado = signal(this.route.snapshot.queryParamMap.get('expirado') === '1');
 
+  // Inicia sesión y redirige según el rol (dignatario -> panel, comunidad -> portal).
   entrar() {
     this.error.set(null);
     this.cargando.set(true);

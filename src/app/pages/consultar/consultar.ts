@@ -18,6 +18,7 @@ export class Consultar {
   error = signal<string | null>(null);
   resultado = signal<PqrsSeguimiento | null>(null);
 
+  // Busca una PQRS por su código de seguimiento y muestra el resultado.
   consultar() {
     const codigo = this.codigo.trim();
     if (!codigo) return;

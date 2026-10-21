@@ -40,16 +40,19 @@ export class Radicar {
   error = signal<string | null>(null);
   codigoGenerado = signal<string | null>(null);
 
+  // Guarda el archivo elegido en el input (adjunto opcional).
   seleccionarArchivo(ev: Event) {
     const input = ev.target as HTMLInputElement;
     this.archivo.set(input.files?.[0] ?? null);
     input.value = '';
   }
 
+  // Quita el archivo adjunto seleccionado.
   quitarArchivo() {
     this.archivo.set(null);
   }
 
+  // Radica la PQRS: si hay adjunto lo sube primero y luego envía.
   radicar() {
     this.error.set(null);
     this.enviando.set(true);
@@ -73,6 +76,7 @@ export class Radicar {
     }
   }
 
+  // Arma el payload (con el adjunto si lo hay) y crea la PQRS; guarda el código.
   private enviarPqrs(adj: Adjunto | null) {
     const data: PqrsCreate = {
       tipo: this.tipo,
@@ -99,6 +103,7 @@ export class Radicar {
     });
   }
 
+  // Reinicia el formulario para radicar otra PQRS.
   nuevaPqrs() {
     // Limpia el formulario para radicar otra
     this.tipo = '';

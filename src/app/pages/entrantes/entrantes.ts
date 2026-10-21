@@ -25,10 +25,12 @@ export class Entrantes implements OnInit {
   comiteSel = '';
   estadoSel = '';
 
+  // Al abrir, carga la bandeja de entrantes.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae las PQRS entrantes (nuevas sin asignar).
   cargar() {
     this.cargando.set(true);
     this.error.set(null);
@@ -44,6 +46,7 @@ export class Entrantes implements OnInit {
     });
   }
 
+  // Abre una PQRS en vista de detalle (tipo correo).
   abrir(p: Pqrs) {
     this.seleccionada.set(p);
     this.comiteSel = '';
@@ -51,10 +54,12 @@ export class Entrantes implements OnInit {
     this.error.set(null);
   }
 
+  // Vuelve a la bandeja.
   volver() {
     this.seleccionada.set(null);
   }
 
+  // Asigna un comité a la PQRS abierta (sale de entrantes).
   asignar() {
     const p = this.seleccionada();
     if (!p || !this.comiteSel) {
@@ -67,6 +72,7 @@ export class Entrantes implements OnInit {
     });
   }
 
+  // Cambia el estado de la PQRS abierta (sale de entrantes).
   actualizarEstado() {
     const p = this.seleccionada();
     if (!p || !this.estadoSel) {
@@ -78,6 +84,7 @@ export class Entrantes implements OnInit {
     });
   }
 
+  // Quita la PQRS de la bandeja y vuelve a la lista.
   private sacarYVolver(id: number) {
     this.pqrs.update((l) => l.filter((x) => x.id !== id));
     this.seleccionada.set(null);

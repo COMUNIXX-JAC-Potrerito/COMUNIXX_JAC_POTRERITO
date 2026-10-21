@@ -73,6 +73,7 @@ export class Mensajes implements OnInit, OnDestroy {
     );
   });
 
+  // Carga usuarios y mensajes, y arranca el sondeo de mensajes nuevos.
   ngOnInit() {
     this.service.usuarios().subscribe((u) => {
       this.usuarios.set(u);
@@ -84,6 +85,7 @@ export class Mensajes implements OnInit, OnDestroy {
     this.poll = setInterval(() => this.revisarNuevos(), 10000);
   }
 
+  // Al salir, detiene el sondeo y limpia los temporizadores.
   ngOnDestroy() {
     if (this.poll) {
       clearInterval(this.poll);
@@ -93,6 +95,7 @@ export class Mensajes implements OnInit, OnDestroy {
     }
   }
 
+  // Carga los mensajes recibidos y enviados.
   cargar() {
     this.service.recibidos().subscribe((m) => {
       this.recibidos.set(m);
@@ -120,6 +123,7 @@ export class Mensajes implements OnInit, OnDestroy {
     this.service.enviados().subscribe((m) => this.enviados.set(m));
   }
 
+  // Muestra el toast de "mensaje nuevo" durante 3 segundos.
   private mostrarToast(nombre: string, texto: string) {
     const corto = texto.length > 60 ? texto.slice(0, 60) + '…' : texto;
     this.toast.set({ nombre, texto: corto });
@@ -129,6 +133,7 @@ export class Mensajes implements OnInit, OnDestroy {
     this.toastTimer = setTimeout(() => this.toast.set(null), 3000);
   }
 
+  // Muestra un aviso corto de acción (copiado, fijado, etc.) por 2 segundos.
   private avisar(txt: string) {
     this.accion.set(txt);
     if (this.accionTimer) {
@@ -137,11 +142,13 @@ export class Mensajes implements OnInit, OnDestroy {
     this.accionTimer = setTimeout(() => this.accion.set(null), 2000);
   }
 
+  // Reemplaza un mensaje por su versión actualizada en ambas listas.
   private reemplazarMsg(u: Mensaje) {
     this.recibidos.update((l) => l.map((x) => (x.id === u.id ? u : x)));
     this.enviados.update((l) => l.map((x) => (x.id === u.id ? u : x)));
   }
 
+  // Copia el texto del mensaje al portapapeles.
   copiar(m: Mensaje) {
     navigator.clipboard
       ?.writeText(m.contenido ?? '')
@@ -149,6 +156,7 @@ export class Mensajes implements OnInit, OnDestroy {
       .catch(() => this.avisar('No se pudo copiar'));
   }
 
+  // Fija o desfija el mensaje.
   fijar(m: Mensaje) {
     this.service.fijarMensaje(m.id, !m.fijado).subscribe({
       next: (u) => {
@@ -159,6 +167,7 @@ export class Mensajes implements OnInit, OnDestroy {
     });
   }
 
+  // Elimina el mensaje de la conversación.
   eliminar(m: Mensaje) {
     this.service.eliminarMensaje(m.id).subscribe({
       next: () => {
@@ -180,15 +189,18 @@ export class Mensajes implements OnInit, OnDestroy {
     return Date.now() - new Date(iso).getTime() < 15 * 60 * 1000;
   }
 
+  // Abre el cuadro para editar el mensaje.
   editar(m: Mensaje) {
     this.editandoId.set(m.id);
     this.textoEdit = m.contenido ?? '';
   }
 
+  // Cancela la edición del mensaje.
   cancelarEdicion() {
     this.editandoId.set(null);
   }
 
+  // Guarda el mensaje editado.
   guardarEdicion(m: Mensaje) {
     const t = this.textoEdit.trim();
     if (!t) {
@@ -203,6 +215,7 @@ export class Mensajes implements OnInit, OnDestroy {
     });
   }
 
+  // Abre la conversación con un contacto y marca sus mensajes como leídos.
   seleccionar(id: number) {
     this.contactoSel.set(id);
     // Marca como leídos los mensajes recibidos de ese contacto.
@@ -218,14 +231,17 @@ export class Mensajes implements OnInit, OnDestroy {
     }
   }
 
+  // Nombre del usuario por su id (para mostrar en el chat).
   nombre(id: number) {
     return this.usuarios().find((u) => u.id === id)?.full_name ?? 'Usuario #' + id;
   }
 
+  // Cuántos mensajes sin leer hay de un contacto.
   noLeidos(contactoId: number): number {
     return this.recibidos().filter((m) => m.remitente_id === contactoId && !m.leido).length;
   }
 
+  // ¿El adjunto es un audio? (por la extensión del archivo).
   esAudio(nombre?: string | null): boolean {
     if (!nombre) {
       return false;
@@ -233,16 +249,19 @@ export class Mensajes implements OnInit, OnDestroy {
     return /\.(mp3|wav|ogg|m4a|aac|opus)$/i.test(nombre);
   }
 
+  // Guarda el archivo elegido para adjuntar al mensaje.
   seleccionarArchivo(ev: Event) {
     const input = ev.target as HTMLInputElement;
     this.archivo.set(input.files?.[0] ?? null);
     input.value = ''; // permite volver a elegir el mismo archivo
   }
 
+  // Quita el archivo adjunto.
   quitarArchivo() {
     this.archivo.set(null);
   }
 
+  // Envía el mensaje (sube el adjunto primero si lo hay).
   enviar() {
     const dest = this.contactoSel();
     if (dest === null) {
@@ -274,6 +293,7 @@ export class Mensajes implements OnInit, OnDestroy {
     }
   }
 
+  // Crea el mensaje (con adjunto opcional), limpia el formulario y recarga.
   private enviarMensaje(
     dest: number,
     url: string | null,

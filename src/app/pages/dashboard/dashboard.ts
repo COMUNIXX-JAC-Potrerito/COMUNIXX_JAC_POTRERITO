@@ -15,18 +15,22 @@ export class Dashboard {
 
   menuAbierto = signal(false);
 
+  // ¿El usuario es superadmin? (para mostrar la opción "Usuarios").
   esSuperadmin(): boolean {
     return this.auth.esSuperadmin();
   }
 
+  // Abre/cierra el menú hamburguesa (móvil).
   toggleMenu() {
     this.menuAbierto.update((v) => !v);
   }
 
+  // Cierra el menú hamburguesa.
   cerrarMenu() {
     this.menuAbierto.set(false);
   }
 
+  // Cierra sesión y vuelve al login.
   salir() {
     this.cerrarMenu();
     this.auth.logout();

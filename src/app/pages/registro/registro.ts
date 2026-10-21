@@ -24,6 +24,7 @@ export class Registro {
   error = signal<string | null>(null);
   exito = signal(false);
 
+  // Registra el usuario; si sale bien, avisa y redirige al login.
   registrar() {
     this.error.set(null);
     this.enviando.set(true);

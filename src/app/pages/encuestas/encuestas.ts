@@ -28,10 +28,12 @@ export class Encuestas implements OnInit {
   email = '';
   telefono = '';
 
+  // Al abrir, carga las encuestas publicadas.
   ngOnInit() {
     this.cargar();
   }
 
+  // Trae las encuestas disponibles para la comunidad.
   cargar() {
     this.cargando.set(true);
     this.service.listarPublicas().subscribe({
@@ -43,6 +45,7 @@ export class Encuestas implements OnInit {
     });
   }
 
+  // Abre una encuesta para responderla (carga sus preguntas).
   abrir(e: EncuestaResumen) {
     this.error.set(null);
     this.gracias.set(false);
@@ -56,11 +59,13 @@ export class Encuestas implements OnInit {
     });
   }
 
+  // Vuelve a la lista de encuestas.
   volver() {
     this.actual.set(null);
     this.gracias.set(false);
   }
 
+  // Valida los datos personales y envía las respuestas de la encuesta.
   responder() {
     const enc = this.actual();
     if (!enc) {
