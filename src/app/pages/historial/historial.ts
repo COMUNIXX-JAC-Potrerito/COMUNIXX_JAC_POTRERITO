@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { COMITES, ESTADOS, Pqrs } from '../../models/pqrs.model';
+import { COMITES, ESTADOS_GESTIONABLES, Pqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class Historial implements OnInit {
   private pqrsService = inject(PqrsService);
 
   readonly comites = COMITES;
-  readonly estados = ESTADOS;
+  // Estados a los que se puede mover (sin "Nueva"); incluye "En_Espera".
+  readonly estados = ESTADOS_GESTIONABLES;
 
   pqrs = signal<Pqrs[]>([]);
   cargando = signal(false);
