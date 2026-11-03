@@ -4,59 +4,24 @@
   flex-direction: column;
 }
 
+/* Barra superior: franja verde con la marca */
 .topbar {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   background: var(--primario);
   color: #fff;
-  padding: 0 24px;
-  min-height: 58px;
+  padding: 0 20px;
+  min-height: 56px;
 
   .brand {
     font-weight: 700;
     letter-spacing: 0.5px;
     white-space: nowrap;
   }
-
-  .nav {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex: 1;
-    flex-wrap: wrap;
-
-    a {
-      color: #e5efe8;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.14);
-      }
-
-      &.active {
-        background: rgba(255, 255, 255, 0.22);
-        color: #fff;
-        font-weight: 600;
-      }
-    }
-  }
-
-  .logout {
-    margin-left: auto;
-    background: rgba(255, 255, 255, 0.16);
-    white-space: nowrap;
-  }
-  .logout:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
 }
 
-/* Botón hamburguesa: oculto en escritorio */
+/* Botón hamburguesa: oculto en escritorio, visible en móvil */
 .menu-btn {
   display: none;
   flex-direction: column;
@@ -76,51 +41,157 @@
   }
 }
 
+/* Cuerpo: menú lateral + contenido, uno al lado del otro */
+.cuerpo {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+/* Menú lateral */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--superficie);
+  border-right: 1px solid var(--gris-borde);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Cabecera de cada grupo (se toca para desplegar/colapsar) */
+.grupo-cab {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  color: var(--texto);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+
+  &:hover {
+    background: var(--primario-suave);
+  }
+
+  /* Flechita que gira cuando el grupo está abierto */
+  .flecha {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--gris);
+    transition: transform 0.15s ease;
+  }
+  &.expandido .flecha {
+    transform: rotate(180deg);
+  }
+}
+
+/* Opciones dentro de un grupo */
+.grupo-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 0 6px;
+
+  a {
+    color: var(--texto-suave);
+    text-decoration: none;
+    font-size: 0.88rem;
+    padding: 8px 12px 8px 26px;
+    border-radius: 6px;
+
+    &:hover {
+      background: var(--primario-suave);
+      color: var(--primario-osc);
+    }
+    &.active {
+      background: var(--primario-suave);
+      color: var(--primario-osc);
+      font-weight: 600;
+    }
+  }
+}
+
+/* Opción suelta (Mensajes), fuera de los grupos */
+.suelto {
+  display: block;
+  color: var(--texto);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 2px;
+
+  &:hover {
+    background: var(--primario-suave);
+  }
+  &.active {
+    background: var(--primario-suave);
+    color: var(--primario-osc);
+  }
+}
+
+/* Cerrar sesión: fijo al fondo del menú */
+.logout {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* Contenido de la pantalla seleccionada */
 .content {
   flex: 1;
+  min-width: 0;
   padding: 24px;
-  max-width: 1200px;
+  max-width: 1100px;
   width: 100%;
   margin: 0 auto;
 }
 
-/* --- Responsive: menú hamburguesa --- */
-@media (max-width: 860px) {
-  .topbar {
-    gap: 12px;
-    padding: 0 16px;
-  }
+/* Capa oscura detrás del menú en móvil (oculta en escritorio) */
+.backdrop {
+  display: none;
+}
 
+/* --- Responsive: el menú se vuelve un cajón deslizante --- */
+@media (max-width: 860px) {
   .menu-btn {
     display: flex;
   }
 
-  .topbar .nav {
-    display: none;
+  .sidebar {
     position: absolute;
-    top: 100%;
+    top: 0;
     left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2px;
-    background: var(--primario);
-    padding: 8px 12px 14px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
-    z-index: 30;
+    bottom: 0;
+    z-index: 40;
+    width: 250px;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  }
+  .sidebar.abierto {
+    transform: translateX(0);
+  }
 
-    &.abierto {
-      display: flex;
-    }
-
-    a {
-      padding: 12px;
-    }
-
-    .logout {
-      margin: 8px 0 0;
-      width: 100%;
-    }
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 35;
   }
 
   .content {
