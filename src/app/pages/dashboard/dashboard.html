@@ -1,4 +1,5 @@
 <div class="layout">
+  <!-- Barra superior: marca + botón de menú (este último solo en móvil) -->
   <header class="topbar">
     <div class="brand">COMUNIX · Panel JAC</div>
 
@@ -11,26 +12,59 @@
     >
       <span></span><span></span><span></span>
     </button>
-
-    <nav class="nav" [class.abierto]="menuAbierto()">
-      <a routerLink="entrantes" routerLinkActive="active" (click)="cerrarMenu()">PQRS entrantes</a>
-      <a routerLink="asignadas" routerLinkActive="active" (click)="cerrarMenu()">Mis asignadas</a>
-      <a routerLink="mis-pqrs" routerLinkActive="active" (click)="cerrarMenu()">Mis PQRS</a>
-      <a routerLink="historial" routerLinkActive="active" (click)="cerrarMenu()">Historial</a>
-      <a routerLink="radicar" routerLinkActive="active" (click)="cerrarMenu()">Radicar PQRS</a>
-      <a routerLink="publicaciones" routerLinkActive="active" (click)="cerrarMenu()">Publicaciones</a>
-      <a routerLink="mensajes" routerLinkActive="active" (click)="cerrarMenu()">Mensajes</a>
-      <a routerLink="comunicaciones" routerLinkActive="active" (click)="cerrarMenu()">Comunicaciones</a>
-      <a routerLink="encuestas" routerLinkActive="active" (click)="cerrarMenu()">Encuestas</a>
-      <a routerLink="reportes" routerLinkActive="active" (click)="cerrarMenu()">Reportes</a>
-      @if (esSuperadmin()) {
-        <a routerLink="usuarios" routerLinkActive="active" (click)="cerrarMenu()">Usuarios</a>
-      }
-      <button class="logout" (click)="salir()">Cerrar sesión</button>
-    </nav>
   </header>
 
-  <main class="content">
-    <router-outlet />
-  </main>
+  <div class="cuerpo">
+    <!-- Capa oscura detrás del menú en móvil: tocarla lo cierra -->
+    @if (menuAbierto()) {
+      <div class="backdrop" (click)="cerrarMenu()"></div>
+    }
+
+    <!-- Menú lateral con grupos desplegables -->
+    <aside class="sidebar" [class.abierto]="menuAbierto()">
+      <nav class="menu">
+        @for (g of grupos; track g.id) {
+          <div class="grupo">
+            <button
+              class="grupo-cab"
+              type="button"
+              [class.expandido]="grupoEstaAbierto(g.id)"
+              [attr.aria-expanded]="grupoEstaAbierto(g.id)"
+              (click)="alternarGrupo(g.id)"
+            >
+              <span>{{ g.titulo }}</span>
+              <span class="flecha"></span>
+            </button>
+
+            @if (grupoEstaAbierto(g.id)) {
+              <div class="grupo-items">
+                @for (item of itemsVisibles(g); track item.ruta) {
+                  <a
+                    [routerLink]="item.ruta"
+                    routerLinkActive="active"
+                    (click)="cerrarMenu()"
+                  >{{ item.etiqueta }}</a>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Mensajes: opción suelta (chat interno entre dignatarios) -->
+        <a
+          class="suelto"
+          routerLink="mensajes"
+          routerLinkActive="active"
+          (click)="cerrarMenu()"
+        >Mensajes</a>
+      </nav>
+
+      <button class="logout secundario" (click)="salir()">Cerrar sesión</button>
+    </aside>
+
+    <!-- Contenido de la opción elegida -->
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
 </div>
