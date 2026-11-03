@@ -3,12 +3,12 @@
   border: 1px solid var(--gris-borde);
   border-radius: 10px;
   padding: 24px;
-  max-width: 560px;
+  max-width: 620px;
   margin: 0 auto;
 
   h2 {
     margin: 0 0 6px;
-    color: var(--azul-osc);
+    color: var(--primario-osc);
   }
 
   .intro {
@@ -18,6 +18,7 @@
   }
 }
 
+/* Barra de búsqueda por código */
 .buscador {
   display: flex;
   gap: 8px;
@@ -28,6 +29,7 @@
   }
 }
 
+/* Tarjeta de estado del código buscado */
 .resultado {
   margin-top: 20px;
   border: 1px solid var(--gris-borde);
@@ -38,6 +40,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     padding: 12px 14px;
     border-bottom: 1px solid var(--gris-borde);
 
@@ -48,6 +51,7 @@
     span:first-child {
       color: var(--texto-suave);
       font-size: 0.85rem;
+      flex-shrink: 0;
     }
   }
 
@@ -67,20 +71,19 @@
     background: #eef1ee;
     color: var(--gris-osc);
   }
-
   &.e-En_Proceso {
     background: #fff4e0;
     color: #b26a00;
   }
-
   &.e-Finalizada {
     background: #e4f6ec;
     color: #2e8b57;
   }
 }
 
+/* Lista de mis PQRS radicadas */
 .mias {
-  margin-bottom: 20px;
+  margin-top: 24px;
 
   .mias-cab {
     display: flex;
@@ -90,54 +93,8 @@
 
     h3 {
       margin: 0;
-      color: var(--azul-osc);
+      color: var(--primario-osc);
       font-size: 1rem;
-    }
-  }
-
-  .mia {
-    border: 1px solid var(--gris-borde);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
-
-    .mia-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-
-      .tipo {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        color: var(--texto-suave);
-      }
-
-      .asunto {
-        flex: 1;
-      }
-    }
-
-    .mia-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: var(--texto-suave);
-    }
-
-    .mia-resp {
-      margin: 8px 0 0;
-      font-size: 0.88rem;
-
-      span {
-        color: var(--texto-suave);
-      }
-    }
-
-    .mono {
-      font-family: ui-monospace, 'Cascadia Code', monospace;
     }
   }
 
@@ -146,9 +103,74 @@
     color: var(--texto-suave);
     font-size: 0.9rem;
   }
+
+  .cod {
+    font-family: ui-monospace, 'Cascadia Code', monospace;
+    font-size: 0.78rem;
+    color: var(--texto-suave);
+  }
 }
 
 button.mini {
   padding: 4px 10px;
   font-size: 0.8rem;
+}
+
+/* --- Detalle (PQRS abierta) --- */
+.fechas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+
+  strong {
+    color: var(--texto);
+    font-weight: 600;
+  }
+}
+
+.contacto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 12px 0;
+  padding: 10px 12px;
+  background: var(--gris-bg);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+
+  .etiqueta {
+    width: 100%;
+    font-weight: 600;
+    color: var(--texto);
+    margin-bottom: 2px;
+  }
+}
+
+.respuesta-det {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--primario-suave);
+  border-radius: 8px;
+
+  .etiqueta {
+    display: block;
+    font-weight: 600;
+    color: var(--primario-osc);
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  .resp-fecha {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--texto-suave);
+  }
 }
