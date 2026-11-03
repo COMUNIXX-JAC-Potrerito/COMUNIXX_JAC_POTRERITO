@@ -24,6 +24,9 @@ export class Consultar implements OnInit {
   mias = signal<Pqrs[]>([]);
   cargandoMias = signal(false);
 
+  // PQRS abierta en detalle (al tocar una de la lista); null = viendo la lista.
+  seleccionada = signal<Pqrs | null>(null);
+
   // Si hay sesión, carga de una las PQRS del usuario.
   ngOnInit() {
     if (this.auth.isLoggedIn()) {
@@ -31,7 +34,7 @@ export class Consultar implements OnInit {
     }
   }
 
-  // Trae las PQRS que el propio usuario ha radicado (incluye sus anónimas).
+  // Trae las PQRS que el propio usuario ha radicado (más recientes primero).
   cargarMias() {
     this.cargandoMias.set(true);
     this.pqrsService.mias().subscribe({
@@ -41,6 +44,16 @@ export class Consultar implements OnInit {
       },
       error: () => this.cargandoMias.set(false),
     });
+  }
+
+  // Abre una PQRS de la lista para ver todos sus datos.
+  abrir(p: Pqrs) {
+    this.seleccionada.set(p);
+  }
+
+  // Vuelve de la vista de detalle a la lista.
+  volver() {
+    this.seleccionada.set(null);
   }
 
   // Busca una PQRS por su código de seguimiento y muestra el resultado.
@@ -62,5 +75,16 @@ export class Consultar implements OnInit {
         this.error.set(err?.error?.detail ?? 'No se encontró una PQRS con ese código');
       },
     });
+  }
+
+  // Formatea una fecha ISO del backend (UTC) a fecha y hora local en español.
+  formatearFecha(iso?: string | null): string {
+    if (!iso) return '—';
+    // El backend guarda la hora en UTC sin zona; la marcamos como UTC ('Z')
+    // para que el navegador la convierta a la hora local del usuario.
+    const tieneZona = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
+    const fecha = new Date(tieneZona ? iso : iso + 'Z');
+    if (isNaN(fecha.getTime())) return iso;
+    return fecha.toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
   }
 }
