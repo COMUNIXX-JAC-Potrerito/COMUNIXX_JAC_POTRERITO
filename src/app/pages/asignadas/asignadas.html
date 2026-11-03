@@ -16,6 +16,9 @@
       <button [class.activo]="tab() === 'En_Proceso'" (click)="tab.set('En_Proceso')">
         En proceso ({{ cuenta('En_Proceso') }})
       </button>
+      <button [class.activo]="tab() === 'En_Espera'" (click)="tab.set('En_Espera')">
+        En espera ({{ cuenta('En_Espera') }})
+      </button>
       <button [class.activo]="tab() === 'Finalizada'" (click)="tab.set('Finalizada')">
         Finalizadas ({{ cuenta('Finalizada') }})
       </button>
