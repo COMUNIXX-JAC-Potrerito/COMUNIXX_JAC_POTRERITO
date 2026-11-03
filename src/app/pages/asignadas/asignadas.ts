@@ -1,10 +1,10 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { ESTADOS, Pqrs } from '../../models/pqrs.model';
+import { ESTADOS_GESTIONABLES, Pqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
 
-type Estado = 'Nueva' | 'En_Proceso' | 'Finalizada';
+type Estado = 'Nueva' | 'En_Proceso' | 'En_Espera' | 'Finalizada';
 const VENTANA_EDICION_MS = 5 * 60 * 1000; // 5 minutos
 
 @Component({
@@ -16,7 +16,8 @@ const VENTANA_EDICION_MS = 5 * 60 * 1000; // 5 minutos
 export class Asignadas implements OnInit {
   private pqrsService = inject(PqrsService);
 
-  readonly estados = ESTADOS;
+  // Estados a los que se puede mover (sin "Nueva"); incluye "En_Espera".
+  readonly estados = ESTADOS_GESTIONABLES;
 
   pqrs = signal<Pqrs[]>([]);
   cargando = signal(false);
