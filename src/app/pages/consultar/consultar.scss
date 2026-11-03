@@ -78,3 +78,77 @@
     color: #2e8b57;
   }
 }
+
+.mias {
+  margin-bottom: 20px;
+
+  .mias-cab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    h3 {
+      margin: 0;
+      color: var(--azul-osc);
+      font-size: 1rem;
+    }
+  }
+
+  .mia {
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+
+    .mia-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      .tipo {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--texto-suave);
+      }
+
+      .asunto {
+        flex: 1;
+      }
+    }
+
+    .mia-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--texto-suave);
+    }
+
+    .mia-resp {
+      margin: 8px 0 0;
+      font-size: 0.88rem;
+
+      span {
+        color: var(--texto-suave);
+      }
+    }
+
+    .mono {
+      font-family: ui-monospace, 'Cascadia Code', monospace;
+    }
+  }
+
+  .hint,
+  .empty {
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+  }
+}
+
+button.mini {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+}

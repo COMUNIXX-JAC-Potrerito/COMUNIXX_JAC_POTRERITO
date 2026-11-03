@@ -67,3 +67,12 @@ export interface Reporte {
   comunicaciones_recibidas: number;
   mensajes_internos: number;
 }
+
+// Carga de trabajo de un comité (GET /api/reportes/carga-comites).
+export interface CargaComite {
+  comite: string;
+  total: number;
+  en_proceso: number;
+  finalizadas: number;
+  pendientes: number;
+}

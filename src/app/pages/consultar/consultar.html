@@ -1,6 +1,46 @@
 <section class="panel">
   <h2>Consultar estado de una PQRS</h2>
-  <p class="intro">Ingresa el código de seguimiento que recibiste al radicar tu solicitud.</p>
+
+  @if (auth.isLoggedIn()) {
+    <div class="mias">
+      <div class="mias-cab">
+        <h3>Tus PQRS</h3>
+        <button class="secundario mini" (click)="cargarMias()" [disabled]="cargandoMias()">
+          Actualizar
+        </button>
+      </div>
+      @if (cargandoMias()) {
+        <p class="hint">Cargando…</p>
+      }
+      @if (!cargandoMias() && mias().length === 0) {
+        <p class="empty">Todavía no has radicado PQRS con tu cuenta.</p>
+      }
+      @for (m of mias(); track m.id) {
+        <div class="mia">
+          <div class="mia-top">
+            <span class="tipo">{{ m.tipo }}</span>
+            <strong class="asunto">{{ m.asunto }}</strong>
+            <span class="badge" [class]="'e-' + m.estado">{{ m.estado }}</span>
+          </div>
+          <div class="mia-meta">
+            <span>Comité: {{ m.comite || 'Pendiente de asignar' }}</span>
+            <span class="cod mono">{{ m.codigo_seguimiento }}</span>
+          </div>
+          @if (m.respuesta) {
+            <p class="mia-resp"><span>Respuesta de la JAC:</span> {{ m.respuesta }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <p class="intro">
+    @if (auth.isLoggedIn()) {
+      ¿Buscar una específica? Ingresa su código (opcional).
+    } @else {
+      Ingresa el código de seguimiento que recibiste al radicar tu solicitud.
+    }
+  </p>
 
   <form class="buscador" (ngSubmit)="consultar()">
     <input name="codigo" [(ngModel)]="codigo" placeholder="Ej: a3f9c1b2e4" />

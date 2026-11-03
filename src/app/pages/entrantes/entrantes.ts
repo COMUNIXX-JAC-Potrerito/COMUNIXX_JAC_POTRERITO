@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { COMITES, ESTADOS, Pqrs } from '../../models/pqrs.model';
+import { COMITES, Pqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
 
 @Component({
@@ -14,7 +14,6 @@ export class Entrantes implements OnInit {
   private pqrsService = inject(PqrsService);
 
   readonly comites = COMITES;
-  readonly estados = ESTADOS;
 
   pqrs = signal<Pqrs[]>([]);
   cargando = signal(false);
@@ -23,7 +22,6 @@ export class Entrantes implements OnInit {
   // PQRS abierta (vista tipo correo). null = viendo la bandeja.
   seleccionada = signal<Pqrs | null>(null);
   comiteSel = '';
-  estadoSel = '';
 
   // Al abrir, carga la bandeja de entrantes.
   ngOnInit() {
@@ -50,7 +48,6 @@ export class Entrantes implements OnInit {
   abrir(p: Pqrs) {
     this.seleccionada.set(p);
     this.comiteSel = '';
-    this.estadoSel = '';
     this.error.set(null);
   }
 
@@ -69,18 +66,6 @@ export class Entrantes implements OnInit {
       // al asignar deja de ser "entrante": sale de la bandeja
       next: () => this.sacarYVolver(p.id),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo asignar el comité'),
-    });
-  }
-
-  // Cambia el estado de la PQRS abierta (sale de entrantes).
-  actualizarEstado() {
-    const p = this.seleccionada();
-    if (!p || !this.estadoSel) {
-      return;
-    }
-    this.pqrsService.cambiarEstado(p.id, this.estadoSel).subscribe({
-      next: () => this.sacarYVolver(p.id),
-      error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo cambiar el estado'),
     });
   }
 

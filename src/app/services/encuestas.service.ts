@@ -8,6 +8,7 @@ import {
   EncuestaDetalle,
   EncuestaResultados,
   EncuestaResumen,
+  Participante,
   RespuestaItem,
 } from '../models/encuesta.model';
 
@@ -61,5 +62,10 @@ export class EncuestasService {
   // Trae los resultados agregados de una encuesta.
   resultados(id: number): Observable<EncuestaResultados> {
     return this.http.get<EncuestaResultados>(`${this.api}/encuestas/${id}/resultados`);
+  }
+
+  // Lista quién respondió una encuesta.
+  participantes(id: number): Observable<Participante[]> {
+    return this.http.get<Participante[]>(`${this.api}/encuestas/${id}/participantes`);
   }
 }

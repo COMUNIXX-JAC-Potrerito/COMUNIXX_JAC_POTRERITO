@@ -7,6 +7,7 @@ import {
   EncuestaDetalle,
   EncuestaResultados,
   EncuestaResumen,
+  Participante,
   PreguntaCreate,
   RespuestaItem,
 } from '../../models/encuesta.model';
@@ -40,6 +41,10 @@ export class AdminEncuestas implements OnInit {
 
   // Resultados abiertos
   resultados = signal<EncuestaResultados | null>(null);
+
+  // Participantes (quién respondió) abiertos
+  participantes = signal<Participante[] | null>(null);
+  participantesTitulo = signal('');
 
   // Responder (los dignatarios también pueden participar)
   respondiendo = signal<EncuestaDetalle | null>(null);
@@ -193,6 +198,21 @@ export class AdminEncuestas implements OnInit {
   // Cierra el panel de resultados.
   cerrarResultados() {
     this.resultados.set(null);
+  }
+
+  // Carga y muestra quién respondió la encuesta.
+  verParticipantes(e: EncuestaResumen) {
+    this.participantesTitulo.set(e.titulo);
+    this.service.participantes(e.id).subscribe({
+      next: (p) => this.participantes.set(p),
+      error: (err) =>
+        this.error.set(err?.error?.detail ?? 'No se pudieron cargar los participantes'),
+    });
+  }
+
+  // Cierra el panel de participantes.
+  cerrarParticipantes() {
+    this.participantes.set(null);
   }
 
   // Para las barras de resultados: total de una pregunta de opciones.
