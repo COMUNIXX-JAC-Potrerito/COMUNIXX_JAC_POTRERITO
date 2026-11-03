@@ -1,80 +1,139 @@
 <section class="panel">
-  <h2>Consultar estado de una PQRS</h2>
+  @if (!seleccionada()) {
+    <h2>Consultar estado de una PQRS</h2>
 
-  @if (auth.isLoggedIn()) {
-    <div class="mias">
-      <div class="mias-cab">
-        <h3>Tus PQRS</h3>
-        <button class="secundario mini" (click)="cargarMias()" [disabled]="cargandoMias()">
-          Actualizar
-        </button>
+    <!-- Barra de búsqueda por código (arriba) -->
+    <p class="intro">
+      @if (auth.isLoggedIn()) {
+        Busca una PQRS por su código, o tócala en la lista de abajo.
+      } @else {
+        Ingresa el código de seguimiento que recibiste al radicar tu solicitud.
+      }
+    </p>
+
+    <form class="buscador" (ngSubmit)="consultar()">
+      <input name="codigo" [(ngModel)]="codigo" placeholder="Ej: a3f9c1b2e4" />
+      <button type="submit" [disabled]="buscando() || !codigo.trim()">
+        {{ buscando() ? 'Buscando…' : 'Consultar' }}
+      </button>
+    </form>
+
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+
+    <!-- Resultado de la búsqueda por código -->
+    @if (resultado(); as r) {
+      <div class="resultado">
+        <div class="fila"><span>Código</span><strong class="mono">{{ r.codigo_seguimiento }}</strong></div>
+        <div class="fila"><span>Tipo</span><strong>{{ r.tipo }}</strong></div>
+        <div class="fila"><span>Asunto</span><strong>{{ r.asunto }}</strong></div>
+        <div class="fila">
+          <span>Estado</span>
+          <span class="badge" [class]="'e-' + r.estado">{{ r.estado }}</span>
+        </div>
+        <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
+        <div class="fila"><span>Radicada</span><strong>{{ formatearFecha(r.created_at) }}</strong></div>
+        <div class="fila"><span>Última actualización</span><strong>{{ formatearFecha(r.updated_at) }}</strong></div>
+        @if (r.respuesta) {
+          <div class="fila respuesta">
+            <span>Respuesta de la JAC</span>
+            <strong>{{ r.respuesta }}</strong>
+          </div>
+        }
+        @if (r.adjunto_url) {
+          <div class="fila">
+            <span>Adjunto</span>
+            <a class="adjunto-link" [href]="r.adjunto_url" target="_blank" rel="noopener">Ver archivo</a>
+          </div>
+        }
       </div>
-      @if (cargandoMias()) {
-        <p class="hint">Cargando…</p>
+    }
+
+    <!-- Lista de mis PQRS radicadas (más reciente primero) -->
+    @if (auth.isLoggedIn()) {
+      <div class="mias">
+        <div class="mias-cab">
+          <h3>Tus PQRS radicadas</h3>
+          <button class="secundario mini" (click)="cargarMias()" [disabled]="cargandoMias()">
+            Actualizar
+          </button>
+        </div>
+        @if (cargandoMias()) {
+          <p class="hint">Cargando…</p>
+        }
+        @if (!cargandoMias() && mias().length === 0) {
+          <p class="empty">Todavía no has radicado PQRS con tu cuenta.</p>
+        }
+        @if (mias().length > 0) {
+          <ul class="bandeja">
+            @for (m of mias(); track m.id) {
+              <li class="fila-msg" (click)="abrir(m)">
+                <div class="izq">
+                  <div class="linea1">
+                    <span class="tipo">{{ m.tipo }}</span>
+                    <strong class="asunto">{{ m.asunto }}</strong>
+                  </div>
+                  <div class="de">Radicada: {{ formatearFecha(m.created_at) }}</div>
+                </div>
+                <div class="der">
+                  <span class="estado-badge" [class]="'e-' + m.estado">{{ m.estado }}</span>
+                  <span class="cod">{{ m.codigo_seguimiento }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  } @else if (seleccionada(); as p) {
+    <!-- Detalle tipo correo: muestra TODO -->
+    <button class="secundario volver" (click)="volver()">← Volver a la lista</button>
+
+    <article class="detalle">
+      <div class="cab-det">
+        <span class="tipo">{{ p.tipo }}</span>
+        <span class="cod">{{ p.codigo_seguimiento }}</span>
+      </div>
+      <h2>{{ p.asunto }}</h2>
+
+      <div class="meta">
+        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado }}</span>
+        <span>Comité: {{ p.comite || 'Pendiente de asignar' }}</span>
+        @if (p.es_anonima) {
+          <span class="badge-anon">Anónima</span>
+        }
+      </div>
+
+      <div class="fechas">
+        <span>Radicada: <strong>{{ formatearFecha(p.created_at) }}</strong></span>
+        <span>Última actualización: <strong>{{ formatearFecha(p.updated_at) }}</strong></span>
+      </div>
+
+      <p class="cuerpo">{{ p.descripcion }}</p>
+
+      @if (!p.es_anonima && (p.nombre_contacto || p.email_contacto || p.telefono_contacto)) {
+        <div class="contacto">
+          <span class="etiqueta">Datos de contacto</span>
+          @if (p.nombre_contacto) { <span>{{ p.nombre_contacto }}</span> }
+          @if (p.email_contacto) { <span>{{ p.email_contacto }}</span> }
+          @if (p.telefono_contacto) { <span>{{ p.telefono_contacto }}</span> }
+        </div>
       }
-      @if (!cargandoMias() && mias().length === 0) {
-        <p class="empty">Todavía no has radicado PQRS con tu cuenta.</p>
+
+      @if (p.adjunto_url) {
+        <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
       }
-      @for (m of mias(); track m.id) {
-        <div class="mia">
-          <div class="mia-top">
-            <span class="tipo">{{ m.tipo }}</span>
-            <strong class="asunto">{{ m.asunto }}</strong>
-            <span class="badge" [class]="'e-' + m.estado">{{ m.estado }}</span>
-          </div>
-          <div class="mia-meta">
-            <span>Comité: {{ m.comite || 'Pendiente de asignar' }}</span>
-            <span class="cod mono">{{ m.codigo_seguimiento }}</span>
-          </div>
-          @if (m.respuesta) {
-            <p class="mia-resp"><span>Respuesta de la JAC:</span> {{ m.respuesta }}</p>
+
+      @if (p.respuesta) {
+        <div class="respuesta-det">
+          <span class="etiqueta">Respuesta de la JAC</span>
+          <p>{{ p.respuesta }}</p>
+          @if (p.respuesta_fecha) {
+            <span class="resp-fecha">Respondida: {{ formatearFecha(p.respuesta_fecha) }}</span>
           }
         </div>
       }
-    </div>
-  }
-
-  <p class="intro">
-    @if (auth.isLoggedIn()) {
-      ¿Buscar una específica? Ingresa su código (opcional).
-    } @else {
-      Ingresa el código de seguimiento que recibiste al radicar tu solicitud.
-    }
-  </p>
-
-  <form class="buscador" (ngSubmit)="consultar()">
-    <input name="codigo" [(ngModel)]="codigo" placeholder="Ej: a3f9c1b2e4" />
-    <button type="submit" [disabled]="buscando() || !codigo.trim()">
-      {{ buscando() ? 'Buscando…' : 'Consultar' }}
-    </button>
-  </form>
-
-  @if (error()) {
-    <div class="alert">{{ error() }}</div>
-  }
-
-  @if (resultado(); as r) {
-    <div class="resultado">
-      <div class="fila"><span>Código</span><strong class="mono">{{ r.codigo_seguimiento }}</strong></div>
-      <div class="fila"><span>Tipo</span><strong>{{ r.tipo }}</strong></div>
-      <div class="fila"><span>Asunto</span><strong>{{ r.asunto }}</strong></div>
-      <div class="fila">
-        <span>Estado</span>
-        <span class="badge" [class]="'e-' + r.estado">{{ r.estado }}</span>
-      </div>
-      <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
-      @if (r.respuesta) {
-        <div class="fila respuesta">
-          <span>Respuesta de la JAC</span>
-          <strong>{{ r.respuesta }}</strong>
-        </div>
-      }
-      @if (r.adjunto_url) {
-        <div class="fila">
-          <span>Adjunto</span>
-          <a class="adjunto-link" [href]="r.adjunto_url" target="_blank" rel="noopener">Ver archivo</a>
-        </div>
-      }
-    </div>
+    </article>
   }
 </section>

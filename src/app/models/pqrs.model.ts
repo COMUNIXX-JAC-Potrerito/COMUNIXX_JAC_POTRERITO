@@ -12,7 +12,8 @@ export interface Pqrs {
   nombre_contacto: string | null;
   email_contacto: string | null;
   telefono_contacto: string | null;
-  created_at: string;
+  created_at: string; // fecha y hora de radicación
+  updated_at?: string | null; // fecha y hora de la última actualización
   respuesta?: string | null;
   respuesta_fecha?: string | null;
   adjunto_url?: string | null;
