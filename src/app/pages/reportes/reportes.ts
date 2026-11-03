@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 
-import { Reporte } from '../../models/comunicacion.model';
+import { CargaComite, Reporte } from '../../models/comunicacion.model';
 import { ComunicacionService } from '../../services/comunicacion.service';
 
 @Component({
@@ -13,6 +13,7 @@ export class Reportes implements OnInit {
   private service = inject(ComunicacionService);
 
   data = signal<Reporte | null>(null);
+  cargas = signal<CargaComite[]>([]);
   cargando = signal(false);
 
   // Al abrir la página, carga el resumen.
@@ -29,6 +30,11 @@ export class Reportes implements OnInit {
         this.cargando.set(false);
       },
       error: () => this.cargando.set(false),
+    });
+    // Carga de cada comité (trabajo pendiente) para el panel general.
+    this.service.cargaComites().subscribe({
+      next: (c) => this.cargas.set(c),
+      error: () => this.cargas.set([]),
     });
   }
 }

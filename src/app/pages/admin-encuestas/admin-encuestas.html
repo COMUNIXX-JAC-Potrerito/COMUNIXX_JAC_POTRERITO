@@ -89,6 +89,7 @@
             <button class="secundario" (click)="responderAbrir(e)">Responder</button>
           }
           <button class="secundario" (click)="verResultados(e)">Resultados</button>
+          <button class="secundario" (click)="verParticipantes(e)">Participantes</button>
           <button class="del" (click)="eliminar(e)">Eliminar</button>
         </div>
       </div>
@@ -125,6 +126,35 @@
             }
           }
         </div>
+      }
+    </div>
+  }
+
+  @if (participantes(); as personas) {
+    <div class="resultados">
+      <div class="res-cab">
+        <h3>Participantes: {{ participantesTitulo() }}</h3>
+        <button class="secundario mini" (click)="cerrarParticipantes()">Cerrar</button>
+      </div>
+      <p class="total">{{ personas.length }} participante(s)</p>
+      @if (personas.length === 0) {
+        <p class="empty">Nadie ha respondido todavía.</p>
+      } @else {
+        <table class="tabla-participantes">
+          <thead>
+            <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Fecha</th></tr>
+          </thead>
+          <tbody>
+            @for (per of personas; track per.id) {
+              <tr>
+                <td>{{ per.nombre || '—' }}</td>
+                <td>{{ per.email || '—' }}</td>
+                <td>{{ per.telefono || '—' }}</td>
+                <td>{{ per.created_at | date: 'short' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       }
     </div>
   }

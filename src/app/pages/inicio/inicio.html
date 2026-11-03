@@ -17,13 +17,30 @@
     <p>Revisa el avance de tu solicitud con tu código de seguimiento.</p>
   </a>
 
-  <a class="card" routerLink="/registro">
-    <h3>Registrarse</h3>
-    <p>Crea tu cuenta para radicar más rápido y llevar tus solicitudes.</p>
+  <a class="card" routerLink="/publicaciones">
+    <h3>Publicaciones</h3>
+    <p>Entérate de las decisiones y actividades de la JAC.</p>
   </a>
 
-  <a class="card acceso" routerLink="/login">
-    <h3>Iniciar sesión</h3>
-    <p>Acceso para dignatarios de la Junta de Acción Comunal.</p>
+  <a class="card" routerLink="/encuestas">
+    <h3>Encuestas</h3>
+    <p>Participa en las encuestas y censos de la comunidad.</p>
   </a>
+
+  @if (!auth.isLoggedIn()) {
+    <a class="card" routerLink="/registro">
+      <h3>Registrarse</h3>
+      <p>Crea tu cuenta para radicar más rápido y llevar tus solicitudes.</p>
+    </a>
+
+    <a class="card acceso" routerLink="/login">
+      <h3>Iniciar sesión</h3>
+      <p>Acceso para dignatarios de la Junta de Acción Comunal.</p>
+    </a>
+  } @else if (auth.esDignatario()) {
+    <a class="card acceso" routerLink="/dashboard">
+      <h3>Panel JAC</h3>
+      <p>Gestiona las PQRS, publicaciones, encuestas y más.</p>
+    </a>
+  }
 </section>

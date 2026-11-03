@@ -36,14 +36,14 @@ body {
   color: var(--texto);
 }
 
-/* Fondo decorativo (líneas verdes sobre blanco) fijo en toda la página. */
+/* Fondo suave: dos halos verdes muy tenues sobre un gris casi blanco. */
 body {
-  background-color: #ffffff;
-  background-image: url('/fondo.svg');
+  background-color: var(--gris-bg);
+  background-image:
+    radial-gradient(900px 500px at 100% -10%, rgba(46, 125, 79, 0.1), transparent 60%),
+    radial-gradient(800px 500px at -10% 110%, rgba(46, 125, 79, 0.08), transparent 60%);
   background-repeat: no-repeat;
-  background-position: center center;
   background-attachment: fixed;
-  background-size: cover;
 }
 
 button {

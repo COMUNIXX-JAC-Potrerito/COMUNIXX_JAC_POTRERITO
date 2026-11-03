@@ -52,3 +52,13 @@ export interface EncuestaResultados {
   total_respuestas: number;
   preguntas: ResultadoPregunta[];
 }
+
+// Quién respondió una encuesta (GET /api/encuestas/{id}/participantes).
+export interface Participante {
+  id: number;
+  nombre: string | null;
+  email: string | null;
+  telefono: string | null;
+  usuario_id: number | null;
+  created_at: string;
+}

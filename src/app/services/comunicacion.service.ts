@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import {
+  CargaComite,
   Comunicacion,
   ComunicacionCreate,
   Mensaje,
@@ -89,5 +90,10 @@ export class ComunicacionService {
   // Trae el resumen con los conteos del sistema.
   reporte(): Observable<Reporte> {
     return this.http.get<Reporte>(`${this.api}/reportes/resumen`);
+  }
+
+  // Trae el trabajo pendiente de cada comité.
+  cargaComites(): Observable<CargaComite[]> {
+    return this.http.get<CargaComite[]>(`${this.api}/reportes/carga-comites`);
   }
 }

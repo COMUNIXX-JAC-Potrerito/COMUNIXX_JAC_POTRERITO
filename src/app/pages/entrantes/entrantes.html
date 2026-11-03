@@ -77,6 +77,10 @@
       <div class="acciones-det">
         <div class="accion">
           <label>Asignar a un comité</label>
+          <p class="nota-asignar">
+            Al asignar, la PQRS pasa al comité (queda “Nueva” para él) y sale de
+            esta bandeja. El comité la gestiona y cambia su estado desde “Mis asignadas”.
+          </p>
           <div class="row">
             <select [(ngModel)]="comiteSel" [ngModelOptions]="{ standalone: true }">
               <option value="">Selecciona…</option>
@@ -85,18 +89,6 @@
               }
             </select>
             <button (click)="asignar()" [disabled]="!comiteSel">Asignar</button>
-          </div>
-        </div>
-        <div class="accion">
-          <label>Cambiar estado</label>
-          <div class="row">
-            <select [(ngModel)]="estadoSel" [ngModelOptions]="{ standalone: true }">
-              <option value="">Selecciona…</option>
-              @for (e of estados; track e) {
-                <option [value]="e">{{ e }}</option>
-              }
-            </select>
-            <button (click)="actualizarEstado()" [disabled]="!estadoSel">Cambiar</button>
           </div>
         </div>
       </div>
