@@ -74,7 +74,11 @@ export const COMITES: string[] = [
 ];
 
 // Estados válidos del ciclo de vida de una PQRS.
-export const ESTADOS: string[] = ['Nueva', 'En_Proceso', 'Finalizada'];
+export const ESTADOS: string[] = ['Nueva', 'En_Proceso', 'En_Espera', 'Finalizada'];
+
+// Estados a los que un dignatario puede MOVER una PQRS desde "Cambiar estado".
+// No incluye "Nueva" (es el estado inicial, no se vuelve a él a mano).
+export const ESTADOS_GESTIONABLES: string[] = ['En_Proceso', 'En_Espera', 'Finalizada'];
 
 // Tipos de PQRS válidos (debe coincidir con el backend).
 export const TIPOS: string[] = ['Peticion', 'Queja', 'Reclamo', 'Sugerencia'];
