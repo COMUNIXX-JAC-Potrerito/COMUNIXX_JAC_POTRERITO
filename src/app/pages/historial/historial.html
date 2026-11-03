@@ -86,18 +86,20 @@
       }
 
       <div class="acciones-det">
-        <div class="accion">
-          <label>Asignar / reasignar comité</label>
-          <div class="row">
-            <select [(ngModel)]="comiteSel" [ngModelOptions]="{ standalone: true }">
-              <option value="">Selecciona…</option>
-              @for (c of comites; track c) {
-                <option [value]="c">{{ c }}</option>
-              }
-            </select>
-            <button (click)="asignar()" [disabled]="!comiteSel">Asignar</button>
+        @if (!p.comite) {
+          <div class="accion">
+            <label>Asignar a un comité</label>
+            <div class="row">
+              <select [(ngModel)]="comiteSel" [ngModelOptions]="{ standalone: true }">
+                <option value="">Selecciona…</option>
+                @for (c of comites; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+              <button (click)="asignar()" [disabled]="!comiteSel">Asignar</button>
+            </div>
           </div>
-        </div>
+        }
         <div class="accion">
           <label>Cambiar estado</label>
           <div class="row">
