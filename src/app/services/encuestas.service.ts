@@ -59,6 +59,11 @@ export class EncuestasService {
     });
   }
 
+  // IDs de las encuestas que el usuario autenticado ya respondió.
+  misRespuestas(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.api}/encuestas/mis-respuestas`);
+  }
+
   // Trae los resultados agregados de una encuesta.
   resultados(id: number): Observable<EncuestaResultados> {
     return this.http.get<EncuestaResultados>(`${this.api}/encuestas/${id}/resultados`);
