@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { ESTADOS_GESTIONABLES, Pqrs } from '../../models/pqrs.model';
+import { ESTADOS_GESTIONABLES, Pqrs, RespuestaPqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
 
 type Estado = 'Nueva' | 'En_Proceso' | 'En_Espera' | 'Finalizada';
@@ -29,9 +29,10 @@ export class Asignadas implements OnInit {
 
   // PQRS abierta (detalle tipo correo)
   seleccionada = signal<Pqrs | null>(null);
-  respuestaTexto = '';
+  respuestaTexto = ''; // texto de una NUEVA respuesta
   estadoSel = '';
-  editando = signal(false);
+  editandoId = signal<number | null>(null); // id de la respuesta que se está editando
+  edicionTexto = ''; // texto mientras se edita una respuesta
 
   // PQRS del sub-panel activo (por estado) que además coinciden con la búsqueda.
   visibles = computed(() => {
@@ -79,9 +80,9 @@ export class Asignadas implements OnInit {
   // Abre una PQRS en vista de detalle para responderla/gestionarla.
   abrir(p: Pqrs) {
     this.seleccionada.set(p);
-    this.respuestaTexto = p.respuesta ?? '';
+    this.respuestaTexto = '';
     this.estadoSel = '';
-    this.editando.set(false);
+    this.editandoId.set(null);
     this.error.set(null);
     this.ok.set(null);
   }
@@ -91,31 +92,48 @@ export class Asignadas implements OnInit {
     this.seleccionada.set(null);
   }
 
-  // ¿La respuesta aún se puede editar? (dentro de los 5 min).
-  puedeEditar(p: Pqrs): boolean {
-    if (!p.respuesta_fecha) {
-      return false;
+  // ¿Esta respuesta aún se puede editar? (dentro de los 5 min de creada).
+  puedeEditar(r: RespuestaPqrs): boolean {
+    if (!r.created_at || r.id === 0) {
+      return false; // id 0 = respuesta legada (antigua), no editable
     }
     const iso =
-      p.respuesta_fecha.endsWith('Z') || p.respuesta_fecha.includes('+')
-        ? p.respuesta_fecha
-        : p.respuesta_fecha + 'Z';
+      r.created_at.endsWith('Z') || r.created_at.includes('+')
+        ? r.created_at
+        : r.created_at + 'Z';
     return Date.now() - new Date(iso).getTime() < VENTANA_EDICION_MS;
   }
 
-  // Reabre el cuadro de texto para editar la respuesta.
-  editar(p: Pqrs) {
-    this.respuestaTexto = p.respuesta ?? '';
-    this.editando.set(true);
+  // Abre el cuadro para editar una respuesta del hilo.
+  editar(r: RespuestaPqrs) {
+    this.editandoId.set(r.id);
+    this.edicionTexto = r.texto;
   }
 
-  // Cancela la edición y restaura la respuesta guardada.
-  cancelar(p: Pqrs) {
-    this.respuestaTexto = p.respuesta ?? '';
-    this.editando.set(false);
+  // Cancela la edición de una respuesta.
+  cancelarEdicion() {
+    this.editandoId.set(null);
+    this.edicionTexto = '';
   }
 
-  // Guarda la respuesta a la PQRS abierta.
+  // Guarda los cambios de una respuesta editada.
+  guardarEdicion(r: RespuestaPqrs) {
+    const texto = this.edicionTexto.trim();
+    if (!texto) {
+      return;
+    }
+    this.error.set(null);
+    this.pqrsService.editarRespuesta(r.id, texto).subscribe({
+      next: (actualizada) => {
+        this.reemplazar(actualizada);
+        this.seleccionada.set(actualizada);
+        this.cancelarEdicion();
+      },
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo editar la respuesta'),
+    });
+  }
+
+  // Envía una NUEVA respuesta a la PQRS abierta (se pueden enviar varias).
   responder() {
     const p = this.seleccionada();
     if (!p) {
@@ -131,11 +149,20 @@ export class Asignadas implements OnInit {
       next: (r) => {
         this.reemplazar(r);
         this.seleccionada.set(r);
-        this.editando.set(false);
-        this.ok.set('Respuesta guardada. El ciudadano ya puede verla con su código.');
+        this.respuestaTexto = '';
+        this.ok.set('Respuesta enviada. El ciudadano ya puede verla con su código.');
       },
-      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo guardar la respuesta'),
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo enviar la respuesta'),
     });
+  }
+
+  // Formatea una fecha ISO (UTC) a fecha y hora local en español.
+  fechaLocal(iso?: string | null): string {
+    if (!iso) return '—';
+    const tieneZona = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
+    const f = new Date(tieneZona ? iso : iso + 'Z');
+    if (isNaN(f.getTime())) return iso;
+    return f.toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
   }
 
   // Cambia el estado de la PQRS abierta (puede moverla de pestaña).

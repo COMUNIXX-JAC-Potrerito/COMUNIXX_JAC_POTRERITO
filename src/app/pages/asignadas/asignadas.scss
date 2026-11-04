@@ -85,6 +85,56 @@
     flex-wrap: wrap;
     margin-top: 8px;
   }
+
+  .hint {
+    color: var(--texto-suave);
+    font-size: 0.88rem;
+    margin: 0 0 14px;
+  }
+
+  /* Separa la etiqueta "Nueva respuesta" del hilo de arriba */
+  .hilo-resp + .etq,
+  .hint + .etq {
+    margin-top: 16px;
+  }
+}
+
+/* Hilo de respuestas (varias por PQRS) */
+.hilo-resp {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-resp {
+  background: var(--primario-suave);
+  border: 1px solid #cfe6d8;
+  border-radius: 8px;
+  padding: 10px 12px;
+
+  .texto {
+    margin: 0;
+    white-space: pre-line;
+  }
+  .pie-resp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .fecha {
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+  }
+  textarea {
+    width: 100%;
+    resize: vertical;
+    font-family: inherit;
+  }
 }
 
 .respuesta-guardada {
