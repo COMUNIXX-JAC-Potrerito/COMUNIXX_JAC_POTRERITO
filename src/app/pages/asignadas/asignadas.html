@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="der">
-              @if (p.respuesta) {
+              @if (p.respuestas && p.respuestas.length > 0) {
                 <span class="clip">Respondida</span>
               }
               <span class="cod">{{ p.codigo_seguimiento }}</span>
@@ -101,28 +101,42 @@
         <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
       }
 
-      <!-- Responder -->
+      <!-- Hilo de respuestas (se pueden enviar varias) -->
       <div class="bloque-resp">
-        @if (!p.respuesta || editando()) {
-          <label class="etq">Respuesta al ciudadano</label>
-          <textarea [(ngModel)]="respuestaTexto" [ngModelOptions]="{ standalone: true }" rows="3" placeholder="Escribe la respuesta…"></textarea>
-          <div class="resp-acc">
-            <button (click)="responder()" [disabled]="!respuestaTexto.trim()">Guardar respuesta</button>
-            @if (p.respuesta) {
-              <button class="secundario" (click)="cancelar(p)">Cancelar</button>
+        <label class="etq">Respuestas al ciudadano</label>
+
+        @if (p.respuestas && p.respuestas.length > 0) {
+          <ul class="hilo-resp">
+            @for (r of p.respuestas; track r.id) {
+              <li class="item-resp">
+                @if (editandoId() === r.id) {
+                  <textarea [(ngModel)]="edicionTexto" [ngModelOptions]="{ standalone: true }" rows="3"></textarea>
+                  <div class="resp-acc">
+                    <button (click)="guardarEdicion(r)" [disabled]="!edicionTexto.trim()">Guardar cambios</button>
+                    <button class="secundario" (click)="cancelarEdicion()">Cancelar</button>
+                  </div>
+                } @else {
+                  <p class="texto">{{ r.texto }}</p>
+                  <div class="pie-resp">
+                    <span class="fecha">{{ fechaLocal(r.created_at) }}</span>
+                    @if (puedeEditar(r)) {
+                      <button class="secundario mini" (click)="editar(r)">Editar (5 min)</button>
+                    }
+                  </div>
+                }
+              </li>
             }
-          </div>
+          </ul>
         } @else {
-          <div class="respuesta-guardada">
-            <span class="etiqueta">Respuesta enviada:</span>
-            <p>{{ p.respuesta }}</p>
-          </div>
-          @if (puedeEditar(p)) {
-            <button class="secundario mini" (click)="editar(p)">Editar (5 min)</button>
-          } @else {
-            <span class="bloqueado">Respuesta enviada (ya no se puede editar).</span>
-          }
+          <p class="hint">Aún no has respondido esta PQRS.</p>
         }
+
+        <!-- Nueva respuesta (siempre disponible) -->
+        <label class="etq">Nueva respuesta</label>
+        <textarea [(ngModel)]="respuestaTexto" [ngModelOptions]="{ standalone: true }" rows="3" placeholder="Escribe una respuesta…"></textarea>
+        <div class="resp-acc">
+          <button (click)="responder()" [disabled]="!respuestaTexto.trim()">Enviar respuesta</button>
+        </div>
       </div>
 
       <div class="acciones-det">
