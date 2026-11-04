@@ -35,11 +35,13 @@
         <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
         <div class="fila"><span>Radicada</span><strong>{{ formatearFecha(r.created_at) }}</strong></div>
         <div class="fila"><span>Última actualización</span><strong>{{ formatearFecha(r.updated_at) }}</strong></div>
-        @if (r.respuesta) {
-          <div class="fila respuesta">
-            <span>Respuesta de la JAC</span>
-            <strong>{{ r.respuesta }}</strong>
-          </div>
+        @if (r.respuestas && r.respuestas.length > 0) {
+          @for (resp of r.respuestas; track resp.id) {
+            <div class="fila respuesta">
+              <span>Respuesta de la JAC</span>
+              <strong>{{ resp.texto }}</strong>
+            </div>
+          }
         }
         @if (r.adjunto_url) {
           <div class="fila">
@@ -125,14 +127,14 @@
         <a class="adjunto-link" [href]="p.adjunto_url" target="_blank" rel="noopener">Ver adjunto</a>
       }
 
-      @if (p.respuesta) {
-        <div class="respuesta-det">
-          <span class="etiqueta">Respuesta de la JAC</span>
-          <p>{{ p.respuesta }}</p>
-          @if (p.respuesta_fecha) {
-            <span class="resp-fecha">Respondida: {{ formatearFecha(p.respuesta_fecha) }}</span>
-          }
-        </div>
+      @if (p.respuestas && p.respuestas.length > 0) {
+        <span class="etiqueta">Respuestas de la JAC</span>
+        @for (resp of p.respuestas; track resp.id) {
+          <div class="respuesta-det">
+            <p>{{ resp.texto }}</p>
+            <span class="resp-fecha">{{ formatearFecha(resp.created_at) }}</span>
+          </div>
+        }
       }
     </article>
   }

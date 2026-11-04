@@ -1,3 +1,12 @@
+// Una respuesta de la JAC dentro del hilo de una PQRS (varias por PQRS).
+export interface RespuestaPqrs {
+  id: number;
+  texto: string;
+  autor_id?: number | null;
+  created_at: string;
+  updated_at?: string | null;
+}
+
 // Estructura de una PQRS tal como la devuelve el backend.
 export interface Pqrs {
   id: number;
@@ -14,8 +23,9 @@ export interface Pqrs {
   telefono_contacto: string | null;
   created_at: string; // fecha y hora de radicación
   updated_at?: string | null; // fecha y hora de la última actualización
-  respuesta?: string | null;
+  respuesta?: string | null; // legado (respuesta única)
   respuesta_fecha?: string | null;
+  respuestas?: RespuestaPqrs[]; // hilo de respuestas de la JAC
   adjunto_url?: string | null;
   adjunto_tipo?: string | null;
   adjunto_nombre?: string | null;
@@ -44,7 +54,8 @@ export interface PqrsSeguimiento {
   comite: string | null;
   created_at: string;
   updated_at: string | null;
-  respuesta?: string | null;
+  respuesta?: string | null; // legado
+  respuestas?: RespuestaPqrs[]; // hilo de respuestas de la JAC
   adjunto_url?: string | null;
   adjunto_tipo?: string | null;
   adjunto_nombre?: string | null;

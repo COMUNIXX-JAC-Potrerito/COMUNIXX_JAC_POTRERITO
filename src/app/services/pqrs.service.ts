@@ -42,9 +42,14 @@ export class PqrsService {
     return this.http.get<Pqrs[]>(`${this.apiUrl}/pqrs/mias`);
   }
 
-  // Guarda la respuesta de la JAC a una PQRS.
+  // Agrega una respuesta de la JAC a una PQRS (permite varias por PQRS).
   responder(id: number, respuesta: string): Observable<Pqrs> {
     return this.http.put<Pqrs>(`${this.apiUrl}/pqrs/${id}/responder`, { respuesta });
+  }
+
+  // Edita una respuesta ya enviada (dentro de los 5 min).
+  editarRespuesta(respuestaId: number, respuesta: string): Observable<Pqrs> {
+    return this.http.put<Pqrs>(`${this.apiUrl}/pqrs/respuestas/${respuestaId}`, { respuesta });
   }
 
   // Asigna una PQRS a un comité.
