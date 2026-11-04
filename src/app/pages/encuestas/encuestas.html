@@ -18,7 +18,12 @@
           @if (e.descripcion) {
             <p class="desc">{{ e.descripcion }}</p>
           }
-          <button (click)="abrir(e)">Responder</button>
+          @if (yaRespondio(e.id)) {
+            <span class="respondida">✓ Ya respondiste</span>
+            <button class="secundario" (click)="abrir(e)">Ver</button>
+          } @else {
+            <button (click)="abrir(e)">Responder</button>
+          }
         </article>
       }
     </div>
@@ -28,7 +33,7 @@
     @if (gracias()) {
       <div class="gracias">
         <h2>¡Gracias por participar!</h2>
-        <p>Tu respuesta fue registrada.</p>
+        <p>Tu respuesta fue enviada exitosamente.</p>
         <button (click)="volver()">Ver otras encuestas</button>
       </div>
     } @else {
@@ -42,13 +47,15 @@
       }
 
       <form (ngSubmit)="responder()">
-        <div class="datos">
-          <p class="nota">Tus datos son obligatorios para registrar tu participación.</p>
-          <input [(ngModel)]="nombre" [ngModelOptions]="{ standalone: true }" placeholder="Nombre completo *" />
-          <input [(ngModel)]="email" [ngModelOptions]="{ standalone: true }" placeholder="Correo" />
-          <input [(ngModel)]="telefono" [ngModelOptions]="{ standalone: true }" placeholder="Celular" />
-          <p class="nota">Indica al menos un correo o un celular.</p>
-        </div>
+        @if (!auth.isLoggedIn()) {
+          <div class="datos">
+            <p class="nota">Tus datos son obligatorios para registrar tu participación.</p>
+            <input [(ngModel)]="nombre" [ngModelOptions]="{ standalone: true }" placeholder="Nombre completo *" />
+            <input [(ngModel)]="email" [ngModelOptions]="{ standalone: true }" placeholder="Correo" />
+            <input [(ngModel)]="telefono" [ngModelOptions]="{ standalone: true }" placeholder="Celular" />
+            <p class="nota">Indica al menos un correo o un celular.</p>
+          </div>
+        }
 
         @for (p of actual()!.preguntas; track p.id) {
           <div class="pregunta">

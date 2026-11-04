@@ -47,6 +47,13 @@
     color: var(--texto-suave);
     margin: 0 0 12px;
   }
+  .respondida {
+    display: inline-block;
+    color: #2e8b57;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-right: 12px;
+  }
 }
 
 .volver {
