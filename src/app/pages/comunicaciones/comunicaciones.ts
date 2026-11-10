@@ -1,13 +1,13 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Comunicacion } from '../../models/comunicacion.model';
 import { ComunicacionService } from '../../services/comunicacion.service';
+import { CapitalizarPipe, FechaLocalPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-comunicaciones',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, CapitalizarPipe, FechaLocalPipe],
   templateUrl: './comunicaciones.html',
   styleUrl: './comunicaciones.scss',
 })
@@ -28,6 +28,7 @@ export class Comunicaciones implements OnInit {
   masivoContenido = '';
   enviandoMasivo = signal(false);
   resultadoMasivo = signal<string | null>(null);
+  errorMasivo = signal<string | null>(null);
 
   // Al abrir, carga la bitácora de comunicaciones.
   ngOnInit() {
@@ -36,7 +37,10 @@ export class Comunicaciones implements OnInit {
 
   // Trae las comunicaciones externas registradas.
   cargar() {
-    this.service.listarComunicaciones().subscribe((c) => this.items.set(c));
+    this.service.listarComunicaciones().subscribe({
+      next: (c) => this.items.set(c),
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo cargar la bitácora'),
+    });
   }
 
   // Registra una nueva comunicación externa y limpia el formulario.
@@ -57,13 +61,23 @@ export class Comunicaciones implements OnInit {
 
   // Elimina una comunicación de la bitácora.
   eliminar(c: Comunicacion) {
-    this.service.eliminarComunicacion(c.id).subscribe(() => this.cargar());
+    if (!confirm(`¿Eliminar el registro "${c.asunto}" de la bitácora? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+    this.service.eliminarComunicacion(c.id).subscribe({
+      next: () => this.cargar(),
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo eliminar'),
+    });
   }
 
   // Envía el comunicado por correo a toda la comunidad y muestra el resultado.
   enviarMasivo() {
+    if (!confirm('El comunicado se enviará por correo a TODAS las personas registradas. ¿Enviarlo?')) {
+      return;
+    }
     this.enviandoMasivo.set(true);
     this.resultadoMasivo.set(null);
+    this.errorMasivo.set(null);
     this.service.enviarMasivo(this.masivoAsunto, this.masivoContenido).subscribe({
       next: (r) => {
         this.enviandoMasivo.set(false);
@@ -74,7 +88,7 @@ export class Comunicaciones implements OnInit {
       },
       error: (e) => {
         this.enviandoMasivo.set(false);
-        this.resultadoMasivo.set(e?.error?.detail ?? 'No se pudo enviar');
+        this.errorMasivo.set(e?.error?.detail ?? 'No se pudo enviar el comunicado');
       },
     });
   }

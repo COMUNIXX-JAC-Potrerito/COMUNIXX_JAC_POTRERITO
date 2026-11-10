@@ -3,13 +3,14 @@ import { FormsModule } from '@angular/forms';
 
 import { ESTADOS_GESTIONABLES, Pqrs, RespuestaPqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
+import { EstadoPipe, FechaLocalPipe, TipoPqrsPipe } from '../../shared/pipes';
 
 type Estado = 'Nueva' | 'En_Proceso' | 'En_Espera' | 'Finalizada';
 const VENTANA_EDICION_MS = 5 * 60 * 1000; // 5 minutos
 
 @Component({
   selector: 'app-asignadas',
-  imports: [FormsModule],
+  imports: [FormsModule, EstadoPipe, FechaLocalPipe, TipoPqrsPipe],
   templateUrl: './asignadas.html',
   styleUrl: './asignadas.scss',
 })
@@ -154,15 +155,6 @@ export class Asignadas implements OnInit {
       },
       error: (e) => this.error.set(e?.error?.detail ?? 'No se pudo enviar la respuesta'),
     });
-  }
-
-  // Formatea una fecha ISO (UTC) a fecha y hora local en español.
-  fechaLocal(iso?: string | null): string {
-    if (!iso) return '—';
-    const tieneZona = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
-    const f = new Date(tieneZona ? iso : iso + 'Z');
-    if (isNaN(f.getTime())) return iso;
-    return f.toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
   }
 
   // Cambia el estado de la PQRS abierta (puede moverla de pestaña).

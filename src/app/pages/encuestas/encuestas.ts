@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { EncuestaDetalle, EncuestaResumen, RespuestaItem } from '../../models/encuesta.model';
 import { AuthService } from '../../services/auth.service';
 import { EncuestasService } from '../../services/encuestas.service';
+import { CapitalizarPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-encuestas',
-  imports: [FormsModule],
+  imports: [FormsModule, CapitalizarPipe],
   templateUrl: './encuestas.html',
   styleUrl: './encuestas.scss',
 })

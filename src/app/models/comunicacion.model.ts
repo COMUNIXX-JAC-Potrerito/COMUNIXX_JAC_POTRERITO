@@ -61,6 +61,7 @@ export interface Reporte {
   pqrs_total: number;
   pqrs_nuevas: number;
   pqrs_en_proceso: number;
+  pqrs_en_espera: number;
   pqrs_finalizadas: number;
   publicaciones: number;
   comunicaciones_enviadas: number;

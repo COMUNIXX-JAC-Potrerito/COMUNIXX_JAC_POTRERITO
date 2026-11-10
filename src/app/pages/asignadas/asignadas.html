@@ -48,7 +48,7 @@
           <li class="fila-msg" (click)="abrir(p)">
             <div class="izq">
               <div class="linea1">
-                <span class="tipo">{{ p.tipo }}</span>
+                <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
                 <strong class="asunto">{{ p.asunto }}</strong>
               </div>
               <div class="de">
@@ -76,12 +76,12 @@
 
     <article class="detalle">
       <div class="cab-det">
-        <span class="tipo">{{ p.tipo }}</span>
+        <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
         <span class="cod">{{ p.codigo_seguimiento }}</span>
       </div>
       <h2>{{ p.asunto }}</h2>
       <div class="meta">
-        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado }}</span>
+        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado | estado }}</span>
         @if (p.es_anonima) {
           <span class="badge-anon">Anónima</span>
         } @else {
@@ -118,7 +118,7 @@
                 } @else {
                   <p class="texto">{{ r.texto }}</p>
                   <div class="pie-resp">
-                    <span class="fecha">{{ fechaLocal(r.created_at) }}</span>
+                    <span class="fecha">{{ r.created_at | fechaLocal }}</span>
                     @if (puedeEditar(r)) {
                       <button class="secundario mini" (click)="editar(r)">Editar (5 min)</button>
                     }
@@ -146,7 +146,7 @@
             <select [(ngModel)]="estadoSel" [ngModelOptions]="{ standalone: true }">
               <option value="">Selecciona…</option>
               @for (e of estados; track e) {
-                <option [value]="e">{{ e }}</option>
+                <option [value]="e">{{ e | estado }}</option>
               }
             </select>
             <button (click)="actualizarEstado()" [disabled]="!estadoSel">Aplicar</button>

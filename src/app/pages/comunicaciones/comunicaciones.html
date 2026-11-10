@@ -49,10 +49,10 @@
       @for (c of items(); track c.id) {
         <div class="item">
           <div>
-            <span class="badge" [class.recibida]="c.tipo === 'recibida'">{{ c.tipo }}</span>
+            <span class="badge" [class.recibida]="c.tipo === 'recibida'">{{ c.tipo | capitalizar }}</span>
             <strong>{{ c.entidad }}</strong> — {{ c.asunto }}
             <div class="desc">{{ c.descripcion }}</div>
-            <div class="fecha">{{ c.fecha | date: 'short' }}</div>
+            <div class="fecha">{{ c.fecha | fechaLocal }}</div>
           </div>
           <button class="del" (click)="eliminar(c)">Eliminar</button>
         </div>
@@ -84,6 +84,9 @@
 
     @if (resultadoMasivo()) {
       <div class="ok">{{ resultadoMasivo() }}</div>
+    }
+    @if (errorMasivo()) {
+      <div class="alert">{{ errorMasivo() }}</div>
     }
   </section>
 </div>

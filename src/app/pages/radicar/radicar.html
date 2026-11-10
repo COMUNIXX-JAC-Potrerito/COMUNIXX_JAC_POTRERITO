@@ -22,7 +22,7 @@
         <select name="tipo" [(ngModel)]="tipo" required>
           <option value="">Selecciona…</option>
           @for (t of tipos; track t) {
-            <option [value]="t">{{ t }}</option>
+            <option [value]="t">{{ t | tipoPqrs }}</option>
           }
         </select>
       </label>
@@ -56,11 +56,11 @@
           </label>
           <label>
             Correo
-            <input name="email" [(ngModel)]="emailContacto" placeholder="correo@ejemplo.com" />
+            <input type="email" name="email" [(ngModel)]="emailContacto" autocomplete="email" placeholder="correo@ejemplo.com" />
           </label>
           <label>
             Celular
-            <input name="telefono" [(ngModel)]="telefonoContacto" placeholder="300 000 0000" />
+            <input type="tel" name="telefono" [(ngModel)]="telefonoContacto" autocomplete="tel" placeholder="300 000 0000" />
           </label>
         </div>
         <p class="req-nota">Indica al menos un correo o un celular.</p>
