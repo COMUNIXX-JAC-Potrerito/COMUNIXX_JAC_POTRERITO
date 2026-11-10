@@ -74,14 +74,14 @@
     @for (e of items(); track e.id) {
       <div class="item">
         <div class="item-info">
-          <span class="badge tipo">{{ e.tipo }}</span>
+          <span class="badge tipo">{{ e.tipo | capitalizar }}</span>
           @if (e.publicada) {
             <span class="badge pub">Publicada</span>
           } @else {
             <span class="badge borr">Borrador</span>
           }
           <strong>{{ e.titulo }}</strong>
-          <div class="fecha">{{ e.created_at | date: 'short' }}</div>
+          <div class="fecha">{{ e.created_at | fechaLocal }}</div>
         </div>
         <div class="acciones">
           <button (click)="publicar(e)">{{ e.publicada ? 'Despublicar' : 'Publicar' }}</button>
@@ -150,7 +150,7 @@
                 <td>{{ per.nombre || '—' }}</td>
                 <td>{{ per.email || '—' }}</td>
                 <td>{{ per.telefono || '—' }}</td>
-                <td>{{ per.created_at | date: 'short' }}</td>
+                <td>{{ per.created_at | fechaLocal }}</td>
               </tr>
             }
           </tbody>

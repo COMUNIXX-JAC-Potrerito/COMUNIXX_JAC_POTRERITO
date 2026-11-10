@@ -51,7 +51,7 @@ export class AdminPublicaciones implements OnInit {
   cargar() {
     this.service.listar().subscribe({
       next: (data) => this.items.set(data),
-      error: (err) => this.error.set(err?.error?.detail ?? 'Error al cargar'),
+      error: (err) => this.error.set(err?.error?.detail ?? 'No se pudieron cargar las publicaciones'),
     });
   }
 
@@ -122,6 +122,9 @@ export class AdminPublicaciones implements OnInit {
 
   // Elimina una publicación.
   eliminar(p: Publicacion) {
+    if (!confirm(`¿Eliminar la publicación "${p.titulo}"? Esta acción no se puede deshacer.`)) {
+      return;
+    }
     this.service.eliminar(p.id).subscribe({
       next: () => this.cargar(),
       error: (err) => this.error.set(err?.error?.detail ?? 'No se pudo eliminar'),

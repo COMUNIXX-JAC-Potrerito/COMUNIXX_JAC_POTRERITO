@@ -12,7 +12,7 @@
     </p>
 
     <form class="buscador" (ngSubmit)="consultar()">
-      <input name="codigo" [(ngModel)]="codigo" placeholder="Ej: a3f9c1b2e4" />
+      <input name="codigo" [(ngModel)]="codigo" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ej: a3f9c1b2e4" />
       <button type="submit" [disabled]="buscando() || !codigo.trim()">
         {{ buscando() ? 'Buscando…' : 'Consultar' }}
       </button>
@@ -26,15 +26,15 @@
     @if (resultado(); as r) {
       <div class="resultado">
         <div class="fila"><span>Código</span><strong class="mono">{{ r.codigo_seguimiento }}</strong></div>
-        <div class="fila"><span>Tipo</span><strong>{{ r.tipo }}</strong></div>
+        <div class="fila"><span>Tipo</span><strong>{{ r.tipo | tipoPqrs }}</strong></div>
         <div class="fila"><span>Asunto</span><strong>{{ r.asunto }}</strong></div>
         <div class="fila">
           <span>Estado</span>
-          <span class="badge" [class]="'e-' + r.estado">{{ r.estado }}</span>
+          <span class="badge" [class]="'e-' + r.estado">{{ r.estado | estado }}</span>
         </div>
         <div class="fila"><span>Comité asignado</span><strong>{{ r.comite || 'Pendiente de asignar' }}</strong></div>
-        <div class="fila"><span>Radicada</span><strong>{{ formatearFecha(r.created_at) }}</strong></div>
-        <div class="fila"><span>Última actualización</span><strong>{{ formatearFecha(r.updated_at) }}</strong></div>
+        <div class="fila"><span>Radicada</span><strong>{{ r.created_at | fechaLocal }}</strong></div>
+        <div class="fila"><span>Última actualización</span><strong>{{ r.updated_at | fechaLocal }}</strong></div>
         @if (r.respuestas && r.respuestas.length > 0) {
           @for (resp of r.respuestas; track resp.id) {
             <div class="fila respuesta">
@@ -73,13 +73,13 @@
               <li class="fila-msg" (click)="abrir(m)">
                 <div class="izq">
                   <div class="linea1">
-                    <span class="tipo">{{ m.tipo }}</span>
+                    <span class="tipo">{{ m.tipo | tipoPqrs }}</span>
                     <strong class="asunto">{{ m.asunto }}</strong>
                   </div>
-                  <div class="de">Radicada: {{ formatearFecha(m.created_at) }}</div>
+                  <div class="de">Radicada: {{ m.created_at | fechaLocal }}</div>
                 </div>
                 <div class="der">
-                  <span class="estado-badge" [class]="'e-' + m.estado">{{ m.estado }}</span>
+                  <span class="estado-badge" [class]="'e-' + m.estado">{{ m.estado | estado }}</span>
                   <span class="cod">{{ m.codigo_seguimiento }}</span>
                 </div>
               </li>
@@ -94,13 +94,13 @@
 
     <article class="detalle">
       <div class="cab-det">
-        <span class="tipo">{{ p.tipo }}</span>
+        <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
         <span class="cod">{{ p.codigo_seguimiento }}</span>
       </div>
       <h2>{{ p.asunto }}</h2>
 
       <div class="meta">
-        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado }}</span>
+        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado | estado }}</span>
         <span>Comité: {{ p.comite || 'Pendiente de asignar' }}</span>
         @if (p.es_anonima) {
           <span class="badge-anon">Anónima</span>
@@ -108,8 +108,8 @@
       </div>
 
       <div class="fechas">
-        <span>Radicada: <strong>{{ formatearFecha(p.created_at) }}</strong></span>
-        <span>Última actualización: <strong>{{ formatearFecha(p.updated_at) }}</strong></span>
+        <span>Radicada: <strong>{{ p.created_at | fechaLocal }}</strong></span>
+        <span>Última actualización: <strong>{{ p.updated_at | fechaLocal }}</strong></span>
       </div>
 
       <p class="cuerpo">{{ p.descripcion }}</p>
@@ -132,7 +132,7 @@
         @for (resp of p.respuestas; track resp.id) {
           <div class="respuesta-det">
             <p>{{ resp.texto }}</p>
-            <span class="resp-fecha">{{ formatearFecha(resp.created_at) }}</span>
+            <span class="resp-fecha">{{ resp.created_at | fechaLocal }}</span>
           </div>
         }
       }
