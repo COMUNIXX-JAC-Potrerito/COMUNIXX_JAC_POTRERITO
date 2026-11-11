@@ -1,59 +1,86 @@
-# ComunixxFrontend
+# COMUNIX — Frontend (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.37.
+Interfaz web del Sistema de Gestión y Comunicación Comunitaria para la **Junta de Acción
+Comunal (JAC) de la Vereda Potrerito**. La API REST está en
+[Backend-FastApi](https://github.com/COMUNIXX-JAC-Potrerito/Backend-FastApi).
 
-## Development server
+Proyecto formativo — SENA, Tecnología en Análisis y Desarrollo de Software (ADSO), ficha 3223873.
 
-To start a local development server, run:
+**Producción:** <https://comunix.vercel.app>
 
-```bash
-ng serve
+## Qué incluye
+
+- **Portal público:** inicio, radicar PQRS (pública o anónima, con adjunto), consultar el
+  estado por código, publicaciones, encuestas y censos, registro e inicio de sesión.
+- **Panel JAC** (administradores y superadministradores): bandejas de PQRS tipo correo
+  (entrantes, mis asignadas, mis PQRS, historial), publicaciones, comunicaciones y envío
+  masivo, encuestas, chat entre dignatarios, **información y estadísticas**, y gestión de
+  usuarios y roles.
+- Diseño responsive, cierre de sesión por inactividad (15 minutos) y por vencimiento del token.
+
+## Tecnologías
+
+Angular 20 (componentes standalone y signals) · TypeScript · RxJS · SCSS ·
+Jasmine + Karma · Vercel.
+
+## Estructura
+
+```
+src/app/
+  pages/          # una carpeta por pantalla (portal público y panel JAC)
+  services/       # llamadas a la API, sesión e inactividad
+  guards/         # authGuard: solo dignatarios entran al panel
+  interceptors/   # agrega el token JWT y maneja la sesión vencida (401)
+  models/         # tipos de datos y catálogos (estados, tipos, comités)
+  shared/         # formato de fechas y etiquetas, pipes reutilizables
+src/environments/ # URL de la API para desarrollo y producción
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Instalación y ejecución local
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Requisitos: Node.js 22 o superior y el backend corriendo en local (ver su README).
 
 ```bash
-ng generate component component-name
+npm ci        # instala las dependencias exactas de package-lock.json
+npm start     # servidor de desarrollo en http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+En desarrollo la app usa la API de `src/environments/environment.ts`
+(`http://127.0.0.1:8000/api`); el build de producción usa `environment.prod.ts`.
+
+## Pruebas y build
 
 ```bash
-ng generate --help
+npx ng test --watch=false --browsers=ChromeHeadless   # pruebas unitarias
+npm run build                                         # build de producción en dist/
 ```
 
-## Building
+## Despliegue
 
-To build the project run:
+Vercel construye y publica automáticamente: `master` va a producción
+(<https://comunix.vercel.app>) y cada rama o pull request genera una vista previa.
+`vercel.json` define la reescritura de rutas de la SPA y las cabeceras de seguridad.
 
-```bash
-ng build
-```
+## Flujo de trabajo
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Git Flow (`master`, `develop`, `feature/*`, `release/*`, `hotfix/*`): ver
+[CONTRIBUTING.md](CONTRIBUTING.md). Los cambios de cada versión están en
+[CHANGELOG.md](CHANGELOG.md).
 
-## Running unit tests
+## Equipo
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+| Integrante | Rol |
+|---|---|
+| Juan Camilo Montes Velásquez | Líder del proyecto y desarrollador backend |
+| Simón Carmona Toro | Administrador de base de datos, documentación y soporte full-stack |
+| David Alejandro Orozco | Desarrollador frontend y diseñador UX/UI |
 
-```bash
-ng test
-```
+## Uso de inteligencia artificial
 
-## Running end-to-end tests
+En el desarrollo se usó asistencia de IA (Claude Code) para auditorías, pruebas
+automatizadas, documentación y parte de la implementación. El equipo revisó los cambios y es
+responsable del código entregado.
 
-For end-to-end (e2e) testing, run:
+## Licencia
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+[MIT](LICENSE) © 2026 equipo COMUNIX.
