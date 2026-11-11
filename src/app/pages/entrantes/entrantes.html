@@ -22,7 +22,7 @@
           <li class="fila-msg" (click)="abrir(p)">
             <div class="izq">
               <div class="linea1">
-                <span class="tipo">{{ p.tipo }}</span>
+                <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
                 <strong class="asunto">{{ p.asunto }}</strong>
               </div>
               <div class="de">
@@ -50,7 +50,7 @@
 
     <article class="detalle">
       <div class="cab-det">
-        <span class="tipo">{{ p.tipo }}</span>
+        <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
         <span class="cod mono">{{ p.codigo_seguimiento }}</span>
       </div>
       <h2>{{ p.asunto }}</h2>

@@ -63,7 +63,7 @@
                 }
               }
               <span class="hora">
-                {{ m.created_at | date: 'short' }}@if (m.editado) { · editado }
+                {{ m.created_at | fechaLocal }}@if (m.editado) { · editado }
               </span>
               <div class="acciones-msg">
                 <button class="acc" (click)="copiar(m)">Copiar</button>
@@ -106,10 +106,9 @@
           [(ngModel)]="texto"
           [ngModelOptions]="{ standalone: true }"
           placeholder="Escribe un mensaje"
-          autocorrect="off"
-          autocapitalize="off"
           autocomplete="off"
-          spellcheck="false"
+          spellcheck="true"
+          maxlength="2000"
         />
         <button type="submit" [disabled]="enviando() || (!texto.trim() && !archivo())">
           {{ subiendo() ? 'Subiendo…' : enviando() ? 'Enviando…' : 'Enviar' }}
@@ -122,7 +121,9 @@
 @if (toast(); as t) {
   <div class="toast-msg">
     <strong>{{ t.nombre }}</strong> te escribió
-    <div class="txt">{{ t.texto }}</div>
+    @if (t.texto) {
+      <div class="txt">{{ t.texto }}</div>
+    }
   </div>
 }
 

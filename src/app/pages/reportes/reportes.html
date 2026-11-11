@@ -1,59 +1,230 @@
-<section>
-  <div class="cab">
-    <h2>Reportes y estadísticas</h2>
-    <button (click)="cargar()" [disabled]="cargando()">Actualizar</button>
-  </div>
+<section class="tablero">
+  <header class="cab">
+    <div>
+      <h2>Información y estadísticas</h2>
+      <p class="sub">
+        Gestión de PQRS {{ etiquetaPeriodo() }}
+        @if (actualizado()) {
+          · actualizado a las {{ horaActualizado() }}
+        }
+      </p>
+    </div>
+    <div class="controles">
+      <div class="periodos" role="group" aria-label="Periodo de los gráficos">
+        @for (p of periodos; track p.valor) {
+          <button
+            type="button"
+            [class.activo]="periodo() === p.valor"
+            [attr.aria-pressed]="periodo() === p.valor"
+            (click)="elegirPeriodo(p.valor)"
+          >{{ p.etiqueta }}</button>
+        }
+      </div>
+      <button type="button" class="secundario" (click)="cargar()" [disabled]="cargando()">
+        {{ cargando() ? 'Actualizando…' : 'Actualizar' }}
+      </button>
+    </div>
+  </header>
 
-  @if (data(); as d) {
-    <div class="grupo">
-      <h3>PQRS</h3>
-      <div class="cards">
-        <div class="stat"><span class="num">{{ d.pqrs_total }}</span><span class="lbl">Total</span></div>
-        <div class="stat azul"><span class="num">{{ d.pqrs_nuevas }}</span><span class="lbl">Nuevas</span></div>
-        <div class="stat naranja"><span class="num">{{ d.pqrs_en_proceso }}</span><span class="lbl">En proceso</span></div>
-        <div class="stat verde"><span class="num">{{ d.pqrs_finalizadas }}</span><span class="lbl">Finalizadas</span></div>
+  @if (error()) {
+    <div class="alert">{{ error() }}</div>
+  }
+  @if (cargando() && !actualizado()) {
+    <p class="hint">Cargando estadísticas…</p>
+  }
+
+  @if (actualizado()) {
+    <!-- Indicadores principales -->
+    <div class="kpis">
+      <div class="kpi">
+        <span class="lbl">PQRS radicadas</span>
+        <span class="num">{{ kpi().total }}</span>
+        <span class="det">{{ plural(kpi().anonimas, 'anónima', 'anónimas') }}</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Pendientes</span>
+        <span class="num">{{ kpi().pendientes }}</span>
+        <span class="det">{{ plural(kpi().sinRespuesta, 'sin ninguna respuesta', 'sin ninguna respuesta') }}</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Resueltas</span>
+        <span class="num">{{ porcentaje(kpi().tasaResolucion) }}</span>
+        <span class="det">{{ plural(kpi().finalizadas, 'finalizada', 'finalizadas') }}</span>
+      </div>
+      <div class="kpi">
+        <span class="lbl">Primera respuesta</span>
+        <span class="num">{{ duracion(kpi().medianaPrimeraRespuestaHoras) }}</span>
+        <span class="det">tiempo típico (mediana)</span>
+      </div>
+      <div class="kpi" [class.alerta]="kpi().sinAsignar > 0">
+        <span class="lbl">Sin comité asignado</span>
+        <span class="num">{{ kpi().sinAsignar }}</span>
+        <span class="det">{{ kpi().sinAsignar > 0 ? 'por repartir en Entrantes' : 'todas repartidas' }}</span>
       </div>
     </div>
 
-    <div class="grupo">
-      <h3>Comunicación</h3>
-      <div class="cards">
-        <div class="stat"><span class="num">{{ d.comunicaciones_enviadas }}</span><span class="lbl">Enviadas</span></div>
-        <div class="stat"><span class="num">{{ d.comunicaciones_recibidas }}</span><span class="lbl">Recibidas</span></div>
-        <div class="stat"><span class="num">{{ d.mensajes_internos }}</span><span class="lbl">Mensajes internos</span></div>
-      </div>
-    </div>
-
-    <div class="grupo">
-      <h3>Carga por comité</h3>
-      @if (cargas().length === 0) {
-        <p class="empty">Aún no hay PQRS asignadas a comités.</p>
-      } @else {
-        <table class="tabla-carga">
-          <thead>
-            <tr><th>Comité</th><th>Pendientes</th><th>En proceso</th><th>Finalizadas</th><th>Total</th></tr>
-          </thead>
-          <tbody>
-            @for (c of cargas(); track c.comite) {
-              <tr>
-                <td>{{ c.comite }}</td>
-                <td><strong>{{ c.pendientes }}</strong></td>
-                <td>{{ c.en_proceso }}</td>
-                <td>{{ c.finalizadas }}</td>
-                <td>{{ c.total }}</td>
-              </tr>
+    @if (kpi().total === 0) {
+      <p class="empty">No hay PQRS radicadas en este periodo.</p>
+    } @else {
+      <div class="grid">
+        <!-- Estado: parte de un todo -->
+        <article class="card">
+          <h3>¿En qué estado están?</h3>
+          <div class="segmentos" role="img" [attr.aria-label]="'Distribución de ' + kpi().total + ' PQRS por estado'">
+            @for (e of porEstado(); track e.clave) {
+              @if (e.cantidad > 0) {
+                <span
+                  class="seg tip"
+                  tabindex="0"
+                  [style.flex-grow]="e.cantidad"
+                  [style.background]="e.color"
+                  [attr.data-tip]="e.etiqueta + ': ' + e.cantidad + ' (' + porcentaje(e.fraccion) + ')'"
+                  [attr.aria-label]="e.etiqueta + ': ' + e.cantidad"
+                ></span>
+              }
             }
-          </tbody>
-        </table>
-      }
-    </div>
+          </div>
+          <ul class="leyenda">
+            @for (e of porEstado(); track e.clave) {
+              <li>
+                <span class="muestra" [style.background]="e.color"></span>
+                <span class="nom">{{ e.etiqueta }}</span>
+                <strong>{{ e.cantidad }}</strong>
+                <span class="pct">{{ porcentaje(e.fraccion) }}</span>
+              </li>
+            }
+          </ul>
+        </article>
 
-    <div class="grupo">
-      <h3>Comunidad</h3>
-      <div class="cards">
-        <div class="stat"><span class="num">{{ d.usuarios }}</span><span class="lbl">Usuarios</span></div>
-        <div class="stat"><span class="num">{{ d.publicaciones }}</span><span class="lbl">Publicaciones</span></div>
+        <!-- Tipo: comparación de magnitudes (una sola serie) -->
+        <article class="card">
+          <h3>¿Qué tipo de solicitudes llegan?</h3>
+          <ul class="barras">
+            @for (t of porTipo(); track t.clave) {
+              <li>
+                <span class="nom">{{ t.etiqueta }}</span>
+                <span class="carril">
+                  <span
+                    class="barra tip"
+                    tabindex="0"
+                    [style.width.%]="t.ancho"
+                    [attr.data-tip]="t.etiqueta + ': ' + t.cantidad"
+                    [attr.aria-label]="t.etiqueta + ': ' + t.cantidad"
+                  ></span>
+                  <span class="valor">{{ t.cantidad }}</span>
+                </span>
+              </li>
+            }
+          </ul>
+        </article>
+
+        <!-- Tendencia mensual -->
+        <article class="card ancho">
+          <h3>PQRS radicadas por mes</h3>
+          <div class="columnas" [style.--cols]="porMes().meses.length">
+            <div class="eje" aria-hidden="true">
+              <span>{{ porMes().max }}</span>
+              <span>{{ porMes().max / 2 }}</span>
+              <span>0</span>
+            </div>
+            <div class="area">
+              <div class="guias" aria-hidden="true"><span></span><span></span><span></span></div>
+              @for (m of porMes().meses; track m.clave) {
+                <div
+                  class="col tip"
+                  tabindex="0"
+                  [attr.data-tip]="m.etiquetaLarga + ': ' + plural(m.total, 'PQRS', 'PQRS')"
+                  [attr.aria-label]="m.etiquetaLarga + ': ' + m.total"
+                >
+                  <span class="pila" [style.height.%]="m.alto">
+                    @if (m.rotular) {
+                      <span class="tope">{{ m.total }}</span>
+                    }
+                  </span>
+                  <span class="mes">{{ m.etiqueta }}</span>
+                </div>
+              }
+            </div>
+          </div>
+          <details>
+            <summary>Ver datos en tabla</summary>
+            <table class="tabla">
+              <thead><tr><th>Mes</th><th>Radicadas</th></tr></thead>
+              <tbody>
+                @for (m of porMes().meses; track m.clave) {
+                  <tr><td>{{ m.etiquetaLarga }}</td><td>{{ m.total }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </details>
+        </article>
+
+        <!-- Carga por comité: barras apiladas -->
+        <article class="card ancho">
+          <h3>Carga de trabajo por comité</h3>
+          @if (carga().length === 0) {
+            <p class="empty">Aún no hay PQRS asignadas a comités en este periodo.</p>
+          } @else {
+            <ul class="leyenda en-linea">
+              <li><span class="muestra" style="background: var(--viz-proceso)"></span>En proceso</li>
+              <li><span class="muestra" style="background: var(--viz-espera)"></span>Nuevas o en espera</li>
+              <li><span class="muestra" style="background: var(--viz-finalizada)"></span>Finalizadas</li>
+            </ul>
+            <ul class="comites">
+              @for (c of carga(); track c.comite) {
+                <li>
+                  <span class="nom">{{ c.comite }}</span>
+                  <span class="carril">
+                    <span class="apilada" [style.width]="'calc((100% - 150px) * ' + c.fraccion + ')'">
+                      @if (c.enProceso) {
+                        <span class="seg tip" tabindex="0" [style.flex-grow]="c.enProceso" style="background: var(--viz-proceso)"
+                          [attr.data-tip]="'En proceso: ' + c.enProceso" [attr.aria-label]="'En proceso: ' + c.enProceso"></span>
+                      }
+                      @if (c.porAtender) {
+                        <span class="seg tip" tabindex="0" [style.flex-grow]="c.porAtender" style="background: var(--viz-espera)"
+                          [attr.data-tip]="'Nuevas o en espera: ' + c.porAtender" [attr.aria-label]="'Nuevas o en espera: ' + c.porAtender"></span>
+                      }
+                      @if (c.finalizadas) {
+                        <span class="seg tip" tabindex="0" [style.flex-grow]="c.finalizadas" style="background: var(--viz-finalizada)"
+                          [attr.data-tip]="'Finalizadas: ' + c.finalizadas" [attr.aria-label]="'Finalizadas: ' + c.finalizadas"></span>
+                      }
+                    </span>
+                    <span class="valor">{{ c.pendientes }} {{ c.pendientes === 1 ? 'pendiente' : 'pendientes' }} de {{ c.total }}</span>
+                  </span>
+                </li>
+              }
+            </ul>
+            <details>
+              <summary>Ver datos en tabla</summary>
+              <table class="tabla">
+                <thead>
+                  <tr><th>Comité</th><th>Pendientes</th><th>En proceso</th><th>Nuevas o en espera</th><th>Finalizadas</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                  @for (c of carga(); track c.comite) {
+                    <tr>
+                      <td>{{ c.comite }}</td><td><strong>{{ c.pendientes }}</strong></td><td>{{ c.enProceso }}</td>
+                      <td>{{ c.porAtender }}</td><td>{{ c.finalizadas }}</td><td>{{ c.total }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </details>
+          }
+        </article>
       </div>
-    </div>
+    }
+
+    <!-- Totales generales (no dependen del periodo) -->
+    @if (resumen(); as r) {
+      <h3 class="titulo-seccion">Comunidad y comunicación <span>(totales históricos)</span></h3>
+      <div class="totales">
+        <div class="total"><span class="num">{{ r.usuarios }}</span><span class="lbl">Usuarios registrados</span></div>
+        <div class="total"><span class="num">{{ r.publicaciones }}</span><span class="lbl">Publicaciones</span></div>
+        <div class="total"><span class="num">{{ r.comunicaciones_enviadas }}</span><span class="lbl">Oficios enviados</span></div>
+        <div class="total"><span class="num">{{ r.comunicaciones_recibidas }}</span><span class="lbl">Oficios recibidos</span></div>
+        <div class="total"><span class="num">{{ r.mensajes_internos }}</span><span class="lbl">Mensajes internos</span></div>
+      </div>
+    }
   }
 </section>

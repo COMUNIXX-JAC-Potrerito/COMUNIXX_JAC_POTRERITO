@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Pqrs, PqrsSeguimiento } from '../../models/pqrs.model';
 import { AuthService } from '../../services/auth.service';
 import { PqrsService } from '../../services/pqrs.service';
+import { EstadoPipe, FechaLocalPipe, TipoPqrsPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-consultar',
-  imports: [FormsModule],
+  imports: [FormsModule, EstadoPipe, FechaLocalPipe, TipoPqrsPipe],
   templateUrl: './consultar.html',
   styleUrl: './consultar.scss',
 })
@@ -58,7 +59,7 @@ export class Consultar implements OnInit {
 
   // Busca una PQRS por su código de seguimiento y muestra el resultado.
   consultar() {
-    const codigo = this.codigo.trim();
+    const codigo = this.codigo.trim().toLowerCase();
     if (!codigo) return;
 
     this.error.set(null);
@@ -75,16 +76,5 @@ export class Consultar implements OnInit {
         this.error.set(err?.error?.detail ?? 'No se encontró una PQRS con ese código');
       },
     });
-  }
-
-  // Formatea una fecha ISO del backend (UTC) a fecha y hora local en español.
-  formatearFecha(iso?: string | null): string {
-    if (!iso) return '—';
-    // El backend guarda la hora en UTC sin zona; la marcamos como UTC ('Z')
-    // para que el navegador la convierta a la hora local del usuario.
-    const tieneZona = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
-    const fecha = new Date(tieneZona ? iso : iso + 'Z');
-    if (isNaN(fecha.getTime())) return iso;
-    return fecha.toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
   }
 }

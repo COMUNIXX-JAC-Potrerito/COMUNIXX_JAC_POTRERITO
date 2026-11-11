@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 
 import { COMITES, Pqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
+import { TipoPqrsPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-entrantes',
-  imports: [FormsModule],
+  imports: [FormsModule, TipoPqrsPipe],
   templateUrl: './entrantes.html',
   styleUrl: './entrantes.scss',
 })

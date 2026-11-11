@@ -13,7 +13,7 @@
     <div class="lista">
       @for (e of items(); track e.id) {
         <article class="card">
-          <span class="badge">{{ e.tipo }}</span>
+          <span class="badge">{{ e.tipo | capitalizar }}</span>
           <h3>{{ e.titulo }}</h3>
           @if (e.descripcion) {
             <p class="desc">{{ e.descripcion }}</p>
@@ -51,8 +51,8 @@
           <div class="datos">
             <p class="nota">Tus datos son obligatorios para registrar tu participación.</p>
             <input [(ngModel)]="nombre" [ngModelOptions]="{ standalone: true }" placeholder="Nombre completo *" />
-            <input [(ngModel)]="email" [ngModelOptions]="{ standalone: true }" placeholder="Correo" />
-            <input [(ngModel)]="telefono" [ngModelOptions]="{ standalone: true }" placeholder="Celular" />
+            <input [(ngModel)]="email" [ngModelOptions]="{ standalone: true }" type="email" autocomplete="email" placeholder="Correo" />
+            <input [(ngModel)]="telefono" [ngModelOptions]="{ standalone: true }" type="tel" autocomplete="tel" placeholder="Celular" />
             <p class="nota">Indica al menos un correo o un celular.</p>
           </div>
         }
