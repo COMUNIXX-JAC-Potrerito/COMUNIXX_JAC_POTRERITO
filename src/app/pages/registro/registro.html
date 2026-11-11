@@ -12,20 +12,20 @@
     <form (ngSubmit)="registrar()">
       <label>
         Nombre completo
-        <input name="fullName" [(ngModel)]="fullName" required placeholder="Nombre y apellidos" />
+        <input name="fullName" [(ngModel)]="fullName" required autocomplete="name" maxlength="120" placeholder="Nombre y apellidos" />
       </label>
       <label>
         Correo
-        <input name="email" [(ngModel)]="email" required placeholder="correo@ejemplo.com" />
+        <input type="email" name="email" [(ngModel)]="email" required autocomplete="email" placeholder="correo@ejemplo.com" />
       </label>
       <label>
         Contraseña
-        <input type="password" name="password" [(ngModel)]="password" required
+        <input type="password" name="password" [(ngModel)]="password" required autocomplete="new-password" minlength="8"
           placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número" />
       </label>
       <label>
         Celular
-        <input name="phone" [(ngModel)]="phone" required placeholder="300 000 0000" />
+        <input type="tel" name="phone" [(ngModel)]="phone" required autocomplete="tel" placeholder="300 000 0000" />
       </label>
 
       <button type="submit" [disabled]="enviando() || !fullName || !email || !password || !phone">

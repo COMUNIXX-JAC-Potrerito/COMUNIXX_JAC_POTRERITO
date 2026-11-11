@@ -30,13 +30,13 @@
           <li class="fila-msg" (click)="abrir(p)">
             <div class="izq">
               <div class="linea1">
-                <span class="tipo">{{ p.tipo }}</span>
+                <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
                 <strong class="asunto">{{ p.asunto }}</strong>
               </div>
               <div class="de">{{ p.descripcion }}</div>
             </div>
             <div class="der">
-              <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado }}</span>
+              <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado | estado }}</span>
               <span class="cod">{{ p.codigo_seguimiento }}</span>
             </div>
           </li>
@@ -47,12 +47,12 @@
     <button class="secundario volver" (click)="volver()">← Volver a mis PQRS</button>
     <article class="detalle">
       <div class="cab-det">
-        <span class="tipo">{{ p.tipo }}</span>
+        <span class="tipo">{{ p.tipo | tipoPqrs }}</span>
         <span class="cod">{{ p.codigo_seguimiento }}</span>
       </div>
       <h2>{{ p.asunto }}</h2>
       <div class="meta">
-        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado }}</span>
+        <span class="estado-badge" [class]="'e-' + p.estado">{{ p.estado | estado }}</span>
         <span>Comité: {{ p.comite || 'Pendiente de asignar' }}</span>
       </div>
       <p class="cuerpo">{{ p.descripcion }}</p>

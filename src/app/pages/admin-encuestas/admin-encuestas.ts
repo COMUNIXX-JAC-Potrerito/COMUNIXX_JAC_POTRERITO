@@ -1,4 +1,4 @@
-import { DatePipe, KeyValuePipe } from '@angular/common';
+import { KeyValuePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -12,6 +12,7 @@ import {
   RespuestaItem,
 } from '../../models/encuesta.model';
 import { EncuestasService } from '../../services/encuestas.service';
+import { CapitalizarPipe, FechaLocalPipe } from '../../shared/pipes';
 
 interface PreguntaForm {
   texto: string;
@@ -21,7 +22,7 @@ interface PreguntaForm {
 
 @Component({
   selector: 'app-admin-encuestas',
-  imports: [FormsModule, DatePipe, KeyValuePipe],
+  imports: [FormsModule, KeyValuePipe, CapitalizarPipe, FechaLocalPipe],
   templateUrl: './admin-encuestas.html',
   styleUrl: './admin-encuestas.scss',
 })
@@ -176,6 +177,9 @@ export class AdminEncuestas implements OnInit {
 
   // Elimina la encuesta (y cierra sus resultados si estaban abiertos).
   eliminar(e: EncuestaResumen) {
+    if (!confirm(`¿Eliminar "${e.titulo}" y todas sus respuestas? Esta acción no se puede deshacer.`)) {
+      return;
+    }
     this.service.eliminar(e.id).subscribe({
       next: () => {
         if (this.resultados()?.encuesta_id === e.id) {

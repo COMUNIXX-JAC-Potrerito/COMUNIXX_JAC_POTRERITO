@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 
 import { Pqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
+import { EstadoPipe, TipoPqrsPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-mis-pqrs',
-  imports: [FormsModule],
+  imports: [FormsModule, EstadoPipe, TipoPqrsPipe],
   templateUrl: './mis-pqrs.html',
   styleUrl: './mis-pqrs.scss',
 })

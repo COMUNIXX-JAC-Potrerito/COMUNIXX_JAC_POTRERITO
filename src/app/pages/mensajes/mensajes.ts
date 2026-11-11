@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -6,6 +5,7 @@ import { Mensaje, Usuario } from '../../models/comunicacion.model';
 import { AuthService } from '../../services/auth.service';
 import { ComunicacionService } from '../../services/comunicacion.service';
 import { UploadService } from '../../services/upload.service';
+import { FechaLocalPipe } from '../../shared/pipes';
 
 // Mensaje anotado con si es mío (para pintar la burbuja a un lado u otro).
 interface Burbuja extends Mensaje {
@@ -14,7 +14,7 @@ interface Burbuja extends Mensaje {
 
 @Component({
   selector: 'app-mensajes',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, FechaLocalPipe],
   templateUrl: './mensajes.html',
   styleUrl: './mensajes.scss',
 })
@@ -97,15 +97,25 @@ export class Mensajes implements OnInit, OnDestroy {
 
   // Carga los mensajes recibidos y enviados.
   cargar() {
-    this.service.recibidos().subscribe((m) => {
-      this.recibidos.set(m);
-      this.ultimoId = m.reduce((max, x) => Math.max(max, x.id), this.ultimoId);
+    this.service.recibidos().subscribe({
+      next: (m) => {
+        this.recibidos.set(m);
+        this.ultimoId = m.reduce((max, x) => Math.max(max, x.id), this.ultimoId);
+      },
+      error: (e) => this.error.set(e?.error?.detail ?? 'No se pudieron cargar los mensajes'),
     });
-    this.service.enviados().subscribe((m) => this.enviados.set(m));
+    this.service.enviados().subscribe({
+      next: (m) => this.enviados.set(m),
+      error: () => {},
+    });
   }
 
   // Sondeo: detecta mensajes recibidos nuevos y muestra el toast.
   private revisarNuevos() {
+    // Con la pestaña oculta no se consulta (ahorra peticiones al backend).
+    if (document.hidden) {
+      return;
+    }
     this.service.recibidos().subscribe((m) => {
       const nuevos = m.filter((x) => x.id > this.ultimoId);
       this.recibidos.set(m);
@@ -115,8 +125,8 @@ export class Mensajes implements OnInit, OnDestroy {
         const preview = ultimo.contenido?.trim()
           ? ultimo.contenido
           : ultimo.adjunto_url
-            ? 'te envió un archivo'
-            : 'te escribió';
+            ? 'Archivo adjunto'
+            : '';
         this.mostrarToast(this.nombre(ultimo.remitente_id), preview);
       }
     });
@@ -169,6 +179,9 @@ export class Mensajes implements OnInit, OnDestroy {
 
   // Elimina el mensaje de la conversación.
   eliminar(m: Mensaje) {
+    if (!confirm('¿Eliminar este mensaje? Se borra para los dos participantes.')) {
+      return;
+    }
     this.service.eliminarMensaje(m.id).subscribe({
       next: () => {
         this.recibidos.update((l) => l.filter((x) => x.id !== m.id));
