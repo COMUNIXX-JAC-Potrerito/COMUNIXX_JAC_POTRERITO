@@ -1,12 +1,12 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 
 import { CATEGORIAS, Publicacion, etiquetaCategoria } from '../../models/publicacion.model';
 import { PublicacionesService } from '../../services/publicaciones.service';
+import { FechaDiaPipe, FechaLocalPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-publicaciones',
-  imports: [DatePipe],
+  imports: [FechaDiaPipe, FechaLocalPipe],
   templateUrl: './publicaciones.html',
   styleUrl: './publicaciones.scss',
 })

@@ -23,6 +23,17 @@ export class AuthService {
   readonly isLoggedIn = signal<boolean>(this.hasToken());
   readonly rol = signal<string | null>(this.leerRol());
 
+  constructor() {
+    // Si la sesión se abre o se cierra en otra pestaña, esta se entera.
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (ev) => {
+        if (ev.key === this.TOKEN_KEY || ev.key === null) {
+          this.sincronizar();
+        }
+      });
+    }
+  }
+
   // Inicia sesión: pide el token al backend y guarda sesión y rol.
   login(email: string, password: string): Observable<TokenResponse> {
     return this.http
@@ -48,9 +59,22 @@ export class AuthService {
     this.rol.set(null);
   }
 
-  // Devuelve el token JWT guardado (o null si no hay sesión).
+  // Devuelve el token JWT guardado, o null si no hay sesión o ya venció.
+  // Un token vencido se borra: así la app no se queda "logueada" con un token
+  // que el backend rechaza con 401.
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (token && tokenVencido(token)) {
+      this.logout();
+      return null;
+    }
+    return token;
+  }
+
+  // Vuelve a leer la sesión desde el almacenamiento (p. ej. tras un cambio en otra pestaña).
+  private sincronizar(): void {
+    this.isLoggedIn.set(this.hasToken());
+    this.rol.set(this.leerRol());
   }
 
   // ¿El usuario logueado es dignatario (puede entrar al Panel JAC)?
@@ -69,9 +93,10 @@ export class AuthService {
     return this.leerCampo('sub');
   }
 
-  // ¿Hay un token guardado? (estado inicial de la sesión)
+  // ¿Hay un token guardado y vigente? (estado inicial de la sesión)
   private hasToken(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return !!token && !tokenVencido(token);
   }
 
   // Lee el rol del usuario desde el token.
@@ -86,13 +111,26 @@ export class AuthService {
     if (!token) {
       return null;
     }
-    try {
-      const payload = token.split('.')[1];
-      const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-      const data = JSON.parse(json);
-      return data[campo] ?? null;
-    } catch {
-      return null;
-    }
+    const valor = leerPayload(token)?.[campo];
+    return typeof valor === 'string' ? valor : null;
   }
+}
+
+// Decodifica el payload del JWT (la parte del medio). No verifica la firma
+// (eso lo hace el backend); solo lee los datos. Soporta tildes (UTF-8).
+export function leerPayload(token: string): Record<string, unknown> | null {
+  try {
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const binario = atob(base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '='));
+    const bytes = Uint8Array.from(binario, (c) => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    return null;
+  }
+}
+
+// ¿El token ya venció? (campo "exp" en segundos). Un token ilegible cuenta como vencido.
+export function tokenVencido(token: string, ahoraMs: number = Date.now()): boolean {
+  const exp = leerPayload(token)?.['exp'];
+  return typeof exp !== 'number' || exp * 1000 <= ahoraMs;
 }

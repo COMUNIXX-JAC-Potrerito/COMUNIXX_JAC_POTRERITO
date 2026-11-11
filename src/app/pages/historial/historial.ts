@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 
 import { COMITES, ESTADOS_GESTIONABLES, Pqrs } from '../../models/pqrs.model';
 import { PqrsService } from '../../services/pqrs.service';
+import { EstadoPipe, TipoPqrsPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-historial',
-  imports: [FormsModule],
+  imports: [FormsModule, EstadoPipe, TipoPqrsPipe],
   templateUrl: './historial.html',
   styleUrl: './historial.scss',
 })
