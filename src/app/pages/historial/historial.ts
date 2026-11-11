@@ -2,6 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { COMITES, ESTADOS_GESTIONABLES, Pqrs } from '../../models/pqrs.model';
+import { AuthService } from '../../services/auth.service';
 import { PqrsService } from '../../services/pqrs.service';
 import { EstadoPipe, TipoPqrsPipe } from '../../shared/pipes';
 
@@ -13,6 +14,8 @@ import { EstadoPipe, TipoPqrsPipe } from '../../shared/pipes';
 })
 export class Historial implements OnInit {
   private pqrsService = inject(PqrsService);
+  // RN-012: solo el superadministrador puede corregir un comité ya asignado.
+  protected auth = inject(AuthService);
 
   readonly comites = COMITES;
   // Estados a los que se puede mover (sin "Nueva"); incluye "En_Espera".
@@ -77,7 +80,7 @@ export class Historial implements OnInit {
     this.seleccionada.set(null);
   }
 
-  // Asigna/reasigna el comité de la PQRS abierta.
+  // Asigna el comité (o lo corrige, si es superadministrador) de la PQRS abierta.
   asignar() {
     const p = this.seleccionada();
     if (!p || !this.comiteSel) {
