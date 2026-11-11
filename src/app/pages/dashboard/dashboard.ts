@@ -53,7 +53,7 @@ export class Dashboard {
       id: 'admin',
       titulo: 'Administración',
       items: [
-        { etiqueta: 'Reportes', ruta: 'reportes' },
+        { etiqueta: 'Estadísticas', ruta: 'reportes' },
         { etiqueta: 'Usuarios', ruta: 'usuarios', soloSuperadmin: true },
       ],
     },

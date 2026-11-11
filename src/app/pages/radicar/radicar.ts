@@ -6,10 +6,11 @@ import { PqrsCreate, TIPOS } from '../../models/pqrs.model';
 import { AuthService } from '../../services/auth.service';
 import { PqrsService } from '../../services/pqrs.service';
 import { UploadService } from '../../services/upload.service';
+import { TipoPqrsPipe } from '../../shared/pipes';
 
 @Component({
   selector: 'app-radicar',
-  imports: [FormsModule],
+  imports: [FormsModule, TipoPqrsPipe],
   templateUrl: './radicar.html',
   styleUrl: './radicar.scss',
 })
