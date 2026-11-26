@@ -104,6 +104,26 @@ form {
     margin: 14px 0;
   }
 
+  .codigo-fila {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+
+    .codigo {
+      flex: 1 1 200px;
+      margin: 0;
+    }
+    .copiar {
+      flex-shrink: 0;
+      align-self: center;
+      white-space: nowrap;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+    }
+  }
+
   .nota {
     color: var(--texto-suave);
     font-size: 0.85rem;
