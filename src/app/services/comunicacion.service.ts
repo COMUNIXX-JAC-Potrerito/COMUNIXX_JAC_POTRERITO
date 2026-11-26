@@ -78,12 +78,25 @@ export class ComunicacionService {
   }
 
   // --- Envío masivo ---
-  // Envía un comunicado por correo a todos los registrados.
-  enviarMasivo(asunto: string, contenido: string): Observable<{ envio_id: number; destinatarios: number; modo: string }> {
-    return this.http.post<{ envio_id: number; destinatarios: number; modo: string }>(
-      `${this.api}/envios-masivos`,
-      { asunto, contenido },
-    );
+  // Envía un comunicado por correo al público elegido ('todos' o 'jac') y, si se
+  // pide, lo deja también en la bitácora de comunicaciones.
+  enviarMasivo(
+    asunto: string,
+    contenido: string,
+    publico: 'todos' | 'jac',
+    guardarEnBitacora: boolean,
+  ): Observable<{ envio_id: number; destinatarios: number; modo: string; guardado_en_bitacora: boolean }> {
+    return this.http.post<{
+      envio_id: number;
+      destinatarios: number;
+      modo: string;
+      guardado_en_bitacora: boolean;
+    }>(`${this.api}/envios-masivos`, {
+      asunto,
+      contenido,
+      publico,
+      guardar_en_bitacora: guardarEnBitacora,
+    });
   }
 
   // --- Reportes ---
