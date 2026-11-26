@@ -1,0 +1,50 @@
+<div class="login-container">
+  <form class="login-card" (ngSubmit)="restablecer()">
+    <h1>COMUNIX</h1>
+    <p class="subtitle">Nueva contraseña</p>
+
+    @if (listo()) {
+      <div class="exito">Tu contraseña fue actualizada. Ya puedes iniciar sesión.</div>
+      <a class="volver" routerLink="/login">Iniciar sesión</a>
+    } @else if (!token) {
+      <div class="alert">Este enlace no es válido. Solicita uno nuevo.</div>
+      <a class="volver" routerLink="/recuperar">Solicitar un enlace nuevo</a>
+    } @else {
+      @if (error()) {
+        <div class="alert">{{ error() }}</div>
+      }
+
+      <label>
+        Nueva contraseña
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          autocomplete="new-password"
+          placeholder="••••••••"
+        />
+      </label>
+
+      <label>
+        Repite la contraseña
+        <input
+          type="password"
+          name="confirmar"
+          [(ngModel)]="confirmar"
+          required
+          autocomplete="new-password"
+          placeholder="••••••••"
+        />
+      </label>
+
+      <p class="ayuda">Mínimo 8 caracteres, con una mayúscula y un número.</p>
+
+      <button type="submit" [disabled]="cargando() || !password || !confirmar">
+        {{ cargando() ? 'Guardando…' : 'Cambiar contraseña' }}
+      </button>
+
+      <a class="volver" routerLink="/login">Volver a iniciar sesión</a>
+    }
+  </form>
+</div>

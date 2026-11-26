@@ -1,0 +1,41 @@
+<div class="login-container">
+  <form class="login-card" (ngSubmit)="enviar()">
+    <h1>COMUNIX</h1>
+    <p class="subtitle">Recuperar contraseña</p>
+
+    @if (enviado()) {
+      <div class="exito">
+        Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.
+        Revisa tu bandeja de entrada (y la carpeta de spam). El enlace vence en 1 hora.
+      </div>
+      <a class="volver" routerLink="/login">Volver a iniciar sesión</a>
+    } @else {
+      <p class="intro">
+        Escribe el correo de tu cuenta y te enviaremos un enlace para crear una
+        contraseña nueva.
+      </p>
+
+      @if (error()) {
+        <div class="alert">{{ error() }}</div>
+      }
+
+      <label>
+        Correo
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          autocomplete="username"
+          placeholder="correo@ejemplo.com"
+        />
+      </label>
+
+      <button type="submit" [disabled]="cargando() || !email">
+        {{ cargando() ? 'Enviando…' : 'Enviar enlace' }}
+      </button>
+
+      <a class="volver" routerLink="/login">Volver a iniciar sesión</a>
+    }
+  </form>
+</div>
