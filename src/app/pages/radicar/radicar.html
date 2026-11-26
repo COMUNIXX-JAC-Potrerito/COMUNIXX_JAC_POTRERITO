@@ -4,7 +4,12 @@
     <div class="exito">
       <h2>PQRS radicada</h2>
       <p>Guarda este código para consultar el estado de tu solicitud:</p>
-      <div class="codigo">{{ codigoGenerado() }}</div>
+      <div class="codigo-fila">
+        <div class="codigo">{{ codigoGenerado() }}</div>
+        <button type="button" class="copiar" (click)="copiarCodigo()">
+          {{ copiado() ? '¡Copiado!' : 'Copiar código' }}
+        </button>
+      </div>
       <p class="nota">Con él podrás hacer seguimiento en cualquier momento, incluso si la enviaste de forma anónima.</p>
       <button (click)="nuevaPqrs()">Radicar otra PQRS</button>
     </div>
