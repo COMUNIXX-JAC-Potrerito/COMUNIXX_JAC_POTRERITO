@@ -26,6 +26,8 @@ export class Comunicaciones implements OnInit {
   // Envío masivo
   masivoAsunto = '';
   masivoContenido = '';
+  masivoPublico: 'todos' | 'jac' = 'todos';
+  masivoGuardarBitacora = false;
   enviandoMasivo = signal(false);
   resultadoMasivo = signal<string | null>(null);
   errorMasivo = signal<string | null>(null);
@@ -70,26 +72,37 @@ export class Comunicaciones implements OnInit {
     });
   }
 
-  // Envía el comunicado por correo a toda la comunidad y muestra el resultado.
+  // Envía el comunicado por correo al público elegido y muestra el resultado.
   enviarMasivo() {
-    if (!confirm('El comunicado se enviará por correo a TODAS las personas registradas. ¿Enviarlo?')) {
+    const destino =
+      this.masivoPublico === 'jac'
+        ? 'los miembros de la JAC (dignatarios)'
+        : 'toda la comunidad registrada';
+    if (!confirm(`El comunicado se enviará por correo a ${destino}. ¿Enviarlo?`)) {
       return;
     }
     this.enviandoMasivo.set(true);
     this.resultadoMasivo.set(null);
     this.errorMasivo.set(null);
-    this.service.enviarMasivo(this.masivoAsunto, this.masivoContenido).subscribe({
-      next: (r) => {
-        this.enviandoMasivo.set(false);
-        const nota = r.modo === 'simulado' ? ' (modo simulado: sin correo configurado)' : '';
-        this.resultadoMasivo.set(`Enviado a ${r.destinatarios} destinatarios${nota}.`);
-        this.masivoAsunto = '';
-        this.masivoContenido = '';
-      },
-      error: (e) => {
-        this.enviandoMasivo.set(false);
-        this.errorMasivo.set(e?.error?.detail ?? 'No se pudo enviar el comunicado');
-      },
-    });
+    this.service
+      .enviarMasivo(this.masivoAsunto, this.masivoContenido, this.masivoPublico, this.masivoGuardarBitacora)
+      .subscribe({
+        next: (r) => {
+          this.enviandoMasivo.set(false);
+          const nota = r.modo === 'simulado' ? ' (modo simulado: sin correo configurado)' : '';
+          const bitacora = r.guardado_en_bitacora ? ' Guardado en la bitácora.' : '';
+          this.resultadoMasivo.set(`Enviado a ${r.destinatarios} destinatarios${nota}.${bitacora}`);
+          this.masivoAsunto = '';
+          this.masivoContenido = '';
+          this.masivoGuardarBitacora = false;
+          if (r.guardado_en_bitacora) {
+            this.cargar(); // refresca la bitácora con el nuevo registro
+          }
+        },
+        error: (e) => {
+          this.enviandoMasivo.set(false);
+          this.errorMasivo.set(e?.error?.detail ?? 'No se pudo enviar el comunicado');
+        },
+      });
   }
 }

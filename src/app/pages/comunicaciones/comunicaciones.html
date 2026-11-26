@@ -64,8 +64,8 @@
   <section class="panel">
     <h2>Envío masivo por correo</h2>
     <p class="intro">
-      Redacta un comunicado y envíalo por correo a <strong>todas las personas registradas</strong>
-      de una sola vez (por ejemplo, para convocar a una asamblea).
+      Redacta un comunicado y envíalo por correo al público que elijas
+      (por ejemplo, para convocar a una asamblea).
     </p>
 
     <form (ngSubmit)="enviarMasivo()">
@@ -75,10 +75,21 @@
       </label>
       <label>
         Contenido
-        <textarea name="mcont" [(ngModel)]="masivoContenido" required rows="4" placeholder="Mensaje para toda la comunidad"></textarea>
+        <textarea name="mcont" [(ngModel)]="masivoContenido" required rows="4" placeholder="Mensaje para la comunidad"></textarea>
+      </label>
+      <label>
+        Enviar a
+        <select name="mpublico" [(ngModel)]="masivoPublico">
+          <option value="todos">Todos los usuarios (comunidad)</option>
+          <option value="jac">Solo miembros de la JAC (dignatarios)</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" name="mbitacora" [(ngModel)]="masivoGuardarBitacora" />
+        Guardar también en la bitácora de comunicaciones
       </label>
       <button type="submit" [disabled]="enviandoMasivo() || !masivoAsunto || !masivoContenido">
-        {{ enviandoMasivo() ? 'Enviando…' : 'Enviar a todos' }}
+        {{ enviandoMasivo() ? 'Enviando…' : 'Enviar comunicado' }}
       </button>
     </form>
 
