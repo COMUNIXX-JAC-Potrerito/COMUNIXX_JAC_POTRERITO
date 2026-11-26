@@ -52,6 +52,17 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
+  // Pide un enlace de recuperación de contraseña. El backend responde igual
+  // exista o no el correo (no revela qué correos están registrados).
+  recuperarPassword(email: string): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(`${this.apiUrl}/recuperar`, { email });
+  }
+
+  // Cambia la contraseña con el token recibido por correo.
+  restablecerPassword(token: string, password: string): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(`${this.apiUrl}/restablecer`, { token, password });
+  }
+
   // Cierra sesión: borra el token y limpia los signals de sesión/rol.
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
