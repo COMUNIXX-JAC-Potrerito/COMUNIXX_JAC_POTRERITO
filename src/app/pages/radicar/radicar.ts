@@ -40,6 +40,22 @@ export class Radicar {
   subiendo = signal(false);
   error = signal<string | null>(null);
   codigoGenerado = signal<string | null>(null);
+  copiado = signal(false);
+
+  // Copia el código de seguimiento al portapapeles y muestra una confirmación breve.
+  async copiarCodigo() {
+    const codigo = this.codigoGenerado();
+    if (!codigo) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(codigo);
+      this.copiado.set(true);
+      setTimeout(() => this.copiado.set(false), 2000);
+    } catch {
+      // Si el navegador bloquea el portapapeles, no rompemos la vista.
+    }
+  }
 
   // Guarda el archivo elegido en el input (adjunto opcional).
   seleccionarArchivo(ev: Event) {
@@ -116,6 +132,7 @@ export class Radicar {
     this.telefonoContacto = '';
     this.archivo.set(null);
     this.codigoGenerado.set(null);
+    this.copiado.set(false);
     this.error.set(null);
   }
 }
