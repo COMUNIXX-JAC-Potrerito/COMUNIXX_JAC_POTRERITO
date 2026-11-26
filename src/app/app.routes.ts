@@ -23,6 +23,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login').then((m) => m.Login),
   },
   {
+    path: 'recuperar',
+    loadComponent: () => import('./pages/recuperar/recuperar').then((m) => m.Recuperar),
+  },
+  {
+    path: 'restablecer',
+    loadComponent: () => import('./pages/restablecer/restablecer').then((m) => m.Restablecer),
+  },
+  {
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
